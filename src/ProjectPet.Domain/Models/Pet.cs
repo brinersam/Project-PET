@@ -19,19 +19,19 @@
         public DateOnly DateOfBirth { get; private set; }
         public DateOnly CreatedOn { get; private set; }
 
-        private List<PaymentInfo> _paymentInfo = [];
-        public IReadOnlyList<PaymentInfo> PaymentInfo => _paymentInfo;
+        private List<PaymentInfo> _paymentMethods = [];
+        public IReadOnlyList<PaymentInfo> PaymentMethods => _paymentMethods;
 
-        public void AddPaymentInfo(PaymentInfo paymentInfo)
+        public void AddPaymentMethod(PaymentInfo paymentInfo)
         {
-            _paymentInfo.Add(paymentInfo);
+            _paymentMethods.Add(paymentInfo);
         }
     }
 
     public class PaymentInfo
     {
         public string Title { get; private set; } = null!;
-        public string Description { get; private set; } = null!;
+        public string Instructions { get; private set; } = null!;
     }
 
     public enum Status
