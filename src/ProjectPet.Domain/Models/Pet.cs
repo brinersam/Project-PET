@@ -31,7 +31,7 @@
     public class PaymentInfo
     {
         public string Title { get; private set; } = null!;
-        public string Instructions { get; private set; } = null!;
+        public string Description { get; private set; } = null!;
     }
 
     public enum Status
