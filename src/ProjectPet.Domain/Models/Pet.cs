@@ -10,11 +10,11 @@
         public string Coat { get; private set; } = null!;
         public string Health { get; private set; } = null!;
         public string Address { get; private set; } = null!;
-        public string WeightKg { get; private set; } = null!;
-        public string Height { get; private set; } = null!;
+        public float Weight { get; private set; }
+        public float Height { get; private set; }
         public string PhoneNumber { get; private set; } = null!;
-        public bool Sterilized { get; private set; }
-        public bool Vaccinated { get; private set; }
+        public bool IsSterilized { get; private set; }
+        public bool IsVaccinated { get; private set; }
         public Status Status { get; private set; }
         public DateOnly DateOfBirth { get; private set; }
         public DateOnly CreatedOn { get; private set; }
@@ -32,12 +32,6 @@
         {
             _photos.Add(petPhoto);
         }
-    }
-
-    public class PaymentInfo
-    {
-        public string Title { get; private set; } = null!;
-        public string Instructions { get; private set; } = null!;
     }
 
     public enum Status
