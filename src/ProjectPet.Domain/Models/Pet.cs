@@ -20,11 +20,17 @@
         public DateOnly CreatedOn { get; private set; }
 
         private List<PaymentInfo> _paymentMethods = [];
+        private List<PetPhoto> _photos = [];
         public IReadOnlyList<PaymentInfo> PaymentMethods => _paymentMethods;
+        public IReadOnlyList<PetPhoto> Photos => _photos;
 
         public void AddPaymentMethod(PaymentInfo paymentInfo)
         {
             _paymentMethods.Add(paymentInfo);
+        }
+        public void AddPetPhoto(PetPhoto petPhoto)
+        {
+            _photos.Add(petPhoto);
         }
     }
 
