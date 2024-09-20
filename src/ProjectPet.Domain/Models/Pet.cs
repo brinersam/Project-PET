@@ -13,8 +13,8 @@
         public float Weight { get; private set; }
         public float Height { get; private set; }
         public string PhoneNumber { get; private set; } = null!;
-        public bool Sterilized { get; private set; }
-        public bool Vaccinated { get; private set; }
+        public bool IsSterilized { get; private set; }
+        public bool IsVaccinated { get; private set; }
         public Status Status { get; private set; }
         public DateOnly DateOfBirth { get; private set; }
         public DateOnly CreatedOn { get; private set; }
