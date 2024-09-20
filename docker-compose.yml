@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  projectpet.api:
+    image: ${DOCKER_REGISTRY-}projectpetapi
+    build:
+      context: .
+      dockerfile: src/ProjectPet.API/Dockerfile
+    ports:
+    - "8080:8080"
+    - "8081:8081"
+
+  projectpet.database:
+    image: postgres
+    container_name: ProjectPet.database
+    environment:
+        - POSTGRES_DB=projectpet
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+    ports:
+        - "5432:5432"
+    volumes:
+        - ./postgres-data:/var/lib/postgresql/data
