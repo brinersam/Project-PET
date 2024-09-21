@@ -14,7 +14,7 @@ services:
     image: postgres
     container_name: ProjectPet.database
     environment:
-        - POSTGRES_DB=projectpet
+        - POSTGRES_DB=project_pet
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
     ports:

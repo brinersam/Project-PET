@@ -4,16 +4,15 @@ using Microsoft.Extensions.Logging;
 
 namespace ProjectPet.Infrastructure
 {
-    public class ApplicationDbContext(IConfiguration _configuration) : DbContext
+    public class ApplicationDbContext(IConfiguration configuration) : DbContext
     {
-        private const string DATABASE = "Database"; // for connecting to the db through compose
-        //private const string DATABASE = "Migrations"; // for applying the migrations through efcore cli
-
+        private const string DATABASE = "Database";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_configuration.GetConnectionString(DATABASE));
+            optionsBuilder.UseNpgsql(configuration.GetConnectionString(DATABASE));
             optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
