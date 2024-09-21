@@ -34,6 +34,26 @@ namespace ProjectPet.Infrastructure.Configurations
                 .WithOne()
                 .HasForeignKey("pet_id")
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.OwnsOne(e => e.PaymentMethods, d =>
+            {
+                d.ToJson();
+                d.OwnsMany(a => a.Data, i =>
+                {
+                    i.Property(payInfo => payInfo.Title).ConfigureString();
+                    i.Property(payInfo => payInfo.Instructions).ConfigureString(Constants.STRING_LEN_MEDIUM);
+                });
+            });
+
+            builder.OwnsOne(e => e.SocialNetworks, d =>
+            {
+                d.ToJson();
+                d.OwnsMany(a => a.Data, i =>
+                {
+                    i.Property(network => network.Name).ConfigureString();
+                    i.Property(network => network.Link).ConfigureString(Constants.STRING_LEN_MEDIUM);
+                });
+            });
         }
     }
 }

@@ -6,7 +6,8 @@ namespace ProjectPet.Infrastructure
 {
     public class ApplicationDbContext(IConfiguration _configuration) : DbContext
     {
-        private const string DATABASE = "Database";
+        private const string DATABASE = "Database"; // for connecting to the db through compose
+        //private const string DATABASE = "Migrations"; // for applying the migrations through efcore cli
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

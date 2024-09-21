@@ -59,13 +59,25 @@ namespace ProjectPet.Infrastructure.Configurations
             builder.Property(e => e.CreatedOn)
                 .IsRequired();
 
-            builder.OwnsMany(
-                e => e.PaymentMethods,
-                d => d.ToJson());
+            builder.OwnsOne(e => e.PaymentMethods, d =>
+                    {
+                        d.ToJson();
+                        d.OwnsMany(a => a.Data, i =>
+                            {
+                                i.Property(payInfo => payInfo.Title).ConfigureString();
+                                i.Property(payInfo => payInfo.Instructions).ConfigureString(Constants.STRING_LEN_MEDIUM);
+                            });
+                    });
 
-            builder.OwnsMany(
-                e => e.Photos,
-                d => d.ToJson());
+            builder.OwnsOne(e => e.Photos, d =>
+            {
+                d.ToJson();
+                d.OwnsMany(a => a.Data, i =>
+                {
+                    i.Property(photo => photo.StoragePath).ConfigureString();
+                    i.Property(photo => photo.IsPrimary).IsRequired();
+                });
+            });
         }
     }
 }
