@@ -1,14 +1,20 @@
-﻿namespace ProjectPet.Domain.Models
+﻿using ProjectPet.Domain.Models.DDD;
+
+namespace ProjectPet.Domain.Models
 {
-    public class Volunteer
+    public class Volunteer : Entity
     {
-        public Guid Id { get; private set; }
         public string FullName { get; private set; } = null!;
         public string Email { get; private set; } = null!;
         public string Description { get; private set; } = null!;
         public int YOExperience { get; private set; }
         public string PhoneNumber { get; private set; } = null!;
         private List<Pet> _ownedPets = [];
+
+        public Volunteer(Guid id) : base(id)
+        {
+        }
+
         //private List<SocialNetwork> _socialNetworks = [];
         //private List<PaymentInfo> _paymentMethods = [];
         public int PetsHoused => _ownedPets.Count(x => x.Status == Status.Home_Found);
