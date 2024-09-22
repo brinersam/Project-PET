@@ -3,7 +3,6 @@
     public abstract class Entity
     {
         public Guid Id { get; private set; } = Guid.Empty;
-        protected Entity() { } //efcore
         protected Entity(Guid id)
         {
             Id = id;
@@ -13,14 +12,23 @@
             if (obj is not Entity other)
                 return false;
 
-            if (ReferenceEquals(this, other))
-                return true;
+            if (ReferenceEquals(this, other) == false)
+                return false;
 
             if (Id.Equals(default) || other.Id.Equals(default))
                 return false;
 
+            if (GetType() != other.GetType())
+                return false;
+
             return Id.Equals(other.Id);
         }
+
+        public override int GetHashCode()
+        {
+            return (GetType().FullName + Id).GetHashCode();
+        }
+
         public static bool operator ==(Entity a, Entity b)
         {
             if (a is null && b is null)
