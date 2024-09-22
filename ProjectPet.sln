@@ -5,11 +5,13 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.API", "src\ProjectPet.API\ProjectPet.API.csproj", "{D73AC7A8-460A-46A6-B89E-810EC3AE19F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.Infrastructure", "src\ProjectPet.Infrastructure\ProjectPet.Infrastructure.csproj", "{6D66C03E-6DD9-49D3-9D3E-E66FBB6C4C7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.Infrastructure", "src\ProjectPet.Infrastructure\ProjectPet.Infrastructure.csproj", "{6D66C03E-6DD9-49D3-9D3E-E66FBB6C4C7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.Domain", "src\ProjectPet.Domain\ProjectPet.Domain.csproj", "{005B5449-9207-4DBB-A15C-5827BF09E0F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.Domain", "src\ProjectPet.Domain\ProjectPet.Domain.csproj", "{005B5449-9207-4DBB-A15C-5827BF09E0F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.Application", "src\ProjectPet.Application\ProjectPet.Application.csproj", "{FC4F191C-C3CE-4489-997A-9DA95CA07CDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.Application", "src\ProjectPet.Application\ProjectPet.Application.csproj", "{FC4F191C-C3CE-4489-997A-9DA95CA07CDA}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C3D825E2-8E84-4F80-88AD-ADF7DDB96320}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{FC4F191C-C3CE-4489-997A-9DA95CA07CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC4F191C-C3CE-4489-997A-9DA95CA07CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC4F191C-C3CE-4489-997A-9DA95CA07CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D825E2-8E84-4F80-88AD-ADF7DDB96320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D825E2-8E84-4F80-88AD-ADF7DDB96320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D825E2-8E84-4F80-88AD-ADF7DDB96320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D825E2-8E84-4F80-88AD-ADF7DDB96320}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
