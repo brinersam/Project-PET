@@ -41,6 +41,7 @@ namespace ProjectPet.Domain.Models
         {
         }
 
+
     }
 
     public record PaymentMethodsList
