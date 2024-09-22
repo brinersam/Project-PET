@@ -1,8 +1,9 @@
-﻿namespace ProjectPet.Domain.Models
+﻿using ProjectPet.Domain.Models.DDD;
+
+namespace ProjectPet.Domain.Models
 {
-    public class Pet
+    public class Pet : Entity
     {
-        public Guid Id { get; private set; }
         public string Name { get; private set; } = null!;
         public string Species { get; private set; } = null!;
         public string Description { get; private set; } = null!;
@@ -35,6 +36,11 @@
         //{
         //    //_photos.Add(petPhoto);
         //}
+
+        public Pet(Guid id) : base(id)
+        {
+        }
+
     }
 
     public record PaymentMethodsList

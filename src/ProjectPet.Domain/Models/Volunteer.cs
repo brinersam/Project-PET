@@ -1,8 +1,9 @@
-﻿namespace ProjectPet.Domain.Models
+﻿using ProjectPet.Domain.Models.DDD;
+
+namespace ProjectPet.Domain.Models
 {
-    public class Volunteer
+    public class Volunteer : Entity
     {
-        public Guid Id { get; private set; }
         public string FullName { get; private set; } = null!;
         public string Email { get; private set; } = null!;
         public string Description { get; private set; } = null!;
@@ -17,9 +18,11 @@
         public IReadOnlyList<Pet> OwnedPets => _ownedPets;
         //public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
         //public IReadOnlyList<PaymentInfo> PaymentMethods => _paymentMethods;
-
         public PaymentMethodsList? PaymentMethods { get; private set; }
         public SocialNetworkList? SocialNetworks { get; private set; }
+        public Volunteer(Guid id) : base(id)
+        {
+        }
     }
     public record SocialNetworkList
     {
