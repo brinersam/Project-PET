@@ -51,6 +51,7 @@ namespace ProjectPet.Domain.Models
     public record PhotoList
     {
         public List<PetPhoto> Data { get; private set; }
+
     }
 
     public enum Status
