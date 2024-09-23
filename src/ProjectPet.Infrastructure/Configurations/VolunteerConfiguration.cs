@@ -27,8 +27,13 @@ namespace ProjectPet.Infrastructure.Configurations
 
             builder.Property(e => e.YOExperience);
 
-            builder.Property(e => e.PhoneNumber)
-                .ConfigureString();
+            builder.ComplexProperty(e => e.PhoneNumber, ba =>
+            {
+                ba.Property(e => e.Number).ConfigureString().HasColumnName("number"); ;
+                ba.Property(e => e.AreaCode)
+                .HasMaxLength(Constants.STRING_LEN_SMALL)
+                .HasColumnName("area_code");
+            });
 
             builder.HasMany(e => e.OwnedPets)
                 .WithOne()
