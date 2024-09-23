@@ -9,8 +9,8 @@
             Value = value;
         }
 
-        public SpeciesID New(Guid value) => new SpeciesID(value);
-        public SpeciesID New() => new SpeciesID(Guid.NewGuid());
-        public SpeciesID Empty() => new SpeciesID(Guid.Empty);
+        public static SpeciesID New(Guid value) => new SpeciesID(value);
+        public static SpeciesID New() => new SpeciesID(Guid.NewGuid());
+        public static SpeciesID Empty() => new SpeciesID(Guid.Empty);
     }
 }

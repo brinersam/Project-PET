@@ -16,14 +16,15 @@ namespace ProjectPet.Infrastructure.Configurations
             builder.Property(e => e.Name)
                 .ConfigureString();
 
-            builder.Property(e => e.Species)
-                .ConfigureString();
+            builder.ComplexProperty(e => e.AnimalData, ba =>
+            {
+                ba.Property(e => e.SpeciesID).IsRequired().HasColumnName("species_id");
+
+                ba.Property(e => e.BreedID).IsRequired();
+            });
 
             builder.Property(e => e.Description)
                 .ConfigureString(Constants.STRING_LEN_MEDIUM);
-
-            builder.Property(e => e.Breed)
-                .ConfigureString();
 
             builder.Property(e => e.Coat);
 
