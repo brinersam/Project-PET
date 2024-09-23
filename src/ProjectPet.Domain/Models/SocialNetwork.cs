@@ -2,7 +2,21 @@
 {
     public record SocialNetwork
     {
-        public string Name { get; private set; } = null!;
-        public string Link { get; private set; } = null!;
+        public string? Name { get; }
+        public string Link { get; } = null!;
+
+        protected SocialNetwork(string link, string? name)
+        {
+            Name = name;
+            Link = link;
+        }
+
+        public static SocialNetwork Create(string link, string? name) // TODO return result
+        {
+            if (String.IsNullOrWhiteSpace(link))
+                throw new ArgumentNullException("Link argument should not be empty"); 
+
+            return new SocialNetwork(link, name);
+        }
     }
 }
