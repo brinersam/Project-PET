@@ -19,29 +19,12 @@ namespace ProjectPet.Domain.Models
         public Status Status { get; private set; }
         public DateOnly DateOfBirth { get; private set; }
         public DateOnly CreatedOn { get; private set; }
-
-        //private List<PaymentInfo> _paymentMethods = [];
-        //private List<PetPhoto> _photos = [];
-        //public IReadOnlyList<PaymentInfo> PaymentMethods => _paymentMethods;
-        //public IReadOnlyList<PetPhoto> Photos => _photos;
-
         public PhotoList? Photos { get; private set; }
         public PaymentMethodsList? PaymentMethods { get; private set; }
-
-        //public void AddPaymentMethod(PaymentInfo paymentInfo)
-        //{
-        //    //_paymentMethods.Add(paymentInfo);
-        //}
-        //public void AddPetPhoto(PetPhoto petPhoto)
-        //{
-        //    //_photos.Add(petPhoto);
-        //}
 
         public Pet(Guid id) : base(id)
         {
         }
-
-
     }
 
     public record PaymentMethodsList
