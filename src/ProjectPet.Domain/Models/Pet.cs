@@ -5,9 +5,8 @@ namespace ProjectPet.Domain.Models
     public class Pet : Entity
     {
         public string Name { get; private set; } = null!;
-        public string Species { get; private set; } = null!;
+        public AnimalData AnimalData { get; private set; } = null!;
         public string Description { get; private set; } = null!;
-        public string Breed { get; private set; } = null!;
         public string Coat { get; private set; } = null!;
         public HealthInfo HealthInfo { get; private set; } = null!;
         public Address Address { get; private set; } = null!;
