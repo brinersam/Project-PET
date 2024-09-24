@@ -23,12 +23,12 @@ namespace ProjectPet.Domain.Models
 
     public record PaymentMethodsList
     {
-        public List<PaymentInfo> Data { get; private set; } = [];
+        public List<PaymentInfo> Data { get; private set; }
     }
 
     public record PhotoList
     {
-        public List<PetPhoto> Data { get; private set; } = [];
+        public List<PetPhoto> Data { get; private set; }
     }
 
     public enum Status

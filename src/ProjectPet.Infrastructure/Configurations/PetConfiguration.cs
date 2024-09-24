@@ -34,10 +34,19 @@ namespace ProjectPet.Infrastructure.Configurations
                     .ConfigureString(Constants.STRING_LEN_MEDIUM)
                     .HasColumnName("health_info");
 
-                ba.Property(e => e.IsSterilized).IsRequired().HasColumnName("is_sterilized");
-                ba.Property(e => e.IsVaccinated).IsRequired().HasColumnName("is_vaccinated");
-                ba.Property(e => e.Weight).HasColumnName("weight");
-                ba.Property(e => e.Height).HasColumnName("height");
+                ba.Property(e => e.IsSterilized)
+                    .IsRequired()
+                    .HasColumnName("is_sterilized");
+
+                ba.Property(e => e.IsVaccinated)
+                    .IsRequired()
+                    .HasColumnName("is_vaccinated");
+
+                ba.Property(e => e.Weight)
+                    .HasColumnName("weight");
+
+                ba.Property(e => e.Height)
+                    .HasColumnName("height");
             });
 
             builder.ComplexProperty(e => e.Address, ba =>
@@ -46,12 +55,26 @@ namespace ProjectPet.Infrastructure.Configurations
                     .ConfigureString()
                     .HasColumnName("saved_name");
 
-                ba.Property(e => e.Street).IsRequired().HasColumnName("street");
-                ba.Property(e => e.Building).IsRequired().HasColumnName("building");
-                ba.Property(e => e.Block).HasColumnName("block");
-                ba.Property(e => e.Entrance).HasColumnName("entrance");
-                ba.Property(e => e.Floor).HasColumnName("floor");
-                ba.Property(e => e.Apartment).IsRequired().HasColumnName("apartment");
+                ba.Property(e => e.Street)
+                    .IsRequired()
+                    .HasColumnName("street");
+
+                ba.Property(e => e.Building)
+                    .IsRequired()
+                    .HasColumnName("building");
+
+                ba.Property(e => e.Block).
+                    HasColumnName("block");
+
+                ba.Property(e => e.Entrance)
+                    .HasColumnName("entrance");
+
+                ba.Property(e => e.Floor)
+                    .HasColumnName("floor");
+
+                ba.Property(e => e.Apartment)
+                    .IsRequired()
+                    .HasColumnName("apartment");
             });
 
             builder.Property(e => e.PhoneNumber)
@@ -75,8 +98,11 @@ namespace ProjectPet.Infrastructure.Configurations
                         d.ToJson();
                         d.OwnsMany(a => a.Data, i =>
                             {
-                                i.Property(payInfo => payInfo.Title).ConfigureString();
-                                i.Property(payInfo => payInfo.Instructions).ConfigureString(Constants.STRING_LEN_MEDIUM);
+                                i.Property(payInfo => payInfo.Title)
+                                    .ConfigureString();
+
+                                i.Property(payInfo => payInfo.Instructions)
+                                    .ConfigureString(Constants.STRING_LEN_MEDIUM);
                             });
                     });
 
@@ -85,8 +111,11 @@ namespace ProjectPet.Infrastructure.Configurations
                 d.ToJson();
                 d.OwnsMany(a => a.Data, i =>
                 {
-                    i.Property(photo => photo.StoragePath).ConfigureString();
-                    i.Property(photo => photo.IsPrimary).IsRequired();
+                    i.Property(photo => photo.StoragePath)
+                        .ConfigureString();
+
+                    i.Property(photo => photo.IsPrimary)
+                        .IsRequired();
                 });
             });
         }
