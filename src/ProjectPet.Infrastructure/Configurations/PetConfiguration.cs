@@ -18,10 +18,13 @@ namespace ProjectPet.Infrastructure.Configurations
 
             builder.ComplexProperty(e => e.AnimalData, ba =>
             {
-                ba.Property(e => e.SpeciesID).IsRequired().HasColumnName("species_id");
+                ba.Property(x => x.SpeciesID)
+                    .HasConversion(
+                        push => push.Value,
+                        pull => SpeciesID.New(pull));
 
                 ba.Property(e => e.BreedID).IsRequired();
-            });
+            }); 
 
             builder.Property(e => e.Description)
                 .ConfigureString(Constants.STRING_LEN_MEDIUM);

@@ -11,14 +11,20 @@ namespace ProjectPet.Infrastructure.Configurations
             builder.ToTable("species");
 
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id)
-                .HasConversion(
-                push => push.Value,
-                pull => SpeciesID.New(pull));
+
+            builder.ComplexProperty(x => x.SpeciesId, ba =>
+            {
+                ba.Property(s => s.Value)
+                    .IsRequired()
+                    .HasColumnName("species_id");
+            });
+
+            builder.Property(s => s.Name)
+                .ConfigureString();
 
             builder.HasMany(x => x.RelatedBreeds)
                 .WithOne()
-                .HasForeignKey("species_id")
+                .HasForeignKey("breed_id")
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }
