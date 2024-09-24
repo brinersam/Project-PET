@@ -80,8 +80,16 @@ namespace ProjectPet.Infrastructure.Configurations
                     .HasColumnName("apartment");
             });
 
-            builder.Property(e => e.PhoneNumber)
-                .ConfigureString();
+            builder.ComplexProperty(e => e.PhoneNumber, ba =>
+            {
+                ba.Property(e => e.Number)
+                    .ConfigureString();
+
+                ba.Property(e => e.AreaCode)
+                    .ConfigureString();
+
+            });
+                
 
             builder.Property(e => e.Status)
                 .IsRequired()
