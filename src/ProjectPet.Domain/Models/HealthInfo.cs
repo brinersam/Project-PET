@@ -8,8 +8,12 @@
         public float Weight { get; }
         public float Height { get; }
 
-        protected HealthInfo(string health, bool isSterilized,
-            bool isVaccinated, float weight, float height)
+        protected HealthInfo(
+            string health,
+            bool isSterilized,
+            bool isVaccinated,
+            float weight,
+            float height)
         {
             Health = health;
             IsSterilized = isSterilized;
@@ -18,9 +22,12 @@
             Height = height;
         }
 
-        public static HealthInfo Create(string health, // TODO use results
-            bool isSterilized, bool isVaccinated,
-            float weight, float height)
+        public static HealthInfo Create(
+            string health, // TODO use results
+            bool isSterilized,
+            bool isVaccinated,
+            float weight,
+            float height)
         {
             if (String.IsNullOrEmpty(health))
                 throw new ArgumentNullException("Health argument should not be empty"); 
@@ -28,8 +35,10 @@
             return new HealthInfo
             (
                 health,
-                isSterilized,isVaccinated,
-                weight, height
+                isSterilized,
+                isVaccinated,
+                weight,
+                height
             );
         }
     }

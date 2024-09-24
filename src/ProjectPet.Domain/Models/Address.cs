@@ -10,9 +10,14 @@
         public int? Floor { get; }
         public int Apartment { get; }
 
-        protected Address(string name, string street,
-            string building, string? block,
-            int? entrance, int? floor, int apartment)
+        protected Address(
+            string name,
+            string street,
+            string building,
+            string? block,
+            int? entrance,
+            int? floor,
+            int apartment)
         {
             Name = name;    
             Street = street;
@@ -24,9 +29,13 @@
         }
 
         public static Address Create( // TODO change return to result, replace returns and raises to result
-            string name, string street,
-            string building, string? block,
-            int? entrance, int? floor, int apartment)
+            string name,
+            string street,
+            string building,
+            string? block,
+            int? entrance,
+            int? floor,
+            int apartment)
         {
             if (String.IsNullOrEmpty(name))
                 throw new ArgumentNullException("Name argument should not be empty"); 
@@ -39,9 +48,13 @@
 
             return new Address
             (
-                name, street,
-                building,block,
-                entrance,floor,apartment
+                name,
+                street,
+                building,
+                block,
+                entrance,
+                floor,
+                apartment
             );
         }
 
