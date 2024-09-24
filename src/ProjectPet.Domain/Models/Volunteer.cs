@@ -17,7 +17,7 @@ namespace ProjectPet.Domain.Models
 
         public Volunteer(Guid id) : base(id){}
 
-        public Volunteer(
+        private Volunteer(
             Guid id,
             string fullName,
             string email,
