@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddScoped<IVolunteerRepository,VolunteerRepository>();
+builder.Services.AddScoped<CreateVolunteerHandler>();
 
 var app = builder.Build();
 

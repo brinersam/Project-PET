@@ -16,11 +16,17 @@ namespace ProjectPet.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] CreateVolunteerRequest dto)
+        public async Task<ActionResult<Guid>> Post([FromServices] CreateVolunteerHandler service, [FromBody] CreateVolunteerRequest dto)
         {
-            var service = new CreateVolunteerHandler(_volunteerRepository);
-
-            var result = await service.HandleAsync(dto);
+            ActionResult<Guid> result;
+            try // TODO refactor to use Result
+            {
+                result = await service.HandleAsync(dto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + ex.StackTrace);
+            }
 
             return Ok(result);
         }
