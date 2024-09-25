@@ -1,7 +1,9 @@
-﻿using ProjectPet.Domain.Models.DDD;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Models.DDD;
+using ProjectPet.Domain.Shared;
 namespace ProjectPet.Domain.Models
 {
-    public class Volunteer : Entity
+    public class Volunteer : EntityBase
     {
         public string FullName { get; private set; } = null!;
         public string Email { get; private set; } = null!;

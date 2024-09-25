@@ -2,7 +2,7 @@
 
 namespace ProjectPet.Domain.Models
 {
-    public class Pet : Entity
+    public class Pet : EntityBase
     {
         public string Name { get; private set; } = null!;
         public AnimalData AnimalData { get; private set; } = null!;

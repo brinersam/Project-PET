@@ -2,7 +2,7 @@
 
 namespace ProjectPet.Domain.Models
 {
-    public class Breed : Entity
+    public class Breed : EntityBase
     {
         public string Value { get; private set; } = null!;
         public Breed(Guid id) : base(id) { } //efcore
