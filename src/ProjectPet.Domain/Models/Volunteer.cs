@@ -38,7 +38,7 @@ namespace ProjectPet.Domain.Models
             SocialNetworks = new() { Data = socialNetworks.ToList() };
         }
 
-        public static Volunteer Create
+        public static Result<Volunteer,Error> Create
             (
             Guid id,
             string fullName,
@@ -51,16 +51,16 @@ namespace ProjectPet.Domain.Models
             IEnumerable<SocialNetwork> socialNetworks)
         {
             if (id.Equals(Guid.Empty))
-                throw new ArgumentNullException("Argument id can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(id,nameof(id));
 
             if (String.IsNullOrWhiteSpace(fullName))
-                throw new ArgumentNullException("Argument fullName can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(fullName,nameof(fullName));
 
             if (String.IsNullOrWhiteSpace(email))
-                throw new ArgumentNullException("Argument email can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(email, nameof(email));
 
             if (String.IsNullOrWhiteSpace(description))
-                throw new ArgumentNullException("Argument description can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(description, nameof(description));
 
             return new Volunteer
                 (

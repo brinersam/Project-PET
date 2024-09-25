@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Shared;
+using System.Text.RegularExpressions;
 
 namespace ProjectPet.Domain.Models
 {
@@ -9,20 +11,19 @@ namespace ProjectPet.Domain.Models
         public string AreaCode { get; } = null!;
         public string Number { get; } = null!;
 
-
         protected PhoneNumber(string number, string areaCode)
         {
             Number = number;
             AreaCode = areaCode;
         }
 
-        public static PhoneNumber Create(string number, string areaCode) // TODO change to result
+        public static Result<PhoneNumber, Error> Create(string number, string areaCode)
         {
             if (!Regex.IsMatch(number, REGEX))
-                throw new ArgumentException("Phone number must be 10 characters long, with optional - inbetween number groups");
+                return Error.Validation("value.is.invalid", "Phone number must be 10 characters long, with optional - inbetween number groups");
 
             if (String.IsNullOrWhiteSpace(areaCode))
-                throw new ArgumentNullException("Argument areacode can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(areaCode, nameof(areaCode));
 
             return new PhoneNumber(number, areaCode);
         }

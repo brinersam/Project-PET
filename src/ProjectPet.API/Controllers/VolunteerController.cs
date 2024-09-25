@@ -17,17 +17,13 @@ namespace ProjectPet.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> Post([FromServices] CreateVolunteerHandler service, [FromBody] CreateVolunteerRequest dto)
         {
-            ActionResult<Guid> result;
-            try // TODO refactor to use Result
-            {
-                result = await service.HandleAsync(dto);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message + ex.StackTrace);
-            }
+            var result = await service.HandleAsync(dto);
 
-            return Ok(result);
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
         }
     }
 }
