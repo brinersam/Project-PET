@@ -27,7 +27,11 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
                 throw new Exception("Error when creating number!", ex);
             }
 
-            Volunteer result = Volunteer.Create(
+
+            Volunteer result;
+            try //refactor to use result later TODO
+            {
+                result = Volunteer.Create(
                 Guid.NewGuid(),
                 request.FullName,
                 request.Description,
@@ -37,6 +41,12 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
                 request.OwnedPets,
                 request.PaymentMethods,
                 request.SocialNetworks);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when creating volunteer!", ex);
+            }
+
 
             await _volunteerRepository.AddAsync(result, cancellationToken);
 
