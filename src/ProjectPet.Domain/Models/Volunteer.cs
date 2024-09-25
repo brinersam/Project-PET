@@ -1,6 +1,4 @@
 ﻿using ProjectPet.Domain.Models.DDD;
-using System.Collections.Generic;
-
 namespace ProjectPet.Domain.Models
 {
     public class Volunteer : Entity
@@ -15,14 +13,14 @@ namespace ProjectPet.Domain.Models
         public PaymentMethodsList? PaymentMethods { get; private set; }
         public SocialNetworkList? SocialNetworks { get; private set; }
 
-        public Volunteer(Guid id) : base(id){}
+        public Volunteer(Guid id) : base(id) { }
 
         private Volunteer(
             Guid id,
             string fullName,
             string email,
             string description,
-            int yOExperience, 
+            int yOExperience,
             PhoneNumber phoneNumber,
             IEnumerable<Pet> ownedPets,
             IEnumerable<PaymentInfo> paymentMethods,
@@ -82,6 +80,6 @@ namespace ProjectPet.Domain.Models
     }
     public record SocialNetworkList
     {
-        public List<SocialNetwork> Data { get;  set; }
+        public List<SocialNetwork> Data { get; set; }
     }
 }

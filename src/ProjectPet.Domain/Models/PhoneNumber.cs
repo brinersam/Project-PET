@@ -24,7 +24,7 @@ namespace ProjectPet.Domain.Models
             if (String.IsNullOrWhiteSpace(areaCode))
                 throw new ArgumentNullException("Argument areacode can not be empty!");
 
-            return new PhoneNumber(number,areaCode);
+            return new PhoneNumber(number, areaCode);
         }
     }
 }

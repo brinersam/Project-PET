@@ -5,7 +5,7 @@ namespace ProjectPet.Domain.Models
     public class Breed : Entity
     {
         public string Value { get; private set; } = null!;
-        public Breed(Guid id) : base(id) {} //efcore
+        public Breed(Guid id) : base(id) { } //efcore
         protected Breed(Guid id, string value) : base(id)
         {
             Value = value;

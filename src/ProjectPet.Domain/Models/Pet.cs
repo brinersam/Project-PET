@@ -1,6 +1,4 @@
 ﻿using ProjectPet.Domain.Models.DDD;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace ProjectPet.Domain.Models
 {
@@ -18,10 +16,10 @@ namespace ProjectPet.Domain.Models
         public DateOnly CreatedOn { get; private set; }
         public PhotoList? Photos { get; private set; }
         public PaymentMethodsList? PaymentMethods { get; private set; }
-        public Pet() : base(Guid.Empty) {} //efcore
+        public Pet() : base(Guid.Empty) { } //efcore
 
         public Pet(
-            Guid id, 
+            Guid id,
             string name,
             AnimalData animalData,
             string description,
@@ -45,7 +43,7 @@ namespace ProjectPet.Domain.Models
             Status = status;
             DateOfBirth = dateOfBirth;
             CreatedOn = createdOn;
-            Photos = new() {Data = photos.ToList() };
+            Photos = new() { Data = photos.ToList() };
             PaymentMethods = new() { Data = paymentMethods.ToList() };
         }
 
@@ -97,7 +95,7 @@ namespace ProjectPet.Domain.Models
 
     public record PhotoList
     {
-        public List<PetPhoto> Data { get;  set; }
+        public List<PetPhoto> Data { get; set; }
     }
 
     public enum Status

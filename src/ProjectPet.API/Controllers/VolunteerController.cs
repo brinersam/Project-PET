@@ -15,9 +15,7 @@ namespace ProjectPet.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Post(
-            [FromServices] CreateVolunteerHandler service,
-            [FromBody] CreateVolunteerRequest dto)
+        public async Task<ActionResult<Guid>> Post([FromServices] CreateVolunteerHandler service, [FromBody] CreateVolunteerRequest dto)
         {
             ActionResult<Guid> result;
             try // TODO refactor to use Result
