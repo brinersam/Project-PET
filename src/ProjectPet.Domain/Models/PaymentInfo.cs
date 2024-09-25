@@ -1,9 +1,13 @@
-﻿namespace ProjectPet.Domain.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ProjectPet.Domain.Models
 {
     public record PaymentInfo
     {
         public string Title { get; } = null!;
         public string Instructions { get; } = null!;
+
+        [JsonConstructor]
         protected PaymentInfo(string title, string instructions)
         {
             Title = title;

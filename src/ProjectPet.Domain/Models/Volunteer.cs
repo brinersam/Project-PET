@@ -24,7 +24,7 @@ namespace ProjectPet.Domain.Models
             string description,
             int yOExperience, 
             PhoneNumber phoneNumber,
-            IEnumerable<Pet> ownedPets, 
+            IEnumerable<Pet> ownedPets,
             IEnumerable<PaymentInfo> paymentMethods,
             IEnumerable<SocialNetwork> socialNetworks) : base(id)
         {
