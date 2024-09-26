@@ -1,4 +1,6 @@
+using ProjectPet.Application.UseCases.CreateVolunteer;
 using ProjectPet.Infrastructure;
+using ProjectPet.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddScoped<IVolunteerRepository,VolunteerRepository>();
+builder.Services.AddScoped<CreateVolunteerHandler>();
 
 var app = builder.Build();
 

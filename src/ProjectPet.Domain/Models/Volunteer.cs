@@ -17,14 +17,14 @@ namespace ProjectPet.Domain.Models
 
         public Volunteer(Guid id) : base(id){}
 
-        public Volunteer(
+        private Volunteer(
             Guid id,
             string fullName,
             string email,
             string description,
             int yOExperience, 
             PhoneNumber phoneNumber,
-            IEnumerable<Pet> ownedPets, 
+            IEnumerable<Pet> ownedPets,
             IEnumerable<PaymentInfo> paymentMethods,
             IEnumerable<SocialNetwork> socialNetworks) : base(id)
         {
@@ -34,8 +34,8 @@ namespace ProjectPet.Domain.Models
             YOExperience = yOExperience;
             PhoneNumber = phoneNumber;
             _ownedPets = ownedPets.ToList();
-            PaymentMethods = new(paymentMethods);
-            SocialNetworks = new SocialNetworkList (socialNetworks);
+            PaymentMethods = new() { Data = paymentMethods.ToList() };
+            SocialNetworks = new() { Data = socialNetworks.ToList() };
         }
 
         public static Volunteer Create
@@ -82,11 +82,6 @@ namespace ProjectPet.Domain.Models
     }
     public record SocialNetworkList
     {
-        public List<SocialNetwork> Data { get; private set; }
-        public SocialNetworkList() { } //efcore
-        public SocialNetworkList(IEnumerable<SocialNetwork> networks)
-        {
-            Data = networks.ToList();
-        }
+        public List<SocialNetwork> Data { get;  set; }
     }
 }

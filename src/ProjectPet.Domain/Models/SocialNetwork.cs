@@ -1,10 +1,13 @@
-﻿namespace ProjectPet.Domain.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ProjectPet.Domain.Models
 {
     public record SocialNetwork
     {
         public string? Name { get; }
         public string Link { get; } = null!;
 
+        [JsonConstructor]
         protected SocialNetwork(string link, string? name)
         {
             Name = name;

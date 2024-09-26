@@ -9,6 +9,7 @@ namespace ProjectPet.Infrastructure
     {
         private const string DATABASE = "Database";
         public DbSet<Species> Species => Set<Species>();
+        public DbSet<Volunteer> Volunteers => Set<Volunteer>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(configuration.GetConnectionString(DATABASE));
