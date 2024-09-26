@@ -1,23 +1,35 @@
-﻿using System.Text.Json.Serialization;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Shared;
+using System.Text.Json.Serialization;
 
 namespace ProjectPet.Domain.Models
 {
     public record SocialNetwork
     {
-        public string? Name { get; }
+        public string Name { get; } = null!;
         public string Link { get; } = null!;
 
         [JsonConstructor]
-        protected SocialNetwork(string link, string? name)
+        private SocialNetwork(string link, string name)
         {
             Name = name;
             Link = link;
         }
 
-        public static SocialNetwork Create(string link, string? name) // TODO return result
+        public static Result<SocialNetwork,Error> Create(string link, string name)
         {
-            if (String.IsNullOrWhiteSpace(link))
-                throw new ArgumentNullException("Link argument should not be empty"); 
+            var validator = Validator.ValidatorString();
+
+            var result = validator.Check(name, nameof(name));
+            if (result.IsFailure)
+                return result.Error;
+
+            result = validator
+                .SetMaxLen(Constants.STRING_LEN_MEDIUM)
+                .Check(link, nameof(link));
+
+            if (result.IsFailure)
+                return result.Error;
 
             return new SocialNetwork(link, name);
         }

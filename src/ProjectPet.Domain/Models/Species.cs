@@ -1,4 +1,6 @@
-﻿using ProjectPet.Domain.Models.DDD;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Models.DDD;
+using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Domain.Models
 {
@@ -9,23 +11,31 @@ namespace ProjectPet.Domain.Models
         private List<Breed> _relatedBreeds;
         public IReadOnlyList<Breed> RelatedBreeds => _relatedBreeds;
         public Species(Guid id) : base(id) { } //efcore
-        protected Species(Guid id, SpeciesID speciesId, string name, IEnumerable<Breed> breeds) : base(id)
+        private Species(Guid id, SpeciesID speciesId, string name, IEnumerable<Breed> breeds) : base(id)
         {
             SpeciesId = speciesId;
             Name = name;
             _relatedBreeds = breeds.ToList();
         }
 
-        public static Species Create(Guid id, SpeciesID speciesId, string name, IEnumerable<Breed> breeds)
+        public static Result<Species,Error> Create(Guid id, SpeciesID speciesId, string name, IEnumerable<Breed> breeds)
         {
-            if (id.Equals(Guid.Empty))
-                throw new ArgumentNullException("Argument id can not be empty!");
+            var validatorID = Validator.ValidatorNull<Guid>();
 
-            if (speciesId.Equals(SpeciesID.Empty()))
-                throw new ArgumentNullException("Argument speciesId can not be empty!");
+            var resultID = validatorID.Check(id, nameof(id));
+            if (resultID.IsFailure)
+                return resultID.Error;
 
-            if (String.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("Argument name can not be empty!");
+            resultID = validatorID.Check(speciesId.Value, nameof(speciesId));
+            if (resultID.IsFailure)
+                return resultID.Error;
+
+            var result = Validator
+                .ValidatorString()
+                .Check(name, nameof(name));
+
+            if (result.IsFailure)
+                return result.Error;
 
             return new Species(id, speciesId, name, breeds);
         }

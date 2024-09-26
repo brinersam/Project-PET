@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Shared;
+using System.Text.Json.Serialization;
 
 namespace ProjectPet.Domain.Models
 {
@@ -8,19 +10,28 @@ namespace ProjectPet.Domain.Models
         public string Instructions { get; } = null!;
 
         [JsonConstructor]
-        protected PaymentInfo(string title, string instructions)
+        private PaymentInfo(string title, string instructions)
         {
             Title = title;
             Instructions = instructions;
         }
 
-        public static PaymentInfo Create(string title, string instructions) // TODO change to result
+        public static Result<PaymentInfo,Error> Create(string title, string instructions)
         {
-            if (String.IsNullOrWhiteSpace(title)) 
-                throw new ArgumentNullException("Title should not be empty"); // TODO return result
+            var validator = Validator.ValidatorString();
 
-            if (String.IsNullOrWhiteSpace(instructions))
-                throw new ArgumentNullException("instructions should not be empty"); // TODO return result
+            var result = validator
+                .Check(title, nameof(title));
+
+            if (result.IsFailure)
+                return result.Error;
+
+            result = validator
+                .SetMaxLen(Constants.STRING_LEN_MEDIUM)
+                .Check(instructions, nameof(instructions));
+
+            if (result.IsFailure)
+                return result.Error;
 
             return new PaymentInfo(title, instructions);
         }

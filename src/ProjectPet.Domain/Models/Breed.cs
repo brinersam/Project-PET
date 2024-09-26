@@ -1,4 +1,6 @@
-﻿using ProjectPet.Domain.Models.DDD;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Models.DDD;
+using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Domain.Models
 {
@@ -6,18 +8,21 @@ namespace ProjectPet.Domain.Models
     {
         public string Value { get; private set; } = null!;
         public Breed(Guid id) : base(id) { } //efcore
-        protected Breed(Guid id, string value) : base(id)
+        private Breed(Guid id, string value) : base(id)
         {
             Value = value;
         }
 
-        public static Breed Create(Guid id, string value)
+        public static Result<Breed,Error> Create(Guid id, string value)
         {
-            if (id.Equals(Guid.Empty))
-                throw new ArgumentNullException("Argument id can not be empty!");
+            var strValidator = Validator.ValidatorString();
 
-            if (String.IsNullOrWhiteSpace(value))
-                throw new ArgumentNullException("Argument value can not be empty!");
+            if (id.Equals(Guid.Empty))
+                return Errors.General.ValueIsEmptyOrNull(id,nameof(id));
+
+            var result = strValidator.Check(value, nameof(value));
+            if (result.IsFailure)
+                return result.Error;
 
             return new Breed(id, value);
         }

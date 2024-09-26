@@ -1,4 +1,7 @@
-﻿namespace ProjectPet.Domain.Models
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Shared;
+
+namespace ProjectPet.Domain.Models
 {
     public record Address
     {
@@ -10,7 +13,7 @@
         public int? Floor { get; }
         public int Apartment { get; }
 
-        protected Address(
+        private Address(
             string name,
             string street,
             string building,
@@ -28,7 +31,7 @@
             Apartment = apartment;
         }
 
-        public static Address Create( // TODO change return to result, replace returns and raises to result
+        public static Result<Address, Error> Create(
             string name,
             string street,
             string building,
@@ -37,14 +40,20 @@
             int? floor,
             int apartment)
         {
-            if (String.IsNullOrEmpty(name))
-                throw new ArgumentNullException("Name argument should not be empty"); 
-                                                                                        
-            if (String.IsNullOrEmpty(street))
-                throw new ArgumentNullException("Street argument should not be empty");
 
-            if (String.IsNullOrEmpty(building))
-                throw new ArgumentNullException("Building argument should not be empty");
+            var strValidator = Validator.ValidatorString();
+
+            var result = strValidator.Check(name,nameof(name));
+            if (result.IsFailure)
+                return result.Error;
+
+            result = strValidator.Check(street, nameof(street));
+            if (result.IsFailure)
+                return result.Error;
+
+            result = strValidator.Check(building, nameof(building));
+            if (result.IsFailure)
+                return result.Error;
 
             return new Address
             (

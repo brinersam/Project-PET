@@ -1,4 +1,6 @@
-﻿using ProjectPet.Domain.Models.DDD;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Models.DDD;
+using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Domain.Models
 {
@@ -18,7 +20,7 @@ namespace ProjectPet.Domain.Models
         public PaymentMethodsList? PaymentMethods { get; private set; }
         public Pet() : base(Guid.Empty) { } //efcore
 
-        public Pet(
+        private Pet(
             Guid id,
             string name,
             AnimalData animalData,
@@ -47,7 +49,7 @@ namespace ProjectPet.Domain.Models
             PaymentMethods = new() { Data = paymentMethods.ToList() };
         }
 
-        public static Pet Create(
+        public static Result<Pet,Error> Create(
             Guid id,
             string name,
             AnimalData animalData,
@@ -62,14 +64,25 @@ namespace ProjectPet.Domain.Models
             IEnumerable<PetPhoto> photos,
             IEnumerable<PaymentInfo> paymentMethods)
         {
-            if (id.Equals(Guid.Empty))
-                throw new ArgumentNullException("Argument id can not be empty!");
+            var resultID = Validator.ValidatorNull<Guid>().Check(id,nameof(id));
+            if (resultID.IsFailure)
+                return resultID.Error;
 
-            if (String.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("Argument name can not be empty!");
+            var validatorStr = Validator.ValidatorString();
 
-            if (String.IsNullOrWhiteSpace(description))
-                throw new ArgumentNullException("Argument description can not be empty!");
+            var result = validatorStr.Check(name,nameof(name));
+            if (result.IsFailure)
+                return result.Error;
+
+            result = validatorStr
+                .SetMaxLen(Constants.STRING_LEN_MEDIUM)
+                .Check(description, nameof(description));
+
+            if (result.IsFailure)
+                return result.Error;
+
+            if (status == Status.NotSet)
+                return Error.Validation("value.is.invalid", "Pet status must be set!");
 
             return new Pet(
                 id,
