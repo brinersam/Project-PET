@@ -1,9 +1,9 @@
-﻿using ProjectPet.Domain.Models.DDD;
-using System.Collections.Generic;
-
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Models.DDD;
+using ProjectPet.Domain.Shared;
 namespace ProjectPet.Domain.Models
 {
-    public class Volunteer : Entity
+    public class Volunteer : EntityBase
     {
         public string FullName { get; private set; } = null!;
         public string Email { get; private set; } = null!;
@@ -15,14 +15,14 @@ namespace ProjectPet.Domain.Models
         public PaymentMethodsList? PaymentMethods { get; private set; }
         public SocialNetworkList? SocialNetworks { get; private set; }
 
-        public Volunteer(Guid id) : base(id){}
+        public Volunteer(Guid id) : base(id) { }
 
         private Volunteer(
             Guid id,
             string fullName,
             string email,
             string description,
-            int yOExperience, 
+            int yOExperience,
             PhoneNumber phoneNumber,
             IEnumerable<Pet> ownedPets,
             IEnumerable<PaymentInfo> paymentMethods,
@@ -38,7 +38,7 @@ namespace ProjectPet.Domain.Models
             SocialNetworks = new() { Data = socialNetworks.ToList() };
         }
 
-        public static Volunteer Create
+        public static Result<Volunteer,Error> Create
             (
             Guid id,
             string fullName,
@@ -51,16 +51,16 @@ namespace ProjectPet.Domain.Models
             IEnumerable<SocialNetwork> socialNetworks)
         {
             if (id.Equals(Guid.Empty))
-                throw new ArgumentNullException("Argument id can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(id,nameof(id));
 
             if (String.IsNullOrWhiteSpace(fullName))
-                throw new ArgumentNullException("Argument fullName can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(fullName,nameof(fullName));
 
             if (String.IsNullOrWhiteSpace(email))
-                throw new ArgumentNullException("Argument email can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(email, nameof(email));
 
             if (String.IsNullOrWhiteSpace(description))
-                throw new ArgumentNullException("Argument description can not be empty!");
+                return Errors.General.ValueIsEmptyOrNull(description, nameof(description));
 
             return new Volunteer
                 (
@@ -82,6 +82,6 @@ namespace ProjectPet.Domain.Models
     }
     public record SocialNetworkList
     {
-        public List<SocialNetwork> Data { get;  set; }
+        public List<SocialNetwork> Data { get; set; }
     }
 }

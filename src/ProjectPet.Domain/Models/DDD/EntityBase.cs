@@ -1,15 +1,15 @@
 ﻿namespace ProjectPet.Domain.Models.DDD
 {
-    public abstract class Entity
+    public abstract class EntityBase
     {
         public Guid Id { get; private set; } = Guid.Empty;
-        protected Entity(Guid id)
+        protected EntityBase(Guid id)
         {
             Id = id;
         }
         public override bool Equals(object? obj)
         {
-            if (obj is not Entity other)
+            if (obj is not EntityBase other)
                 return false;
 
             if (ReferenceEquals(this, other) == false)
@@ -29,7 +29,7 @@
             return (GetType().FullName + Id).GetHashCode();
         }
 
-        public static bool operator ==(Entity a, Entity b)
+        public static bool operator ==(EntityBase a, EntityBase b)
         {
             if (a is null && b is null)
                 return true;
@@ -39,7 +39,7 @@
 
             return a.Equals(b);
         }
-        public static bool operator !=(Entity a, Entity b)
+        public static bool operator !=(EntityBase a, EntityBase b)
         {
             return !(a == b);
         }

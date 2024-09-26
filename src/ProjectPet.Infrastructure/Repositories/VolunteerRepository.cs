@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
 using ProjectPet.Application.UseCases.CreateVolunteer;
 using ProjectPet.Domain.Models;
+using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Infrastructure.Repositories
 {
@@ -13,23 +15,22 @@ namespace ProjectPet.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Guid> AddAsync(Volunteer volunteer, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> AddAsync(Volunteer volunteer, CancellationToken cancellationToken = default)
         {
             await _dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
-
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return volunteer.Id; // TODO result
+            return volunteer.Id;
         }
 
-        public async Task<Volunteer> GetAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Result<Volunteer, Error>> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var result = await _dbContext.Volunteers
                 .Include(x => x.OwnedPets)
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-            if (result == null || result.Equals(Guid.Empty))
-                throw new ArgumentException("Id not found"); // TODO refactor to result
+            if (result is null)
+                return Errors.General.NotFound(typeof(Volunteer), id);
 
             return result;
         }

@@ -1,4 +1,6 @@
-﻿using ProjectPet.Domain.Models;
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Models;
+using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Application.UseCases.CreateVolunteer
 {
@@ -11,46 +13,38 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
             _volunteerRepository = volunteerRepository;
         }
 
-        public async Task<Guid> HandleAsync( 
-            CreateVolunteerRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid,Error>> HandleAsync(
+            CreateVolunteerRequest request,
+            CancellationToken cancellationToken = default)
         {
+            var phoneNumberRes = PhoneNumber.Create(
+                request.Phonenumber,
+                request.PhonenumberAreaCode);
 
-            // validation goes here too
+            if (phoneNumberRes.IsFailure)
+                return phoneNumberRes.Error;
 
-            PhoneNumber phoneNumber; //refactor to use result later TODO
-            try 
-            {
-                phoneNumber = PhoneNumber.Create(request.Phonenumber, request.PhonenumberAreaCode);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error when creating number!", ex);
-            }
-
-
-            Volunteer result;
-            try //refactor to use result later TODO
-            {
-                result = Volunteer.Create(
+            var volunteerRes = Volunteer.Create(
                 Guid.NewGuid(),
                 request.FullName,
                 request.Description,
                 request.Email,
                 request.YOExperience,
-                phoneNumber,
+                phoneNumberRes.Value,
                 request.OwnedPets,
                 request.PaymentMethods,
                 request.SocialNetworks);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error when creating volunteer!", ex);
-            }
 
+            if (volunteerRes.IsFailure)
+                return volunteerRes.Error;
 
-            await _volunteerRepository.AddAsync(result, cancellationToken);
+            var addRes = await _volunteerRepository.AddAsync
+                                    (volunteerRes.Value, cancellationToken);
 
-            return result.Id; 
+            if (addRes.IsFailure)
+                return addRes.Error;
+
+            return volunteerRes.Value.Id; 
         }
     }
 }
