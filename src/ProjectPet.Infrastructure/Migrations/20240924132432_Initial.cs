@@ -12,6 +12,19 @@ namespace ProjectPet.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "species",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    species_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_species", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "volunteers",
                 columns: table => new
                 {
@@ -31,14 +44,30 @@ namespace ProjectPet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "breeds",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    value = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    breed_id = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_breeds", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_breeds_species_breed_id",
+                        column: x => x.breed_id,
+                        principalTable: "species",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "pets",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    species = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    breed = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     coat = table.Column<string>(type: "text", nullable: false),
                     phone_number = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
@@ -52,6 +81,8 @@ namespace ProjectPet.Infrastructure.Migrations
                     floor = table.Column<int>(type: "integer", nullable: true),
                     saved_name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     street = table.Column<string>(type: "text", nullable: false),
+                    animal_data_breed_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    animal_data_species_id = table.Column<Guid>(type: "uuid", nullable: false),
                     health_info = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     height = table.Column<float>(type: "real", nullable: false),
                     is_sterilized = table.Column<bool>(type: "boolean", nullable: false),
@@ -71,6 +102,11 @@ namespace ProjectPet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_breeds_breed_id",
+                table: "breeds",
+                column: "breed_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_pets_pet_id",
                 table: "pets",
                 column: "pet_id");
@@ -80,7 +116,13 @@ namespace ProjectPet.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "breeds");
+
+            migrationBuilder.DropTable(
                 name: "pets");
+
+            migrationBuilder.DropTable(
+                name: "species");
 
             migrationBuilder.DropTable(
                 name: "volunteers");

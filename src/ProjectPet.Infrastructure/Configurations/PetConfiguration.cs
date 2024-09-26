@@ -16,14 +16,18 @@ namespace ProjectPet.Infrastructure.Configurations
             builder.Property(e => e.Name)
                 .ConfigureString();
 
-            builder.Property(e => e.Species)
-                .ConfigureString();
+            builder.ComplexProperty(e => e.AnimalData, ba =>
+            {
+                ba.Property(x => x.SpeciesID)
+                    .HasConversion(
+                        push => push.Value,
+                        pull => SpeciesID.New(pull));
+
+                ba.Property(e => e.BreedID).IsRequired();
+            }); 
 
             builder.Property(e => e.Description)
                 .ConfigureString(Constants.STRING_LEN_MEDIUM);
-
-            builder.Property(e => e.Breed)
-                .ConfigureString();
 
             builder.Property(e => e.Coat);
 
@@ -76,8 +80,16 @@ namespace ProjectPet.Infrastructure.Configurations
                     .HasColumnName("apartment");
             });
 
-            builder.Property(e => e.PhoneNumber)
-                .ConfigureString();
+            builder.ComplexProperty(e => e.PhoneNumber, ba =>
+            {
+                ba.Property(e => e.Number)
+                    .ConfigureString();
+
+                ba.Property(e => e.AreaCode)
+                    .ConfigureString();
+
+            });
+                
 
             builder.Property(e => e.Status)
                 .IsRequired()

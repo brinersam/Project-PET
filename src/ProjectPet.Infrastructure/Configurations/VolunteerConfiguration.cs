@@ -22,9 +22,6 @@ namespace ProjectPet.Infrastructure.Configurations
             builder.Property(e => e.Description)
                 .ConfigureString(Constants.STRING_LEN_MEDIUM);
 
-            builder.Property(e => e.Email)
-                .ConfigureString(Constants.STRING_LEN_MEDIUM);
-
             builder.Property(e => e.YOExperience);
 
             builder.ComplexProperty(e => e.PhoneNumber, ba =>
