@@ -27,24 +27,57 @@ namespace ProjectPet.Infrastructure.Configurations
 
             builder.Property(e => e.Coat);
 
-            builder.Property(e => e.Health)
-                .ConfigureString(Constants.STRING_LEN_MEDIUM);
+            builder.ComplexProperty(e => e.HealthInfo, ba =>
+            {
+                ba.Property(e => e.Health)
+                    .ConfigureString(Constants.STRING_LEN_MEDIUM)
+                    .HasColumnName("health_info");
 
-            builder.Property(e => e.Address)
-                .ConfigureString(Constants.STRING_LEN_MEDIUM);
+                ba.Property(e => e.IsSterilized)
+                    .IsRequired()
+                    .HasColumnName("is_sterilized");
 
-            builder.Property(e => e.Weight);
+                ba.Property(e => e.IsVaccinated)
+                    .IsRequired()
+                    .HasColumnName("is_vaccinated");
 
-            builder.Property(e => e.Height);
+                ba.Property(e => e.Weight)
+                    .HasColumnName("weight");
+
+                ba.Property(e => e.Height)
+                    .HasColumnName("height");
+            });
+
+            builder.ComplexProperty(e => e.Address, ba =>
+            {
+                ba.Property(e => e.Name)
+                    .ConfigureString()
+                    .HasColumnName("saved_name");
+
+                ba.Property(e => e.Street)
+                    .IsRequired()
+                    .HasColumnName("street");
+
+                ba.Property(e => e.Building)
+                    .IsRequired()
+                    .HasColumnName("building");
+
+                ba.Property(e => e.Block).
+                    HasColumnName("block");
+
+                ba.Property(e => e.Entrance)
+                    .HasColumnName("entrance");
+
+                ba.Property(e => e.Floor)
+                    .HasColumnName("floor");
+
+                ba.Property(e => e.Apartment)
+                    .IsRequired()
+                    .HasColumnName("apartment");
+            });
 
             builder.Property(e => e.PhoneNumber)
                 .ConfigureString();
-
-            builder.Property(e => e.IsSterilized)
-                .IsRequired();
-
-            builder.Property(e => e.IsVaccinated)
-                .IsRequired();
 
             builder.Property(e => e.Status)
                 .IsRequired()
@@ -64,8 +97,11 @@ namespace ProjectPet.Infrastructure.Configurations
                         d.ToJson();
                         d.OwnsMany(a => a.Data, i =>
                             {
-                                i.Property(payInfo => payInfo.Title).ConfigureString();
-                                i.Property(payInfo => payInfo.Instructions).ConfigureString(Constants.STRING_LEN_MEDIUM);
+                                i.Property(payInfo => payInfo.Title)
+                                    .ConfigureString();
+
+                                i.Property(payInfo => payInfo.Instructions)
+                                    .ConfigureString(Constants.STRING_LEN_MEDIUM);
                             });
                     });
 
@@ -74,8 +110,11 @@ namespace ProjectPet.Infrastructure.Configurations
                 d.ToJson();
                 d.OwnsMany(a => a.Data, i =>
                 {
-                    i.Property(photo => photo.StoragePath).ConfigureString();
-                    i.Property(photo => photo.IsPrimary).IsRequired();
+                    i.Property(photo => photo.StoragePath)
+                        .ConfigureString();
+
+                    i.Property(photo => photo.IsPrimary)
+                        .IsRequired();
                 });
             });
         }

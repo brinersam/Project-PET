@@ -27,8 +27,16 @@ namespace ProjectPet.Infrastructure.Configurations
 
             builder.Property(e => e.YOExperience);
 
-            builder.Property(e => e.PhoneNumber)
-                .ConfigureString();
+            builder.ComplexProperty(e => e.PhoneNumber, ba =>
+            {
+                ba.Property(e => e.Number)
+                    .ConfigureString()
+                    .HasColumnName("number");
+
+                ba.Property(e => e.AreaCode)
+                    .HasMaxLength(Constants.STRING_LEN_SMALL)
+                    .HasColumnName("area_code");
+            });
 
             builder.HasMany(e => e.OwnedPets)
                 .WithOne()
@@ -40,8 +48,11 @@ namespace ProjectPet.Infrastructure.Configurations
                 d.ToJson();
                 d.OwnsMany(a => a.Data, i =>
                 {
-                    i.Property(payInfo => payInfo.Title).ConfigureString();
-                    i.Property(payInfo => payInfo.Instructions).ConfigureString(Constants.STRING_LEN_MEDIUM);
+                    i.Property(payInfo => payInfo.Title)
+                        .ConfigureString();
+
+                    i.Property(payInfo => payInfo.Instructions)
+                        .ConfigureString(Constants.STRING_LEN_MEDIUM);
                 });
             });
 
@@ -50,8 +61,11 @@ namespace ProjectPet.Infrastructure.Configurations
                 d.ToJson();
                 d.OwnsMany(a => a.Data, i =>
                 {
-                    i.Property(network => network.Name).ConfigureString();
-                    i.Property(network => network.Link).ConfigureString(Constants.STRING_LEN_MEDIUM);
+                    i.Property(network => network.Name)
+                        .ConfigureString();
+
+                    i.Property(network => network.Link)
+                        .ConfigureString(Constants.STRING_LEN_MEDIUM);
                 });
             });
         }
