@@ -2,7 +2,7 @@
 
 namespace ProjectPet.Application.UseCases.CreateVolunteer
 {
-    public record CreateVolunteerRequest(
+    public record CreateVolunteerRequestDto(
     string FullName,
     string Email,
     string Description,

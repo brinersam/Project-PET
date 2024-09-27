@@ -15,7 +15,10 @@ namespace ProjectPet.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Post([FromServices] CreateVolunteerHandler service, [FromBody] CreateVolunteerRequest dto)
+        public async Task<ActionResult<Guid>> Post(
+            [FromServices] CreateVolunteerHandler service,
+            [FromBody] CreateVolunteerRequestDto dto,
+            CancellationToken cancellation = default)
         {
             var result = await service.HandleAsync(dto);
 

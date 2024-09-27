@@ -1,4 +1,7 @@
-﻿namespace ProjectPet.Domain.Models
+﻿using CSharpFunctionalExtensions;
+using ProjectPet.Domain.Shared;
+
+namespace ProjectPet.Domain.Models
 {
     public record HealthInfo
     {
@@ -8,7 +11,7 @@
         public float Weight { get; }
         public float Height { get; }
 
-        protected HealthInfo(
+        private HealthInfo(
             string health,
             bool isSterilized,
             bool isVaccinated,
@@ -22,15 +25,18 @@
             Height = height;
         }
 
-        public static HealthInfo Create(
-            string health, // TODO use results
+        public static Result<HealthInfo,Error> Create(
+            string health,
             bool isSterilized,
             bool isVaccinated,
             float weight,
             float height)
         {
-            if (String.IsNullOrEmpty(health))
-                throw new ArgumentNullException("Health argument should not be empty"); 
+            var result = Validator.ValidatorString(Constants.STRING_LEN_MEDIUM)
+                .Check(health,nameof(health));
+
+            if (result.IsFailure)
+                return result.Error;
 
             return new HealthInfo
             (

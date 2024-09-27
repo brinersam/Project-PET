@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.Domain.Models.DDD;
 using ProjectPet.Domain.Shared;
+
 namespace ProjectPet.Domain.Models
 {
     public class Volunteer : EntityBase
@@ -50,17 +51,26 @@ namespace ProjectPet.Domain.Models
             IEnumerable<PaymentInfo> paymentMethods,
             IEnumerable<SocialNetwork> socialNetworks)
         {
-            if (id.Equals(Guid.Empty))
-                return Errors.General.ValueIsEmptyOrNull(id,nameof(id));
+            var resultID = Validator
+                .ValidatorNull<Guid>()
+                .Check(id, nameof(id));
 
-            if (String.IsNullOrWhiteSpace(fullName))
-                return Errors.General.ValueIsEmptyOrNull(fullName,nameof(fullName));
+            if (resultID.IsFailure)
+                return resultID.Error;
 
-            if (String.IsNullOrWhiteSpace(email))
-                return Errors.General.ValueIsEmptyOrNull(email, nameof(email));
+            var validator = Validator.ValidatorString(Constants.STRING_LEN_MEDIUM);
 
-            if (String.IsNullOrWhiteSpace(description))
-                return Errors.General.ValueIsEmptyOrNull(description, nameof(description));
+            var result = validator.Check(fullName, nameof(fullName));
+            if (result.IsFailure)
+                return result.Error;
+
+            result = validator.Check(email, nameof(email));
+            if (result.IsFailure)
+                return result.Error;
+
+            result = validator.Check(description, nameof(description));
+            if (result.IsFailure)
+                return result.Error;
 
             return new Volunteer
                 (

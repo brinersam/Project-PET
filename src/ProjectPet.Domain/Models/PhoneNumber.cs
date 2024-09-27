@@ -11,7 +11,7 @@ namespace ProjectPet.Domain.Models
         public string AreaCode { get; } = null!;
         public string Number { get; } = null!;
 
-        protected PhoneNumber(string number, string areaCode)
+        private PhoneNumber(string number, string areaCode)
         {
             Number = number;
             AreaCode = areaCode;
@@ -19,11 +19,15 @@ namespace ProjectPet.Domain.Models
 
         public static Result<PhoneNumber, Error> Create(string number, string areaCode)
         {
+            var result = Validator
+                .ValidatorString(maxLen : 4)
+                .Check(areaCode, nameof(areaCode));
+
+            if (result.IsFailure)
+                return result.Error;
+
             if (!Regex.IsMatch(number, REGEX))
                 return Error.Validation("value.is.invalid", "Phone number must be 10 characters long, with optional - inbetween number groups");
-
-            if (String.IsNullOrWhiteSpace(areaCode))
-                return Errors.General.ValueIsEmptyOrNull(areaCode, nameof(areaCode));
 
             return new PhoneNumber(number, areaCode);
         }

@@ -14,7 +14,7 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
         }
 
         public async Task<Result<Guid,Error>> HandleAsync(
-            CreateVolunteerRequest request,
+            CreateVolunteerRequestDto request,
             CancellationToken cancellationToken = default)
         {
             var phoneNumberRes = PhoneNumber.Create(
