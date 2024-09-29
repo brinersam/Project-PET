@@ -13,4 +13,5 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
     IEnumerable<PaymentInfo>? PaymentMethods,
     IEnumerable<SocialNetwork>? SocialNetworks)
     { }
+
 }

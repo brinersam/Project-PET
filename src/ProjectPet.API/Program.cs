@@ -1,6 +1,8 @@
+using ProjectPet.Application.UseCases;
 using ProjectPet.Application.UseCases.CreateVolunteer;
 using ProjectPet.Infrastructure;
 using ProjectPet.Infrastructure.Repositories;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 builder.Services.AddScoped<CreateVolunteerHandler>();
+builder.Services.AddValidatorsFromAssembly(typeof(IVolunteerRepository).Assembly);
 
 var app = builder.Build();
 

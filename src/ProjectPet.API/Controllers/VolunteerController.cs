@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using ProjectPet.Application.UseCases;
 using ProjectPet.Application.UseCases.CreateVolunteer;
 
 namespace ProjectPet.API.Controllers
@@ -17,10 +19,15 @@ namespace ProjectPet.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> Post(
             [FromServices] CreateVolunteerHandler service,
+            [FromServices] IValidator<CreateVolunteerRequestDto> validator,
             [FromBody] CreateVolunteerRequestDto dto,
-            CancellationToken cancellation = default)
+            CancellationToken cancellationToken = default)
         {
-            var result = await service.HandleAsync(dto);
+            var validatorResult = await validator.ValidateAsync(dto, cancellationToken);
+            if (validatorResult.IsValid == false)
+                return BadRequest(validatorResult.Errors);
+
+            var result = await service.HandleAsync(dto,cancellationToken);
 
             if (result.IsFailure)
                 return BadRequest(result.Error.Message);

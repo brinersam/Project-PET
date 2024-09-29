@@ -2,7 +2,7 @@
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.CreateVolunteer
+namespace ProjectPet.Application.UseCases
 {
     public interface IVolunteerRepository
     {

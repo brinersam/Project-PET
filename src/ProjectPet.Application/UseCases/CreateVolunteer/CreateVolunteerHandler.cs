@@ -19,10 +19,7 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
         {
             var phoneNumberRes = PhoneNumber.Create(
                 request.Phonenumber,
-                request.PhonenumberAreaCode);
-
-            if (phoneNumberRes.IsFailure)
-                return phoneNumberRes.Error;
+                request.PhonenumberAreaCode).Value;
 
             var volunteerRes = Volunteer.Create(
                 Guid.NewGuid(),
@@ -30,7 +27,7 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
                 request.Description,
                 request.Email,
                 request.YOExperience,
-                phoneNumberRes.Value,
+                phoneNumberRes,
                 request.OwnedPets,
                 request.PaymentMethods,
                 request.SocialNetworks);
