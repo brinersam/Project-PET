@@ -9,11 +9,9 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
     {
         public CreateVolunteerRequestValidator()
         {
-            RuleFor(c => new{
-                c.Phonenumber,
-                c.PhonenumberAreaCode
-            }).ValidateValueObj(x => 
-                PhoneNumber.Create(x.Phonenumber,x.PhonenumberAreaCode));
+            RuleFor(c => c.Phonenumber)
+                .ValidateValueObj(x => PhoneNumber.Create
+                                    (x.Phonenumber,x.PhonenumberAreaCode));
 
             RuleFor(c => c.FullName)
                 .NotNull()
