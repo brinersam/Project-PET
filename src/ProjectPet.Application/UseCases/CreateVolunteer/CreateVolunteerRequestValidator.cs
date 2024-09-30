@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using ProjectPet.Application.Validation;
 using ProjectPet.Domain.Models;
+using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Application.UseCases.CreateVolunteer
 {
@@ -13,6 +14,18 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
                 c.PhonenumberAreaCode
             }).ValidateValueObj(x => 
                 PhoneNumber.Create(x.Phonenumber,x.PhonenumberAreaCode));
+
+            RuleFor(c => c.FullName)
+                .NotNull()
+                .MaximumLength(Constants.STRING_LEN_MEDIUM);
+
+            RuleFor(c => c.Email)
+                .NotNull()
+                .MaximumLength(Constants.STRING_LEN_MEDIUM);
+
+            RuleFor(c => c.Description)
+                .NotNull()
+                .MaximumLength(Constants.STRING_LEN_MEDIUM);
 
             RuleForEach(c => c.PaymentMethods)
                 .ValidateValueObj(x => PaymentInfo.Create(x.Title, x.Instructions));
