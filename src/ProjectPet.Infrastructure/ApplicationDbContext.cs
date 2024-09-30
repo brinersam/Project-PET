@@ -7,7 +7,9 @@ namespace ProjectPet.Infrastructure
 {
     public class ApplicationDbContext(IConfiguration configuration) : DbContext
     {
-        private const string DATABASE = "Database";
+        private readonly string DATABASE = configuration["CStrings:Postgresql"]
+            ?? throw new ArgumentNullException("CStrings:Postgresql");
+
         public DbSet<Species> Species => Set<Species>();
         public DbSet<Volunteer> Volunteers => Set<Volunteer>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
