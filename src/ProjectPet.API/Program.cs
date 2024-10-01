@@ -6,6 +6,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Serilog;
 using Serilog.Events;
+using ProjectPet.API.MIddlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,8 +37,6 @@ builder.Services.AddScoped<CreateVolunteerHandler>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(IVolunteerRepository).Assembly);
 
-
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -45,6 +44,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCustomExceptionHandler();
 
 app.UseSerilogRequestLogging();
 
