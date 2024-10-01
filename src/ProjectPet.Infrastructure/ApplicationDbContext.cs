@@ -14,7 +14,7 @@ namespace ProjectPet.Infrastructure
         public DbSet<Volunteer> Volunteers => Set<Volunteer>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString(DATABASE));
+            optionsBuilder.UseNpgsql(DATABASE);
             optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
             optionsBuilder.EnableSensitiveDataLogging();
