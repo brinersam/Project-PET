@@ -29,6 +29,22 @@ namespace ProjectPet.API.Controllers
             return Ok(result.Value);
         }
 
+        [HttpPut("{id:guid}/main")]
+        public async Task<ActionResult<Guid>> PatchInfo(
+            [FromServices] UpdateVolunteerInfoHandler service,
+            [FromBody] UpdateVolunteerInfoRequestDto dto,
+            [FromRoute] Guid id,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new UpdateVolunteerInfoRequest(id,dto);
 
+            var result = await service.HandleAsync(request, cancellationToken);
+            
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
+        }
     }
 }
