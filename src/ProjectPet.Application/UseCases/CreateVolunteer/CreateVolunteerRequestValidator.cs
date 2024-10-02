@@ -15,15 +15,24 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
 
             RuleFor(c => c.FullName)
                 .NotNull()
-                .MaximumLength(Constants.STRING_LEN_MEDIUM);
+                .WithMessage(Errors.General.ValueIsEmptyOrNull("{PropertyValue}", "{PropertyName}").Message)
+                .MaximumLength(Constants.STRING_LEN_MEDIUM)
+                .WithMessage(Errors.General
+                    .ValueLengthMoreThan("{PropertyValue}", "{PropertyName}", "{MaxLength}").Message);
 
             RuleFor(c => c.Email)
                 .NotNull()
-                .MaximumLength(Constants.STRING_LEN_MEDIUM);
+                .WithMessage(Errors.General.ValueIsEmptyOrNull("{PropertyValue}", "{PropertyName}").Message)
+                .MaximumLength(Constants.STRING_LEN_MEDIUM)
+                .WithMessage(Errors.General
+                    .ValueLengthMoreThan("{PropertyValue}", "{PropertyName}", "{MaxLength}").Message);
 
             RuleFor(c => c.Description)
                 .NotNull()
-                .MaximumLength(Constants.STRING_LEN_MEDIUM);
+                .WithMessage(Errors.General.ValueIsEmptyOrNull("{PropertyValue}", "{PropertyName}").Message)
+                .MaximumLength(Constants.STRING_LEN_MEDIUM)
+                .WithMessage(Errors.General
+                    .ValueLengthMoreThan("{PropertyValue}", "{PropertyName}", "{MaxLength}").Message);
 
             RuleForEach(c => c.PaymentMethods)
                 .ValidateValueObj(x => PaymentInfo.Create(x.Title, x.Instructions));
