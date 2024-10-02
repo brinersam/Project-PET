@@ -3,7 +3,7 @@ using ProjectPet.Application.Validation;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.CreateVolunteer
+namespace ProjectPet.Application.UseCases.Volunteers
 {
     public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequestDto>
     {
@@ -11,7 +11,7 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
         {
             RuleFor(c => c.Phonenumber)
                 .ValidateValueObj(x => PhoneNumber.Create
-                                    (x.Phonenumber,x.PhonenumberAreaCode));
+                                    (x.Phonenumber, x.PhonenumberAreaCode));
 
             RuleFor(c => c.FullName)
                 .NotNull()

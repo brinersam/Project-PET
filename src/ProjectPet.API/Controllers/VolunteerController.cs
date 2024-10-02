@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectPet.Application.UseCases;
-using ProjectPet.Application.UseCases.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers;
 
 namespace ProjectPet.API.Controllers
 {
@@ -21,7 +20,7 @@ namespace ProjectPet.API.Controllers
             [FromBody] CreateVolunteerRequestDto dto,
             CancellationToken cancellationToken = default)
         {
-            var result = await service.HandleAsync(dto,cancellationToken);
+            var result = await service.HandleAsync(dto, cancellationToken);
 
             if (result.IsFailure)
                 return BadRequest(result.Error.Message);
@@ -29,5 +28,7 @@ namespace ProjectPet.API.Controllers
 
             return Ok(result.Value);
         }
+
+
     }
 }

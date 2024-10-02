@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.CreateVolunteer
+namespace ProjectPet.Application.UseCases.Volunteers
 {
     public class CreateVolunteerHandler
     {
@@ -18,7 +18,7 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
             _logger = logger;
         }
 
-        public async Task<Result<Guid,Error>> HandleAsync(
+        public async Task<Result<Guid, Error>> HandleAsync(
             CreateVolunteerRequestDto request,
             CancellationToken cancellationToken = default)
         {
@@ -34,8 +34,8 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
                 request.YOExperience,
                 phoneNumberRes,
                 request.OwnedPets,
-                request.PaymentMethods,
-                request.SocialNetworks);
+                request.PaymentMethods!,
+                request.SocialNetworks!);
 
             if (volunteerRes.IsFailure)
             {
@@ -51,11 +51,11 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
                 _logger.LogInformation("Failed to add a new volunteer {name}!\n {error}", volunteerRes.Value.FullName, addRes.Error.Message);
                 return addRes.Error;
             }
-                
+            
 
             _logger.LogInformation("Created volunteer {name} with id {id}", volunteerRes.Value.FullName, volunteerRes.Value.Id);
 
-            return volunteerRes.Value.Id; 
+            return volunteerRes.Value.Id;
         }
     }
 }

@@ -1,5 +1,3 @@
-using ProjectPet.Application.UseCases;
-using ProjectPet.Application.UseCases.CreateVolunteer;
 using ProjectPet.Infrastructure;
 using ProjectPet.Infrastructure.Repositories;
 using FluentValidation;
@@ -7,6 +5,7 @@ using FluentValidation.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using ProjectPet.API.MIddlewares;
+using ProjectPet.Application.UseCases.Volunteers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +31,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+
 builder.Services.AddScoped<CreateVolunteerHandler>();
+builder.Services.AddScoped<UpdateVolunteerInfoHandler>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(IVolunteerRepository).Assembly);

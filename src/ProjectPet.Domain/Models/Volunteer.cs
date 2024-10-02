@@ -89,6 +89,25 @@ namespace ProjectPet.Domain.Models
         public int PetsHoused() => _ownedPets.Count(x => x.Status == Status.Home_Found);
         public int PetsLookingForHome() => _ownedPets.Count(x => x.Status == Status.Looking_For_Home);
         public int PetsInCare() => _ownedPets.Count(x => x.Status == Status.Requires_Care);
+
+        public void UpdateGeneralInfo(string? FullName,
+            string? Email,
+            string? Description,
+            int? YOExperience,
+            PhoneNumber? PhoneNumber)
+        {
+            if (!String.IsNullOrEmpty(FullName))
+                this.FullName = FullName;
+
+            if (!String.IsNullOrEmpty(Email))
+                this.Email = Email;
+
+            if (!String.IsNullOrEmpty(Description))
+                this.Description = Description ?? this.Description;
+
+            this.YOExperience = YOExperience ?? this.YOExperience;
+            this.PhoneNumber = PhoneNumber ?? this.PhoneNumber;
+        }
     }
     public record SocialNetworkList
     {
