@@ -34,6 +34,7 @@ builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 
 builder.Services.AddScoped<CreateVolunteerHandler>();
 builder.Services.AddScoped<UpdateVolunteerInfoHandler>();
+builder.Services.AddScoped<UpdateVolunteerPaymentHandler>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(IVolunteerRepository).Assembly);

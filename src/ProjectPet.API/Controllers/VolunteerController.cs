@@ -36,10 +36,28 @@ namespace ProjectPet.API.Controllers
             [FromRoute] Guid id,
             CancellationToken cancellationToken = default)
         {
-            var request = new UpdateVolunteerInfoRequest(id,dto);
+            var request = new UpdateVolunteerInfoRequest(id, dto);
 
             var result = await service.HandleAsync(request, cancellationToken);
             
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
+        }
+
+        [HttpPatch("{id:guid}/payment")]
+        public async Task<ActionResult<Guid>> PatchPayment(
+            [FromServices] UpdateVolunteerPaymentHandler service,
+            [FromRoute] Guid id,
+            [FromBody] UpdateVolunteerPaymentRequestDto dto,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new UpdateVolunteerPaymentRequest(id, dto);
+
+            var result = await service.HandleAsync(request, cancellationToken);
+
             if (result.IsFailure)
                 return BadRequest(result.Error.Message);
             // todo refactor to handle different error codes

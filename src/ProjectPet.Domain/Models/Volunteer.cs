@@ -39,7 +39,7 @@ namespace ProjectPet.Domain.Models
             SocialNetworks = new() { Data = socialNetworks.ToList() };
         }
 
-        public static Result<Volunteer,Error> Create
+        public static Result<Volunteer, Error> Create
             (
             Guid id,
             string fullName,
@@ -107,6 +107,11 @@ namespace ProjectPet.Domain.Models
 
             this.YOExperience = YOExperience ?? this.YOExperience;
             this.PhoneNumber = PhoneNumber ?? this.PhoneNumber;
+        }
+
+        public void UpdatePaymentMethods(IEnumerable<PaymentInfo> infos)
+        {
+            this.PaymentMethods = new() { Data = infos.ToList() };
         }
     }
     public record SocialNetworkList
