@@ -113,6 +113,11 @@ namespace ProjectPet.Domain.Models
         {
             this.PaymentMethods = new() { Data = infos.ToList() };
         }
+
+        public void UpdateSocialNetworks(IEnumerable<SocialNetwork> infos)
+        {
+            this.SocialNetworks = new() { Data = infos.ToList() };
+        }
     }
     public record SocialNetworkList
     {

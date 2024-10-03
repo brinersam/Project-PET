@@ -29,7 +29,7 @@ namespace ProjectPet.API.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPut("{id:guid}/main")]
+        [HttpPatch("{id:guid}/main")]
         public async Task<ActionResult<Guid>> PatchInfo(
             [FromServices] UpdateVolunteerInfoHandler service,
             [FromBody] UpdateVolunteerInfoRequestDto dto,
@@ -39,7 +39,7 @@ namespace ProjectPet.API.Controllers
             var request = new UpdateVolunteerInfoRequest(id, dto);
 
             var result = await service.HandleAsync(request, cancellationToken);
-            
+
             if (result.IsFailure)
                 return BadRequest(result.Error.Message);
             // todo refactor to handle different error codes
@@ -47,7 +47,7 @@ namespace ProjectPet.API.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPatch("{id:guid}/payment")]
+        [HttpPut("{id:guid}/payment")]
         public async Task<ActionResult<Guid>> PatchPayment(
             [FromServices] UpdateVolunteerPaymentHandler service,
             [FromRoute] Guid id,
@@ -64,5 +64,26 @@ namespace ProjectPet.API.Controllers
 
             return Ok(result.Value);
         }
+
+
+        [HttpPut("{id:guid}/social")]
+        public async Task<ActionResult<Guid>> PatchSocial(
+            [FromServices] UpdateVolunteerSocialsHandler service,
+            [FromRoute] Guid id,
+            [FromBody] UpdateVolunteerSocialsRequestDto dto,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new UpdateVolunteerSocialsRequest(id, dto);
+
+            var result = await service.HandleAsync(request, cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
+        }
+
+
     }
 }
