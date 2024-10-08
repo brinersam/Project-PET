@@ -10,20 +10,27 @@ namespace ProjectPet.Application.UseCases.Volunteers
         public CreateVolunteerRequestValidator()
         {
             RuleFor(c => c.Phonenumber)
+                .NotNull()
                 .ValidateValueObj(x => PhoneNumber.Create
                                     (x.Phonenumber, x.PhonenumberAreaCode));
 
             RuleFor(c => c.FullName)
-                .NotNull()
-                .MaximumLength(Constants.STRING_LEN_MEDIUM);
-
+                .NotEmpty()
+                .WithError(Errors.General.ValueIsEmptyOrNull)
+                .MaxLengthWithError(Errors.General.ValueLengthMoreThan,
+                                    Constants.STRING_LEN_MEDIUM);
+                
             RuleFor(c => c.Email)
-                .NotNull()
-                .MaximumLength(Constants.STRING_LEN_MEDIUM);
+                .NotEmpty()
+                .WithError(Errors.General.ValueIsEmptyOrNull)
+                .MaxLengthWithError(Errors.General.ValueLengthMoreThan,
+                                    Constants.STRING_LEN_MEDIUM);
 
             RuleFor(c => c.Description)
-                .NotNull()
-                .MaximumLength(Constants.STRING_LEN_MEDIUM);
+                .NotEmpty()
+                .WithError(Errors.General.ValueIsEmptyOrNull)
+                .MaxLengthWithError(Errors.General.ValueLengthMoreThan,
+                                    Constants.STRING_LEN_MEDIUM);
 
             RuleForEach(c => c.PaymentMethods)
                 .ValidateValueObj(x => PaymentInfo.Create(x.Title, x.Instructions));
