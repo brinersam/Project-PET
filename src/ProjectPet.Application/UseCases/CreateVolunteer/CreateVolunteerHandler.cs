@@ -18,19 +18,16 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
             CancellationToken cancellationToken = default)
         {
             var phoneNumberRes = PhoneNumber.Create(
-                request.Phonenumber,
-                request.PhonenumberAreaCode);
-
-            if (phoneNumberRes.IsFailure)
-                return phoneNumberRes.Error;
+                request.Phonenumber.Phonenumber,
+                request.Phonenumber.PhonenumberAreaCode).Value;
 
             var volunteerRes = Volunteer.Create(
                 Guid.NewGuid(),
                 request.FullName,
-                request.Description,
                 request.Email,
+                request.Description,
                 request.YOExperience,
-                phoneNumberRes.Value,
+                phoneNumberRes,
                 request.OwnedPets,
                 request.PaymentMethods,
                 request.SocialNetworks);
