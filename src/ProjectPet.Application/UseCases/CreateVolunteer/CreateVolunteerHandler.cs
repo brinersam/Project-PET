@@ -29,8 +29,8 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
             var volunteerRes = Volunteer.Create(
                 Guid.NewGuid(),
                 request.FullName,
-                request.Description,
                 request.Email,
+                request.Description,
                 request.YOExperience,
                 phoneNumberRes,
                 request.OwnedPets,
