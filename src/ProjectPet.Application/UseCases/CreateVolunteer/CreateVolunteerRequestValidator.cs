@@ -10,29 +10,27 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
         public CreateVolunteerRequestValidator()
         {
             RuleFor(c => c.Phonenumber)
+                .NotNull()
                 .ValidateValueObj(x => PhoneNumber.Create
-                                    (x.Phonenumber,x.PhonenumberAreaCode));
+                    (x.Phonenumber,x.PhonenumberAreaCode));
 
             RuleFor(c => c.FullName)
-                .NotNull()
-                .WithMessage(Errors.General.ValueIsEmptyOrNull("{PropertyValue}", "{PropertyName}").Message)
-                .MaximumLength(Constants.STRING_LEN_MEDIUM)
-                .WithMessage(Errors.General
-                    .ValueLengthMoreThan("{PropertyValue}", "{PropertyName}", "{MaxLength}").Message);
-
+                .NotEmpty()
+                .WithError(Errors.General.ValueIsEmptyOrNull)
+                .MaxLengthWithError(Errors.General.ValueLengthMoreThan,
+                                    Constants.STRING_LEN_MEDIUM);
+                
             RuleFor(c => c.Email)
-                .NotNull()
-                .WithMessage(Errors.General.ValueIsEmptyOrNull("{PropertyValue}", "{PropertyName}").Message)
-                .MaximumLength(Constants.STRING_LEN_MEDIUM)
-                .WithMessage(Errors.General
-                    .ValueLengthMoreThan("{PropertyValue}", "{PropertyName}", "{MaxLength}").Message);
+                .NotEmpty()
+                .WithError(Errors.General.ValueIsEmptyOrNull)
+                .MaxLengthWithError(Errors.General.ValueLengthMoreThan,
+                                    Constants.STRING_LEN_MEDIUM);
 
             RuleFor(c => c.Description)
-                .NotNull()
-                .WithMessage(Errors.General.ValueIsEmptyOrNull("{PropertyValue}", "{PropertyName}").Message)
-                .MaximumLength(Constants.STRING_LEN_MEDIUM)
-                .WithMessage(Errors.General
-                    .ValueLengthMoreThan("{PropertyValue}", "{PropertyName}", "{MaxLength}").Message);
+                .NotEmpty()
+                .WithError(Errors.General.ValueIsEmptyOrNull)
+                .MaxLengthWithError(Errors.General.ValueLengthMoreThan,
+                                    Constants.STRING_LEN_MEDIUM);
 
             RuleForEach(c => c.PaymentMethods)
                 .ValidateValueObj(x => PaymentInfo.Create(x.Title, x.Instructions));
