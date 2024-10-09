@@ -2,7 +2,5 @@
 {
     public record PhoneNumberDto(
         string Phonenumber,
-        string PhonenumberAreaCode)
-    { }
-
+        string PhonenumberAreaCode);
 }

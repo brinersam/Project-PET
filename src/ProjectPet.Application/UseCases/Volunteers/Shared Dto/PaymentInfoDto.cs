@@ -2,7 +2,5 @@
 {
     public record PaymentInfoDto(
         string Title,
-        string Instructions
-        )
-    {}
+        string Instructions);
 }
