@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Application.UseCases.Volunteers;
 
 namespace ProjectPet.API.Controllers
@@ -21,6 +22,28 @@ namespace ProjectPet.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await service.HandleAsync(dto, cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> Delete(
+            [FromServices] DeleteVolunteerHandler service,
+            [FromServices] IValidator<DeleteVolunteerRequest> validator,
+            [FromRoute] Guid id,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new DeleteVolunteerRequest(id);
+
+            var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+            if (validatorRes.IsValid == false)
+                return BadRequest(validatorRes.Errors);
+
+            var result = await service.HandleAsync(request, cancellationToken);
 
             if (result.IsFailure)
                 return BadRequest(result.Error.Message);
