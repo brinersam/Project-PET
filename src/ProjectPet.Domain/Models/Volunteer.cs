@@ -4,7 +4,7 @@ using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Domain.Models
 {
-    public class Volunteer : EntityBase, ISoftDeletable
+    public class Volunteer : EntityBase
     {
         public string FullName { get; private set; } = null!;
         public string Email { get; private set; } = null!;
@@ -15,7 +15,6 @@ namespace ProjectPet.Domain.Models
         public IReadOnlyList<Pet> OwnedPets => _ownedPets;
         public PaymentMethodsList? PaymentMethods { get; private set; }
         public SocialNetworkList? SocialNetworks { get; private set; }
-        private bool _isDeleted = false;
 
         public Volunteer(Guid id) : base(id) { }
 
@@ -108,11 +107,6 @@ namespace ProjectPet.Domain.Models
 
             this.YOExperience = YOExperience ?? this.YOExperience;
             this.PhoneNumber = PhoneNumber ?? this.PhoneNumber;
-        }
-
-        public void SetIsDeletedFlag(bool value)
-        {
-            _isDeleted = value;
         }
 
         public void UpdatePaymentMethods(IEnumerable<PaymentInfo> infos)

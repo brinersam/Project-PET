@@ -4,9 +4,8 @@ using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Domain.Models
 {
-    public class Pet : EntityBase, ISoftDeletable
+    public class Pet : EntityBase
     {
-        private bool _isDeleted = false;
         public string Name { get; private set; } = null!;
         public AnimalData AnimalData { get; private set; } = null!;
         public string Description { get; private set; } = null!;
@@ -99,11 +98,6 @@ namespace ProjectPet.Domain.Models
                 createdOn,
                 photos,
                 paymentMethods);
-        }
-
-        public void SetIsDeletedFlag(bool value)
-        {
-            _isDeleted = value;
         }
     }
 
