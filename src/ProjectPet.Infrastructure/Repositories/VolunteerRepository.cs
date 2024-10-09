@@ -42,5 +42,13 @@ namespace ProjectPet.Infrastructure.Repositories
 
             return volunteer.Id;
         }
+
+        public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Remove(volunteer);
+            await _dbContext.SaveChangesAsync();
+
+            return volunteer.Id;
+        }
     }
 }

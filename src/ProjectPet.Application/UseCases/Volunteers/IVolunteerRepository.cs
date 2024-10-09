@@ -9,5 +9,6 @@ namespace ProjectPet.Application.UseCases.Volunteers
         Task<Result<Guid, Error>> AddAsync(Volunteer volunteer, CancellationToken cancellationToken = default);
         Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken cancellationToken = default);
         Task<Result<Volunteer, Error>> GetAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken cancellationToken = default);
     }
 }
