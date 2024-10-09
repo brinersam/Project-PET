@@ -6,6 +6,7 @@ using Serilog;
 using Serilog.Events;
 using ProjectPet.API.MIddlewares;
 using ProjectPet.Application.UseCases.Volunteers;
+using ProjectPet.Infrastructure.Interceptors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,7 @@ builder.Services.AddScoped<CreateVolunteerHandler>();
 builder.Services.AddScoped<UpdateVolunteerInfoHandler>();
 builder.Services.AddScoped<UpdateVolunteerPaymentHandler>();
 builder.Services.AddScoped<UpdateVolunteerSocialsHandler>();
+builder.Services.AddScoped<DeleteVolunteerHandler>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(IVolunteerRepository).Assembly);
