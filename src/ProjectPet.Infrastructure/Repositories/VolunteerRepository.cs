@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Application.UseCases;
+using ProjectPet.Application.UseCases.Volunteers;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 
@@ -35,5 +35,12 @@ namespace ProjectPet.Infrastructure.Repositories
             return result;
         }
 
+        public async Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Volunteers.Attach(volunteer);
+            await _dbContext.SaveChangesAsync();
+
+            return volunteer.Id;
+        }
     }
 }

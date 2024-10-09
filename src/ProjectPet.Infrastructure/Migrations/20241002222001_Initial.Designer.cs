@@ -13,7 +13,7 @@ using ProjectPet.Infrastructure;
 namespace ProjectPet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240924132432_Initial")]
+    [Migration("20241002222001_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -83,12 +83,6 @@ namespace ProjectPet.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)")
                         .HasColumnName("name");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("phone_number");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -176,6 +170,23 @@ namespace ProjectPet.Infrastructure.Migrations
                                 .HasColumnName("weight");
                         });
 
+                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "ProjectPet.Domain.Models.Pet.PhoneNumber#PhoneNumber", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("AreaCode")
+                                .IsRequired()
+                                .HasMaxLength(30)
+                                .HasColumnType("character varying(30)")
+                                .HasColumnName("phone_number_area_code");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasMaxLength(30)
+                                .HasColumnType("character varying(30)")
+                                .HasColumnName("phone_number_number");
+                        });
+
                     b.HasKey("Id")
                         .HasName("pk_pets");
 
@@ -247,6 +258,7 @@ namespace ProjectPet.Infrastructure.Migrations
                             b1.IsRequired();
 
                             b1.Property<string>("AreaCode")
+                                .IsRequired()
                                 .HasMaxLength(30)
                                 .HasColumnType("character varying(30)")
                                 .HasColumnName("area_code");
