@@ -101,9 +101,14 @@ namespace ProjectPet.Domain.Models
                 paymentMethods);
         }
 
-        public void SetIsDeletedFlag(bool value)
+        public void Delete()
         {
-            _isDeleted = value;
+            _isDeleted = true;
+        }
+
+        public void Restore()
+        {
+            _isDeleted = false;
         }
     }
 

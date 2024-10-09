@@ -110,9 +110,14 @@ namespace ProjectPet.Domain.Models
             this.PhoneNumber = PhoneNumber ?? this.PhoneNumber;
         }
 
-        public void SetIsDeletedFlag(bool value)
+        public void Delete()
         {
-            _isDeleted = value;
+            _isDeleted = true;
+        }
+
+        public void Restore()
+        {
+            _isDeleted = false;
         }
 
         public void UpdatePaymentMethods(IEnumerable<PaymentInfo> infos)

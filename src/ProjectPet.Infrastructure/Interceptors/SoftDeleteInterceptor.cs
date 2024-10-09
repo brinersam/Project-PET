@@ -22,7 +22,7 @@ namespace ProjectPet.Infrastructure.Interceptors
             {
                 entry.State = EntityState.Modified;
                 if (entry.Entity is ISoftDeletable deletableEntry)
-                    deletableEntry.SetIsDeletedFlag(true);
+                    deletableEntry.Delete(true);
             }
 
             return base.SavingChangesAsync(eventData, result, cancellationToken);

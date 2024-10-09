@@ -2,6 +2,7 @@
 {
     public interface ISoftDeletable
     {
-        void SetIsDeletedFlag(bool value);
+        void Delete();
+        void Restore();
     }
 }

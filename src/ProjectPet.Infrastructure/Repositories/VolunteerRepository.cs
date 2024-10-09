@@ -23,7 +23,7 @@ namespace ProjectPet.Infrastructure.Repositories
             return volunteer.Id;
         }
 
-        public async Task<Result<Volunteer, Error>> GetAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Result<Volunteer, Error>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var result = await _dbContext.Volunteers
                 .Include(x => x.OwnedPets)

@@ -20,17 +20,9 @@ namespace ProjectPet.Application.UseCases.Volunteers
             DeleteVolunteerRequest request,
             CancellationToken cancellationToken = default)
         {
-            var volunteerRes = await _volunteerRepository.GetAsync(request.Id, cancellationToken);
+            var volunteerRes = await _volunteerRepository.GetByIdAsync(request.Id, cancellationToken);
             if (volunteerRes.IsFailure)
-            {
-                _logger.LogInformation("Failed to get volunteer with id: {id}!\n {error}",
-                    request.Id,
-                    volunteerRes.Error.Message);
-
                 return volunteerRes.Error;
-            }
-
-            volunteerRes.Value.SetIsDeletedFlag(true);
 
             var result = await _volunteerRepository.Delete(volunteerRes.Value, cancellationToken);
 

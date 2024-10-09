@@ -21,7 +21,7 @@ namespace ProjectPet.Application.UseCases.Volunteers
             UpdateVolunteerPaymentRequest request,
             CancellationToken cancellationToken = default)
         {
-            var volunteerRes = await _volunteerRepository.GetAsync(request.Id, cancellationToken);
+            var volunteerRes = await _volunteerRepository.GetByIdAsync(request.Id, cancellationToken);
             if (volunteerRes.IsFailure)
             {
                 _logger.LogInformation("Failed to get volunteer with id: {id}!\n {error}",
