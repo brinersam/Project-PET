@@ -2,6 +2,5 @@
 {
     public record SocialNetworkDto(
         string Name,
-        string Link)
-    {}
+        string Link);
 }

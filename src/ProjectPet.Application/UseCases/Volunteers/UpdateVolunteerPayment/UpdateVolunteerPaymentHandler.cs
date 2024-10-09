@@ -23,13 +23,7 @@ namespace ProjectPet.Application.UseCases.Volunteers
         {
             var volunteerRes = await _volunteerRepository.GetByIdAsync(request.Id, cancellationToken);
             if (volunteerRes.IsFailure)
-            {
-                _logger.LogInformation("Failed to get volunteer with id: {id}!\n {error}",
-                    request.Id,
-                    volunteerRes.Error.Message);
-
                 return volunteerRes.Error;
-            }
 
             var PaymentMethodsList = request.PaymentInfos.PaymentInfos
                                         .Select(x =>
@@ -40,10 +34,7 @@ namespace ProjectPet.Application.UseCases.Volunteers
 
             var saveRes = await _volunteerRepository.Save(volunteerRes.Value);
             if (saveRes.IsFailure)
-            {
-                _logger.LogInformation("Failed to save database after modifying a volunteer with id:{id}!\n {error}", volunteerRes.Value.Id, saveRes.Error.Message);
                 return saveRes.Error;
-            }
 
             _logger.LogInformation("Updated volunteer with id {id} successfully!", saveRes.Value);
             return saveRes.Value;

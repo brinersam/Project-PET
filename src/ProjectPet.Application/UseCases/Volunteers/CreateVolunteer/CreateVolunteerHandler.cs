@@ -38,20 +38,13 @@ namespace ProjectPet.Application.UseCases.Volunteers
                 request.SocialNetworks!);
 
             if (volunteerRes.IsFailure)
-            {
-                _logger.LogInformation("Failed to add a new volunteer {name}!\n {error}", request.FullName, volunteerRes.Error.Message);
                 return volunteerRes.Error;
-            }
 
             var addRes = await _volunteerRepository.AddAsync
                                     (volunteerRes.Value, cancellationToken);
 
             if (addRes.IsFailure)
-            {
-                _logger.LogInformation("Failed to add a new volunteer {name}!\n {error}", volunteerRes.Value.FullName, addRes.Error.Message);
                 return addRes.Error;
-            }
-            
 
             _logger.LogInformation("Created volunteer {name} with id {id}", volunteerRes.Value.FullName, volunteerRes.Value.Id);
 
