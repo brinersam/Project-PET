@@ -8,12 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogLogger();
 
+#region ASP 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+#endregion
 
-builder.Services.AddInfrastructure();
-builder.Services.AddApplication();
+#region App layers 
+builder.AddInfrastructure();
+builder.AddApplication();
+#endregion
 
 builder.Services.AddAutoValidation();
 
