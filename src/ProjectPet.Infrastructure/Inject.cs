@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Minio;
 using Minio.AspNetCore;
+using ProjectPet.Application.Database;
 using ProjectPet.Application.UseCases.Volunteers;
 using ProjectPet.Infrastructure.Options;
 using ProjectPet.Infrastructure.Repositories;
@@ -18,6 +19,8 @@ namespace ProjectPet.Infrastructure
 
             builder.Services.AddScoped<ApplicationDbContext>();
             builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return builder;
         }
