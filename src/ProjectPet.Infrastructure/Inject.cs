@@ -4,8 +4,10 @@ using Microsoft.Extensions.Hosting;
 using Minio;
 using Minio.AspNetCore;
 using ProjectPet.Application.Database;
+using ProjectPet.Application.Providers;
 using ProjectPet.Application.UseCases.Volunteers;
 using ProjectPet.Infrastructure.Options;
+using ProjectPet.Infrastructure.Providers;
 using ProjectPet.Infrastructure.Repositories;
 
 namespace ProjectPet.Infrastructure
@@ -40,6 +42,8 @@ namespace ProjectPet.Infrastructure
                 options.WithCredentials(config.AccessKey,config.SecretKey);
                 options.WithSSL(config.WithSSL);
             });
+
+            builder.Services.AddScoped<IFileProvider, MinioProvider>();
 
             return builder;
         }
