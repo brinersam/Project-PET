@@ -6,6 +6,7 @@ using Minio.DataModel.Args;
 using ProjectPet.Application.Providers;
 using ProjectPet.Domain.Shared;
 using ProjectPet.Infrastructure.Options;
+using System.Reactive.Linq;
 
 namespace ProjectPet.Infrastructure.Providers
 {
@@ -32,7 +33,6 @@ namespace ProjectPet.Infrastructure.Providers
             CancellationToken cancellationToken = default)
         {
             var semaphore = new SemaphoreSlim(_options.Value.MaxConcurrentUpload);
-            List<string> uploadedFilePaths = [];
 
             string userBucket = GetBucketName(bucket, userId);
             var createBucketRes = await CreateBucketIfMissing(userBucket, cancellationToken);
@@ -62,11 +62,88 @@ namespace ProjectPet.Infrastructure.Providers
             return uploadedFilePaths;
         }
 
-        private async Task<Result<string,Error>> PutObject(
-            string targetBucket,
-            SemaphoreSlim semaphore,
-            FileDataDto file,
-            CancellationToken cancellationToken)
+        public async Task<Result<List<FileInfoDto>, Error>> GetFilesAsync(
+            string bucket,
+            int userId,
+            CancellationToken cancellationToken = default)
+        {
+            string userBucket = GetBucketName(bucket, userId);
+
+            var argsBucketExists = new BucketExistsArgs()
+                .WithBucket(userBucket);
+
+            var bucketExists = await _minioClient.BucketExistsAsync(argsBucketExists);
+            if (bucketExists == false)
+                return Error.NotFound("minio.missing.bucket", $"Requested bucket {bucket} for user {userId} is not found!");
+
+            var objectNamesRes = await GetObjectsFromBucketAsync(userBucket);
+            if (objectNamesRes.IsFailure)
+                return objectNamesRes.Error;
+
+            var queryRes = await ObjectNamesToUrlPairs(userBucket, objectNamesRes.Value);
+            if (queryRes.IsFailure)
+                return queryRes.Error;
+
+            _logger.LogInformation("Successfully retrieved {amount} object name/url pairs from bucket {bucketname}!",
+                queryRes.Value.Count,
+                userBucket);
+
+            return queryRes.Value;
+        }
+
+        private async Task<Result<List<FileInfoDto>, Error>> ObjectNamesToUrlPairs(
+            string bucketName,
+            IEnumerable<string> objectNames)
+        {
+            List<FileInfoDto> result = [];
+            foreach (string oName in objectNames)
+            {
+                try
+                {
+                    PresignedGetObjectArgs args = new PresignedGetObjectArgs()
+                                                      .WithBucket(bucketName)
+                                                      .WithObject(oName)
+                                                      .WithExpiry(60 * 60 * 1); // sec * min * hour = sec
+
+                    var url = await _minioClient.PresignedGetObjectAsync(args);
+                    result.Add(new FileInfoDto(oName, url));
+                }
+                catch (Exception ex)
+                {
+                    return ErrorFailure(ex.Message);
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<Result<List<string>, Error>> GetObjectsFromBucketAsync(
+            string userBucket,
+            CancellationToken cancellationToken = default)
+        {
+            List<string> result = [];
+
+            var args = new ListObjectsArgs()
+                            .WithBucket(userBucket)
+                            .WithRecursive(false);
+            try
+            {
+                await _minioClient.ListObjectsAsync(args, cancellationToken)
+                    .ForEachAsync(o => result.Add(o.Key));
+            }
+            catch (Exception ex)
+            {
+                return ErrorFailure(ex.Message);
+            }
+
+            return result;
+        }
+
+        private async Task<Result<string, Error>> PutObject(
+                string targetBucket,
+                SemaphoreSlim semaphore,
+                FileDataDto file,
+                CancellationToken cancellationToken)
         {
             await semaphore.WaitAsync(cancellationToken);
             try
@@ -105,7 +182,6 @@ namespace ProjectPet.Infrastructure.Providers
                 var bucketExists = await _minioClient
                     .BucketExistsAsync(bucketExistsArgs, cancellationToken);
 
-                var bucketExists = await _minioClient.BucketExistsAsync(bucketExistsArgs, cancellationToken);
                 if (bucketExists == false)
                 {
                     var makeBucketArgs = new MakeBucketArgs()

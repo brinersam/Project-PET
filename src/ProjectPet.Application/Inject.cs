@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ProjectPet.Application.UseCases.FileManagement.UploadFile;
+using ProjectPet.Application.UseCases.FileManagement;
 using ProjectPet.Application.UseCases.Volunteers;
 
 namespace ProjectPet.Application
@@ -16,6 +16,7 @@ namespace ProjectPet.Application
             builder.Services.AddScoped<DeleteVolunteerHandler>();
 
             builder.Services.AddScoped<UploadFileHandler>();
+            builder.Services.AddScoped<GetFileHandler>();
 
             return builder;
         }

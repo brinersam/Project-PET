@@ -1,10 +1,8 @@
 ﻿using FluentValidation;
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ProjectPet.API.Contracts.FileManagement;
 using ProjectPet.API.Processors;
 using ProjectPet.Application.UseCases.FileManagement;
-using ProjectPet.Application.UseCases.FileManagement.Dto;
-using ProjectPet.Application.UseCases.FileManagement.UploadFile;
 
 namespace ProjectPet.API.Controllers
 {
@@ -42,22 +40,34 @@ namespace ProjectPet.API.Controllers
             }
         }
 
-        //[HttpDelete]
+        //[HttpDelete("{DebugUserId:int}")]
         //public async Task<IActionResult> DeleteFile(
-        //    IFormFile file,
+        //    [FromServices] DeleteFileHandler service,
+        //    [FromRoute] int DebugUserId,
+        //    [FromBody] DeleteFileDto dto,
+        //    [FromServices] IValidator<UploadFileDto> validator,
         //    CancellationToken cancellationToken = default)
         //{
         //    await using var stream = file.OpenReadStream();
 
         //}
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetFileForId(
-        //    IFormFile file,
-        //    CancellationToken cancellationToken = default)
-        //{
-        //    await using var stream = file.OpenReadStream();
+        [HttpGet("{debugUserId:int}")]
+        public async Task<IActionResult> GetFileForId(
+            [FromServices] GetFileHandler service,
+            [FromRoute] int debugUserId,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new GetFileRequest(debugUserId);
+            var result = await service.Handle(request, cancellationToken);
+            if (result.IsFailure)
+                return BadRequest(result.Error);
 
-        //}
+            if (result.Value.Count <= 0)
+                return StatusCode(204);
+
+            return Ok(result.Value);
+        }
     }
+
 }
