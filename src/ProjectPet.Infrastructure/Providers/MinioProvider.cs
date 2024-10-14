@@ -27,18 +27,20 @@ namespace ProjectPet.Infrastructure.Providers
 
         public async Task<Result<List<string>, Error>> UploadFilesAsync(
             IEnumerable<FileDataDto> dataList,
-            string targetBucket,
+            string bucket,
+            int userId,
             CancellationToken cancellationToken = default)
         {
             var semaphore = new SemaphoreSlim(_options.Value.MaxConcurrentUpload);
             List<string> uploadedFilePaths = [];
 
-            var createBucketRes = await CreateBucketIfMissing(targetBucket, cancellationToken);
+            string userBucket = GetBucketName(bucket, userId);
+            var createBucketRes = await CreateBucketIfMissing(userBucket, cancellationToken);
             if (createBucketRes.IsFailure)
                 return createBucketRes.Error;
 
             var putObjectTasks = dataList.Select(async file => await PutObject(
-                                                        targetBucket,
+                                                        userBucket,
                                                         semaphore,
                                                         file,
                                                         cancellationToken));
@@ -49,13 +51,13 @@ namespace ProjectPet.Infrastructure.Providers
             if (isContainsErrors)
                 return taskResults.First(x => x.IsFailure).Error;
 
-            uploadedFilePaths = taskResults
+            List<string> uploadedFilePaths = taskResults
                                 .Select(task => task.Value)
                                 .ToList();
 
             _logger.LogInformation("Successfully uploaded files {files} to a bucket {bucket}",
                 String.Join(" | ", uploadedFilePaths),
-                targetBucket);
+                userBucket);
 
             return uploadedFilePaths;
         }
@@ -83,7 +85,7 @@ namespace ProjectPet.Infrastructure.Providers
             }
             catch (Exception ex)
             {
-                return CreateError(ex.Message);
+                return ErrorFailure(ex.Message);
             }
             finally
             {
@@ -97,7 +99,11 @@ namespace ProjectPet.Infrastructure.Providers
         {
             try
             {
-                var bucketExistsArgs = new BucketExistsArgs().WithBucket(bucketName);
+                var bucketExistsArgs = new BucketExistsArgs()
+                    .WithBucket(bucketName);
+
+                var bucketExists = await _minioClient
+                    .BucketExistsAsync(bucketExistsArgs, cancellationToken);
 
                 var bucketExists = await _minioClient.BucketExistsAsync(bucketExistsArgs, cancellationToken);
                 if (bucketExists == false)
@@ -112,13 +118,14 @@ namespace ProjectPet.Infrastructure.Providers
             }
             catch (Exception ex)
             {
-                return CreateError(ex.Message);
+                return ErrorFailure(ex.Message);
             }
         }
 
-        private Error CreateError(string msg)
-        {
-            return Error.Failure("minio.failure", $"Minio errored: {msg}");
-        }
+        private Error ErrorFailure(string msg)
+        => Error.Failure("minio.failure", $"Minio errored: {msg}");
+
+        private static string GetBucketName(string bucket, int userId)
+            => $"id{userId}.{bucket}";
     }
 }

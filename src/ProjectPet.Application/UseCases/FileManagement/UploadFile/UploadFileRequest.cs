@@ -1,6 +1,4 @@
-﻿using ProjectPet.Application.UseCases.FileManagement.Dto;
-
-namespace ProjectPet.Application.UseCases.FileManagement.UploadFile
+﻿namespace ProjectPet.Application.UseCases.FileManagement
 {
     public record UploadFileRequest(
         int DebugId,

@@ -1,4 +1,6 @@
+﻿using FluentValidation;
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectPet.API.Contracts.FileManagement;
 using ProjectPet.API.Processors;
 using ProjectPet.Application.UseCases.FileManagement;
 using ProjectPet.Application.UseCases.FileManagement.Dto;
@@ -10,18 +12,23 @@ namespace ProjectPet.API.Controllers
     [Route("api/[controller]")]
     public class FileController : ControllerBase
     {
-        [HttpPost("{DebugId:int}")]
+        [HttpPost("{DebugUserId:int}")]
         public async Task<IActionResult> UploadFile(
             [FromServices] UploadFileHandler service,
-            [FromRoute] int DebugId, // this is a test controller, we do not care for an id outside of debug purposes
+            [FromRoute] int DebugUserId, // test controller
             [FromForm] UploadFileDto dto,
+            [FromServices] IValidator<UploadFileDto> validator,
             CancellationToken cancellationToken = default)
         {
+            var validatorRes = await validator.ValidateAsync(dto);
+            if (validatorRes.IsValid == false)
+                return BadRequest(validatorRes.Errors); // todo refactor to use envelope
+
             await using (var processor = new FormFileProcessor())
             {
                 List<FileDto> filesDto = processor.Process(dto.Files);
 
-                var request = new UploadFileRequest(DebugId,
+                var request = new UploadFileRequest(DebugUserId,
                     dto.Title,
                     filesDto);
 

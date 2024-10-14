@@ -4,7 +4,7 @@ using ProjectPet.Application.Database;
 using ProjectPet.Application.Providers;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.FileManagement.UploadFile
+namespace ProjectPet.Application.UseCases.FileManagement
 {
     public class UploadFileHandler
     {
@@ -35,7 +35,7 @@ namespace ProjectPet.Application.UseCases.FileManagement.UploadFile
                 //var volunteerIdRes = await _repository.GetByIdAsync(request.Id);
                 //if (volunteerIdRes.IsFailure)
                 //    return volunteerIdRes.Errors;
-                var volunteerId = request.DebugId; // we use debug id, always succeed
+                var volunteerId = request.DebugId; // while we use debugid we always succeed
 
                 var fileList = request.Files.Select(file =>
                     new FileDataDto(
@@ -49,6 +49,7 @@ namespace ProjectPet.Application.UseCases.FileManagement.UploadFile
                 var fileuploadRes = await _fileProvider.UploadFilesAsync(
                     fileList,
                     BUCKETNAME,
+                    volunteerId,
                     cancellationToken);
 
                 if (fileuploadRes.IsSuccess == false)

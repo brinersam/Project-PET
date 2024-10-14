@@ -31,6 +31,7 @@ namespace ProjectPet.API
         {
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(typeof(IVolunteerRepository).Assembly);
+            services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
             return services;
         }
     }
