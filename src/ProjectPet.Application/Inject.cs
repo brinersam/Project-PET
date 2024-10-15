@@ -16,7 +16,8 @@ namespace ProjectPet.Application
             builder.Services.AddScoped<DeleteVolunteerHandler>();
 
             builder.Services.AddScoped<UploadFileHandler>();
-            builder.Services.AddScoped<GetFileHandler>();
+            builder.Services.AddScoped<GetFileInfoHandler>();
+            builder.Services.AddScoped<DeleteFileHandler>();
 
             return builder;
         }

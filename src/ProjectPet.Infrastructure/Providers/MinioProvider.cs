@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
@@ -13,16 +12,13 @@ namespace ProjectPet.Infrastructure.Providers
     public class MinioProvider : IFileProvider
     {
         private readonly IMinioClient _minioClient;
-        private readonly ILogger<MinioProvider> _logger;
         private readonly IOptions<OptionsMinIO> _options;
 
         public MinioProvider(
             IMinioClient minioClient,
-            ILogger<MinioProvider> logger,
             IOptions<OptionsMinIO> options)
         {
             _minioClient = minioClient;
-            _logger = logger;
             _options = options;
         }
 
@@ -33,11 +29,14 @@ namespace ProjectPet.Infrastructure.Providers
             CancellationToken cancellationToken = default)
         {
             var semaphore = new SemaphoreSlim(_options.Value.MaxConcurrentUpload);
-
             string userBucket = GetBucketName(bucket, userId);
-            var createBucketRes = await CreateBucketIfMissing(userBucket, cancellationToken);
-            if (createBucketRes.IsFailure)
-                return createBucketRes.Error;
+
+            if (await BucketExistsAsync(userBucket, cancellationToken) == false)
+            {
+                var createBucketRes = await CreateBucket(userBucket, cancellationToken);
+                if (createBucketRes.IsFailure)
+                    return createBucketRes.Error;
+            }
 
             var putObjectTasks = dataList.Select(async file => await PutObject(
                                                         userBucket,
@@ -55,10 +54,6 @@ namespace ProjectPet.Infrastructure.Providers
                                 .Select(task => task.Value)
                                 .ToList();
 
-            _logger.LogInformation("Successfully uploaded files {files} to a bucket {bucket}",
-                String.Join(" | ", uploadedFilePaths),
-                userBucket);
-
             return uploadedFilePaths;
         }
 
@@ -69,12 +64,8 @@ namespace ProjectPet.Infrastructure.Providers
         {
             string userBucket = GetBucketName(bucket, userId);
 
-            var argsBucketExists = new BucketExistsArgs()
-                .WithBucket(userBucket);
-
-            var bucketExists = await _minioClient.BucketExistsAsync(argsBucketExists);
-            if (bucketExists == false)
-                return Error.NotFound("minio.missing.bucket", $"Requested bucket {bucket} for user {userId} is not found!");
+            if (await BucketExistsAsync(userBucket,cancellationToken) == false)
+                return ErrorMissingBucket(userBucket);
 
             var objectNamesRes = await GetObjectsFromBucketAsync(userBucket);
             if (objectNamesRes.IsFailure)
@@ -84,16 +75,37 @@ namespace ProjectPet.Infrastructure.Providers
             if (queryRes.IsFailure)
                 return queryRes.Error;
 
-            _logger.LogInformation("Successfully retrieved {amount} object name/url pairs from bucket {bucketname}!",
-                queryRes.Value.Count,
-                userBucket);
-
             return queryRes.Value;
         }
 
+        public async Task<UnitResult<Error>> DeleteFilesAsync(
+            string bucket,
+            int userId,
+            IEnumerable<string> fileKeys,
+            CancellationToken cancellationToken = default)
+        {
+            string userBucket = GetBucketName(bucket, userId);
+
+            if (await BucketExistsAsync(userBucket, cancellationToken) == false)
+                return ErrorMissingBucket(userBucket);
+
+            try
+            {
+                var objectDeletionArgs = new RemoveObjectsArgs().WithBucket(userBucket).WithObjects(fileKeys.ToList());
+                var objectDeletionRes = await _minioClient.RemoveObjectsAsync(objectDeletionArgs, cancellationToken);
+                
+            }
+            catch (Exception ex)
+            {
+                return ErrorFailure(ex.Message);
+            }
+
+            return Result.Success<Error>();
+        }
+
         private async Task<Result<List<FileInfoDto>, Error>> ObjectNamesToUrlPairs(
-            string bucketName,
-            IEnumerable<string> objectNames)
+        string bucketName,
+        IEnumerable<string> objectNames)
         {
             List<FileInfoDto> result = [];
             foreach (string oName in objectNames)
@@ -103,7 +115,7 @@ namespace ProjectPet.Infrastructure.Providers
                     PresignedGetObjectArgs args = new PresignedGetObjectArgs()
                                                       .WithBucket(bucketName)
                                                       .WithObject(oName)
-                                                      .WithExpiry(60 * 60 * 1); // sec * min * hour = sec
+                                                      .WithExpiry(60 * 30); // sec
 
                     var url = await _minioClient.PresignedGetObjectAsync(args);
                     result.Add(new FileInfoDto(oName, url));
@@ -170,25 +182,16 @@ namespace ProjectPet.Infrastructure.Providers
             }
         }
 
-        private async Task<UnitResult<Error>> CreateBucketIfMissing(
+        private async Task<UnitResult<Error>> CreateBucket(
             string bucketName,
             CancellationToken cancellationToken = default)
         {
             try
             {
-                var bucketExistsArgs = new BucketExistsArgs()
+                var makeBucketArgs = new MakeBucketArgs()
                     .WithBucket(bucketName);
 
-                var bucketExists = await _minioClient
-                    .BucketExistsAsync(bucketExistsArgs, cancellationToken);
-
-                if (bucketExists == false)
-                {
-                    var makeBucketArgs = new MakeBucketArgs()
-                        .WithBucket(bucketName);
-
-                    await _minioClient.MakeBucketAsync(makeBucketArgs);
-                }
+                await _minioClient.MakeBucketAsync(makeBucketArgs);
 
                 return Result.Success<Error>();
             }
@@ -198,8 +201,30 @@ namespace ProjectPet.Infrastructure.Providers
             }
         }
 
+        private async Task<bool> BucketExistsAsync(
+            string bucketName,
+            CancellationToken cancellationToken = default)
+        {
+            var bucketExistsArgs = new BucketExistsArgs()
+                    .WithBucket(bucketName);
+            try
+            {
+                return await _minioClient.BucketExistsAsync(
+                    bucketExistsArgs,
+                    cancellationToken);
+                return true;
+            }
+            catch (Minio.Exceptions.BucketNotFoundException)
+            {
+                return false;
+            }
+        }
+
+        private Error ErrorMissingBucket(string bucketName)
+        => Error.NotFound("minio.missing.bucket", $"Requested bucket {bucketName} is not found!");
+
         private Error ErrorFailure(string msg)
-        => Error.Failure("minio.failure", $"Minio errored: {msg}");
+    => Error.Failure("minio.failure", $"Minio errored: {msg}");
 
         private static string GetBucketName(string bucket, int userId)
             => $"id{userId}.{bucket}";

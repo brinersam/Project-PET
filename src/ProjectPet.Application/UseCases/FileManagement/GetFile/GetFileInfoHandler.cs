@@ -5,16 +5,16 @@ using ProjectPet.Domain.Shared;
 
 namespace ProjectPet.Application.UseCases.FileManagement
 {
-    public class GetFileHandler
+    public class GetFileInfoHandler
     {
         private const string BUCKETNAME = "photos";
 
         private readonly IFileProvider _fileProvider;
-        private readonly ILogger<GetFileHandler> _logger;
+        private readonly ILogger<GetFileInfoHandler> _logger;
 
-        public GetFileHandler(
+        public GetFileInfoHandler(
             IFileProvider fileProvider,
-            ILogger<GetFileHandler> logger)
+            ILogger<GetFileInfoHandler> logger)
         {
             _fileProvider = fileProvider;
             _logger = logger;

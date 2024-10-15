@@ -10,10 +10,10 @@ namespace ProjectPet.API.Controllers
     [Route("api/[controller]")]
     public class FileController : ControllerBase
     {
-        [HttpPost("{DebugUserId:int}")]
-        public async Task<IActionResult> UploadFile(
+        [HttpPost("{debugUserId:int}")]
+        public async Task<IActionResult> UploadFiles(
             [FromServices] UploadFileHandler service,
-            [FromRoute] int DebugUserId, // test controller
+            [FromRoute] int debugUserId, // test controller
             [FromForm] UploadFileDto dto,
             [FromServices] IValidator<UploadFileDto> validator,
             CancellationToken cancellationToken = default)
@@ -26,7 +26,7 @@ namespace ProjectPet.API.Controllers
             {
                 List<FileDto> filesDto = processor.Process(dto.Files);
 
-                var request = new UploadFileRequest(DebugUserId,
+                var request = new UploadFileRequest(debugUserId,
                     dto.Title,
                     filesDto);
 
@@ -40,21 +40,9 @@ namespace ProjectPet.API.Controllers
             }
         }
 
-        //[HttpDelete("{DebugUserId:int}")]
-        //public async Task<IActionResult> DeleteFile(
-        //    [FromServices] DeleteFileHandler service,
-        //    [FromRoute] int DebugUserId,
-        //    [FromBody] DeleteFileDto dto,
-        //    [FromServices] IValidator<UploadFileDto> validator,
-        //    CancellationToken cancellationToken = default)
-        //{
-        //    await using var stream = file.OpenReadStream();
-
-        //}
-
         [HttpGet("{debugUserId:int}")]
-        public async Task<IActionResult> GetFileForId(
-            [FromServices] GetFileHandler service,
+        public async Task<IActionResult> GetFilesInfo(
+            [FromServices] GetFileInfoHandler service,
             [FromRoute] int debugUserId,
             CancellationToken cancellationToken = default)
         {
@@ -67,6 +55,24 @@ namespace ProjectPet.API.Controllers
                 return StatusCode(204);
 
             return Ok(result.Value);
+        }
+
+        [HttpDelete("{debugUserId:int}")]
+        public async Task<IActionResult> DeleteFiles(
+            [FromServices] DeleteFileHandler service,
+            [FromBody] DeleteFileRequestDto dto,
+            [FromRoute] int debugUserId,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new DeleteFileRequest(
+                debugUserId,
+                dto.FileNames);
+
+            var result = await service.Handle(request, cancellationToken);
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+
+            return Ok();
         }
     }
 

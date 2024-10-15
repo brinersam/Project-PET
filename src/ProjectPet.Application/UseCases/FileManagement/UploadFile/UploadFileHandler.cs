@@ -57,6 +57,9 @@ namespace ProjectPet.Application.UseCases.FileManagement
 
                 transaction.Commit();
 
+                _logger.LogInformation("Successfully uploaded files {files} to a bucket {bucket} of user with id {id}",
+                        String.Join(" | ", fileuploadRes.Value), BUCKETNAME, request.DebugId);
+
                 return fileuploadRes.Value;
             }
             catch (Exception ex)
