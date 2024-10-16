@@ -1,6 +1,6 @@
 ﻿using ProjectPet.Domain.Models;
 
-namespace ProjectPet.Application.UseCases.CreateVolunteer
+namespace ProjectPet.Application.UseCases.Volunteers
 {
     public record CreateVolunteerRequestDto(
         string FullName,
@@ -11,11 +11,6 @@ namespace ProjectPet.Application.UseCases.CreateVolunteer
         IEnumerable<Pet> OwnedPets,
         IEnumerable<PaymentInfo>? PaymentMethods,
         IEnumerable<SocialNetwork>? SocialNetworks)
-    { }
-
-    public record PhoneNumberDto(
-        string Phonenumber,
-        string PhonenumberAreaCode)
     { }
 
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectPet.Application.UseCases;
-using ProjectPet.Application.UseCases.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers;
 
 namespace ProjectPet.API.Controllers
 {
@@ -21,7 +20,7 @@ namespace ProjectPet.API.Controllers
             [FromBody] CreateVolunteerRequestDto dto,
             CancellationToken cancellationToken = default)
         {
-            var result = await service.HandleAsync(dto,cancellationToken);
+            var result = await service.HandleAsync(dto, cancellationToken);
 
             if (result.IsFailure)
                 return BadRequest(result.Error.Message);
@@ -29,5 +28,62 @@ namespace ProjectPet.API.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpPatch("{id:guid}/main")]
+        public async Task<ActionResult<Guid>> PatchInfo(
+            [FromServices] UpdateVolunteerInfoHandler service,
+            [FromBody] UpdateVolunteerInfoRequestDto dto,
+            [FromRoute] Guid id,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new UpdateVolunteerInfoRequest(id, dto);
+
+            var result = await service.HandleAsync(request, cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
+        }
+
+        [HttpPut("{id:guid}/payment")]
+        public async Task<ActionResult<Guid>> PatchPayment(
+            [FromServices] UpdateVolunteerPaymentHandler service,
+            [FromRoute] Guid id,
+            [FromBody] UpdateVolunteerPaymentRequestDto dto,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new UpdateVolunteerPaymentRequest(id, dto);
+
+            var result = await service.HandleAsync(request, cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
+        }
+
+
+        [HttpPut("{id:guid}/social")]
+        public async Task<ActionResult<Guid>> PatchSocial(
+            [FromServices] UpdateVolunteerSocialsHandler service,
+            [FromRoute] Guid id,
+            [FromBody] UpdateVolunteerSocialsRequestDto dto,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new UpdateVolunteerSocialsRequest(id, dto);
+
+            var result = await service.HandleAsync(request, cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error.Message);
+            // todo refactor to handle different error codes
+
+            return Ok(result.Value);
+        }
+
+
     }
 }

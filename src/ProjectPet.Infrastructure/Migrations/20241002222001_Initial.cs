@@ -33,7 +33,7 @@ namespace ProjectPet.Infrastructure.Migrations
                     email = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     yo_experience = table.Column<int>(type: "integer", nullable: false),
-                    area_code = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
+                    area_code = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     number = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     payment_methods = table.Column<string>(type: "jsonb", nullable: true),
                     social_networks = table.Column<string>(type: "jsonb", nullable: true)
@@ -69,7 +69,6 @@ namespace ProjectPet.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     coat = table.Column<string>(type: "text", nullable: false),
-                    phone_number = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     date_of_birth = table.Column<DateOnly>(type: "date", nullable: false),
                     created_on = table.Column<DateOnly>(type: "date", nullable: false),
@@ -88,6 +87,8 @@ namespace ProjectPet.Infrastructure.Migrations
                     is_sterilized = table.Column<bool>(type: "boolean", nullable: false),
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
                     weight = table.Column<float>(type: "real", nullable: false),
+                    phone_number_area_code = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    phone_number_number = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     payment_methods = table.Column<string>(type: "jsonb", nullable: true),
                     photos = table.Column<string>(type: "jsonb", nullable: true)
                 },
