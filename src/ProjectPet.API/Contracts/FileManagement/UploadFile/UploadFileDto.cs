@@ -2,6 +2,6 @@
 {
     public record UploadFileDto(
         string Title,
-        IFormFile[] Files);
+        IFormFileCollection Files);
 }
 
