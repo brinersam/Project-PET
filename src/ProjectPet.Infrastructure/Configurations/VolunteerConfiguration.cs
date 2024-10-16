@@ -65,6 +65,10 @@ namespace ProjectPet.Infrastructure.Configurations
                         .ConfigureString(Constants.STRING_LEN_MEDIUM);
                 });
             });
+
+            builder.Property<bool>("_isDeleted")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("is_deleted");
         }
     }
 }

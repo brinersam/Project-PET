@@ -23,7 +23,7 @@ namespace ProjectPet.Infrastructure.Repositories
             return volunteer.Id;
         }
 
-        public async Task<Result<Volunteer, Error>> GetAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Result<Volunteer, Error>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var result = await _dbContext.Volunteers
                 .Include(x => x.OwnedPets)
@@ -38,6 +38,14 @@ namespace ProjectPet.Infrastructure.Repositories
         public async Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
         {
             _dbContext.Volunteers.Attach(volunteer);
+            await _dbContext.SaveChangesAsync();
+
+            return volunteer.Id;
+        }
+
+        public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Remove(volunteer);
             await _dbContext.SaveChangesAsync();
 
             return volunteer.Id;

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ProjectPet.Domain.Models;
+using ProjectPet.Infrastructure.Interceptors;
 
 namespace ProjectPet.Infrastructure
 {
@@ -18,6 +19,8 @@ namespace ProjectPet.Infrastructure
             optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
             optionsBuilder.EnableSensitiveDataLogging();
+
+            optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
