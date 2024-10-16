@@ -36,13 +36,12 @@ namespace ProjectPet.Application.Validation
 
         public static IRuleBuilderOptions<T, string> MaxLengthWithError<T, TProperty>(
             this IRuleBuilderOptions<T, TProperty> ruleBuilder,
-            Func<string, string, int, Error> error,
             int maxLen)
         {
             return ((IRuleBuilderOptions <T, string>)ruleBuilder)
                 .MaximumLength(maxLen)
                 .WithMessage((x, y) => 
-                    $"{error.Invoke(y, "{PropertyName}", maxLen).Message}");
+                    $"{Errors.General.ValueLengthMoreThan(y, "{PropertyName}", maxLen).Message}");
         }
     }
 }
