@@ -3,6 +3,8 @@ using Serilog;
 using ProjectPet.Application.UseCases.Volunteers;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using FluentValidation;
+using ProjectPet.API.Validation;
+using ProjectPet.API.Contracts.FileManagement;
 
 namespace ProjectPet.API
 {
@@ -27,11 +29,15 @@ namespace ProjectPet.API
             builder.Services.AddSerilog();
             return builder;
         }
-        public static IServiceCollection AddAutoValidation(this IServiceCollection services)
+        public static IServiceCollection AddCustomAutoValidation(this IServiceCollection services)
         {
-            services.AddFluentValidationAutoValidation();
-            services.AddValidatorsFromAssembly(typeof(IVolunteerRepository).Assembly);
-            services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
+            services.AddValidatorsFromAssemblyContaining<IVolunteerRepository>();
+            services.AddValidatorsFromAssemblyContaining<UploadFileDtoValidator>();
+
+            services.AddFluentValidationAutoValidation(config =>
+                config.OverrideDefaultResultFactoryWith<CustomResultFactory>()
+            );
+
             return services;
         }
     }

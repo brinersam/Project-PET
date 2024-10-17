@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using ProjectPet.API.Extentions;
 using ProjectPet.Application.UseCases.Volunteers;
 
 namespace ProjectPet.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class VolunteerController : ControllerBase
+    public class VolunteerController : CustomControllerBase
     {
         private readonly IVolunteerRepository _volunteerRepository;
 
@@ -24,8 +23,7 @@ namespace ProjectPet.API.Controllers
             var result = await service.HandleAsync(dto, cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error.Message);
-            // todo refactor to handle different error codes
+                return result.Error.ToResponse();
 
             return Ok(result.Value);
         }
@@ -46,8 +44,7 @@ namespace ProjectPet.API.Controllers
             var result = await service.HandleAsync(request, cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error.Message);
-            // todo refactor to handle different error codes
+                return result.Error.ToResponse();
 
             return Ok(result.Value);
         }
@@ -64,8 +61,7 @@ namespace ProjectPet.API.Controllers
             var result = await service.HandleAsync(request, cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error.Message);
-            // todo refactor to handle different error codes
+                return result.Error.ToResponse();
 
             return Ok(result.Value);
         }
@@ -82,8 +78,7 @@ namespace ProjectPet.API.Controllers
             var result = await service.HandleAsync(request, cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error.Message);
-            // todo refactor to handle different error codes
+                return result.Error.ToResponse();
 
             return Ok(result.Value);
         }
@@ -101,12 +96,9 @@ namespace ProjectPet.API.Controllers
             var result = await service.HandleAsync(request, cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error.Message);
-            // todo refactor to handle different error codes
+                return result.Error.ToResponse();
 
             return Ok(result.Value);
         }
-
-
     }
 }

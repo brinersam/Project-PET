@@ -27,7 +27,7 @@ namespace ProjectPet.Domain.Models
                 return result.Error;
 
             if (!Regex.IsMatch(number, REGEX))
-                return Error.Validation("value.is.invalid", "Phone number must be 10 characters long, with optional - inbetween number groups");
+                return Error.Validation("value.is.invalid", "Phone number must adhere to format : 123-456-78-90 or 1234567890");
 
             return new PhoneNumber(number, areaCode);
         }
