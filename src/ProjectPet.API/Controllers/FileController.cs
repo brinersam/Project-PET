@@ -1,40 +1,40 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.API.Contracts.FileManagement;
+using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
+using ProjectPet.API.Response;
 using ProjectPet.Application.UseCases.FileManagement;
 
 namespace ProjectPet.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FileController : ControllerBase
+    public class FileController : CustomControllerBase
     {
         [HttpPost("{debugUserId:int}")]
         public async Task<IActionResult> UploadFiles(
             [FromServices] UploadFileHandler service,
+            [FromServices] IValidator<UploadFileDto> validator,
             [FromRoute] int debugUserId, // test controller
             [FromForm] UploadFileDto dto,
-            [FromServices] IValidator<UploadFileDto> validator,
             CancellationToken cancellationToken = default)
         {
-            var validatorRes = await validator.ValidateAsync(dto);
-            if (validatorRes.IsValid == false)
-                return BadRequest(validatorRes.Errors); // todo refactor to use envelope
+            var validationResult = validator.Validate(dto);
+            if (validationResult.IsValid == false)
+                return Envelope.ToResponse(validationResult.Errors);
 
             await using (var processor = new FormFileProcessor())
             {
                 List<FileDto> filesDto = processor.Process(dto.Files);
 
-                var request = new UploadFileRequest(debugUserId,
-                    dto.Title,
-                    filesDto);
+                var request = new UploadFileRequest(
+                        debugUserId,
+                        dto.Title,
+                        filesDto);
 
                 var result = await service.HandleAsync(request, cancellationToken);
 
                 if (result.IsFailure)
-                    return BadRequest(result.Error.Message);
-                // todo refactor to handle different error codes
+                    return result.Error.ToResponse();
 
                 return Ok(result.Value);
             }
@@ -49,7 +49,7 @@ namespace ProjectPet.API.Controllers
             var request = new GetFileRequest(debugUserId);
             var result = await service.Handle(request, cancellationToken);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return result.Error.ToResponse();
 
             if (result.Value.Count <= 0)
                 return StatusCode(204);
@@ -70,7 +70,7 @@ namespace ProjectPet.API.Controllers
 
             var result = await service.Handle(request, cancellationToken);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return result.Error.ToResponse();
 
             return Ok();
         }

@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using ProjectPet.API.Response;
+using ProjectPet.Domain.Shared;
+using System.Net;
 
 namespace ProjectPet.API.MIddlewares
 {
@@ -28,7 +30,9 @@ namespace ProjectPet.API.MIddlewares
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                await context.Response.WriteAsJsonAsync(ex.Message); // todo use envelope
+                var err = Error.Failure("exception", ex.Message);
+
+                await context.Response.WriteAsJsonAsync(Envelope.Error(err));
             }
         }
     }

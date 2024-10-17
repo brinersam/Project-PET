@@ -20,13 +20,13 @@
                 ("record.not.found", $"Record with id {id} of type {type.Name} was not found!");
 
             public static Error ValueLengthMoreThan<T>(T? value, string valueName, int len)
-            =>  ValueLength(value, "more", valueName, len);
+                => ValueLength(value, "more", valueName, len);
             public static Error ValueLengthLessThan<T>(T? value, string valueName, int len)
-            => ValueLength(value, "less", valueName, len);
+                => ValueLength(value, "less", valueName, len);
 
             private static Error ValueLength<T>(T? value, string lessmore, string valueName, int len)
-            => Error.Validation
-                ("value.is.invalid", $"Value {valueName} of type {typeof(T).Name} cannot be {lessmore} than {len} elements long");
+                => Error.Validation
+                    ("value.is.invalid", $"Value {valueName} of type {typeof(T).Name} cannot be {lessmore} than {len} elements long");
 
         }
     }

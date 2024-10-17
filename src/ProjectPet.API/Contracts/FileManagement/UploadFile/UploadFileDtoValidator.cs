@@ -14,7 +14,7 @@ namespace ProjectPet.API.Contracts.FileManagement
 
             RuleFor(u => u.Files)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsEmptyOrNull);
+                .WithError(Errors.General.ValueIsEmptyOrNull); 
         }
     }
 }
