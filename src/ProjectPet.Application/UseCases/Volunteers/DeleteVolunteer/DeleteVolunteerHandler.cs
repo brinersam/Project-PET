@@ -2,33 +2,32 @@
 using Microsoft.Extensions.Logging;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.Volunteers
+namespace ProjectPet.Application.UseCases.Volunteers;
+
+public class DeleteVolunteerHandler
 {
-    public class DeleteVolunteerHandler
+    private readonly IVolunteerRepository _volunteerRepository;
+    private readonly ILogger<DeleteVolunteerHandler> _logger;
+
+    public DeleteVolunteerHandler(
+        IVolunteerRepository volunteerRepository,
+        ILogger<DeleteVolunteerHandler> logger)
     {
-        private readonly IVolunteerRepository _volunteerRepository;
-        private readonly ILogger<DeleteVolunteerHandler> _logger;
+        _volunteerRepository = volunteerRepository;
+        _logger = logger;
+    }
+    public async Task<Result<Guid, Error>> HandleAsync(
+        DeleteVolunteerRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var volunteerRes = await _volunteerRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (volunteerRes.IsFailure)
+            return volunteerRes.Error;
 
-        public DeleteVolunteerHandler(
-            IVolunteerRepository volunteerRepository,
-            ILogger<DeleteVolunteerHandler> logger)
-        {
-            _volunteerRepository = volunteerRepository;
-            _logger = logger;
-        }
-        public async Task<Result<Guid, Error>> HandleAsync(
-            DeleteVolunteerRequest request,
-            CancellationToken cancellationToken = default)
-        {
-            var volunteerRes = await _volunteerRepository.GetByIdAsync(request.Id, cancellationToken);
-            if (volunteerRes.IsFailure)
-                return volunteerRes.Error;
+        var result = await _volunteerRepository.Delete(volunteerRes.Value, cancellationToken);
 
-            var result = await _volunteerRepository.Delete(volunteerRes.Value, cancellationToken);
+        _logger.LogInformation("Volunteer with id {id} was deleted successfully!", request.Id);
 
-            _logger.LogInformation("Volunteer with id {id} was deleted successfully!", request.Id);
-
-            return result.Value;
-        }
+        return result.Value;
     }
 }

@@ -2,38 +2,37 @@
 using ProjectPet.Domain.Shared;
 using System.Net;
 
-namespace ProjectPet.API.MIddlewares
+namespace ProjectPet.API.MIddlewares;
+
+public class CustomExceptionHandlerMiddleware
 {
-    public class CustomExceptionHandlerMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ILogger<CustomExceptionHandlerMiddleware> _logger;
+
+    public CustomExceptionHandlerMiddleware(
+        RequestDelegate next,
+        ILogger<CustomExceptionHandlerMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<CustomExceptionHandlerMiddleware> _logger;
+        _next = next;
+        _logger = logger;
+    }
 
-        public CustomExceptionHandlerMiddleware(
-            RequestDelegate next,
-            ILogger<CustomExceptionHandlerMiddleware> logger)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
-            _logger = logger;
+            await _next(context);
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        catch (Exception ex)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Exception was caught!: {error} {stacktrace}", ex.Message, ex.StackTrace);
+            _logger.LogError("Exception was caught!: {error} {stacktrace}", ex.Message, ex.StackTrace);
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                var err = Error.Failure("exception", ex.Message);
+            var err = Error.Failure("exception", ex.Message);
 
-                await context.Response.WriteAsJsonAsync(Envelope.Error(err));
-            }
+            await context.Response.WriteAsJsonAsync(Envelope.Error(err));
         }
     }
 }

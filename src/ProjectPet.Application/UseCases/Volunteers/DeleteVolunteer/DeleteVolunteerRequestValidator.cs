@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace ProjectPet.Application.UseCases.Volunteers
+namespace ProjectPet.Application.UseCases.Volunteers;
+
+public class DeleteVolunteerRequestValidator : AbstractValidator<DeleteVolunteerRequest>
 {
-    public class DeleteVolunteerRequestValidator : AbstractValidator<DeleteVolunteerRequest>
+    public DeleteVolunteerRequestValidator()
     {
-        public DeleteVolunteerRequestValidator()
-        {
-            RuleFor(d => d.Id).NotEmpty();
-        }
+        RuleFor(d => d.Id).NotEmpty();
     }
 }

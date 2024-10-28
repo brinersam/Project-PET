@@ -1,5 +1,4 @@
-﻿namespace ProjectPet.Application.UseCases.FileManagement
-{
-    public record DeleteFileRequestDto(
-        string[] FileNames);
-}
+﻿namespace ProjectPet.Application.UseCases.FileManagement;
+
+public record DeleteFileRequestDto(
+    string[] FileNames);

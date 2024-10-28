@@ -1,8 +1,8 @@
-using ProjectPet.Infrastructure;
-using Serilog;
+using ProjectPet.API;
 using ProjectPet.API.MIddlewares;
 using ProjectPet.Application;
-using ProjectPet.API;
+using ProjectPet.Infrastructure;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
