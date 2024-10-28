@@ -2,7 +2,7 @@
 using ProjectPet.Application.Validation;
 using ProjectPet.Domain.Models;
 
-namespace ProjectPet.Application.UseCases.Volunteers;
+namespace ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerPayment;
 
 public class UpdateVolunteerPaymentRequestValidator : AbstractValidator<UpdateVolunteerPaymentRequestDto>
 {

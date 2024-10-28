@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.Volunteers;
+namespace ProjectPet.Application.UseCases.Volunteers.DeleteVolunteer;
 
 public class DeleteVolunteerHandler
 {

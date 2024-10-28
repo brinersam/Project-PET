@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.Application.UseCases.FileManagement;
+﻿namespace ProjectPet.Application.UseCases.FileManagement.Dto;
 
 public record FileDto(
     Stream Stream,

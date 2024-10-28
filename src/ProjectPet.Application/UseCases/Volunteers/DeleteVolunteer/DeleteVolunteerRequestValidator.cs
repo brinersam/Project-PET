@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ProjectPet.Application.UseCases.Volunteers;
+namespace ProjectPet.Application.UseCases.Volunteers.DeleteVolunteer;
 
 public class DeleteVolunteerRequestValidator : AbstractValidator<DeleteVolunteerRequest>
 {

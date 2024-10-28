@@ -1,10 +1,13 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ProjectPet.API.Contracts.FileManagement;
+using ProjectPet.API.Contracts.FileManagement.UploadFile;
 using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
 using ProjectPet.API.Response;
-using ProjectPet.Application.UseCases.FileManagement;
+using ProjectPet.Application.UseCases.FileManagement.DeleteFile;
+using ProjectPet.Application.UseCases.FileManagement.Dto;
+using ProjectPet.Application.UseCases.FileManagement.GetFile;
+using ProjectPet.Application.UseCases.FileManagement.UploadFile;
 
 namespace ProjectPet.API.Controllers;
 

@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.Application.UseCases.Volunteers;
+﻿namespace ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerSocials;
 
 public record UpdateVolunteerSocialsRequest(
     Guid Id,

@@ -4,7 +4,7 @@ using ProjectPet.Application.Database;
 using ProjectPet.Application.Providers;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.FileManagement;
+namespace ProjectPet.Application.UseCases.FileManagement.UploadFile;
 
 public class UploadFileHandler
 {
@@ -58,7 +58,7 @@ public class UploadFileHandler
             transaction.Commit();
 
             _logger.LogInformation("Successfully uploaded files {files} to a bucket {bucket} of user with id {id}",
-                    String.Join(" | ", fileuploadRes.Value), BUCKETNAME, request.DebugId);
+                    string.Join(" | ", fileuploadRes.Value), BUCKETNAME, request.DebugId);
 
             return fileuploadRes.Value;
         }

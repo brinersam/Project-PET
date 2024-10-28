@@ -1,6 +1,6 @@
 ﻿using ProjectPet.Domain.Models;
 
-namespace ProjectPet.Application.UseCases.Volunteers;
+namespace ProjectPet.Application.UseCases.Volunteers.CreateVolunteer;
 
 public record CreateVolunteerRequestDto(
     string FullName,

@@ -1,5 +1,4 @@
-﻿
-using ProjectPet.Application.UseCases.FileManagement;
+﻿using ProjectPet.Application.UseCases.FileManagement.Dto;
 
 namespace ProjectPet.API.Processors;
 

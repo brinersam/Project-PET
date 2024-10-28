@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using ProjectPet.Application.Providers;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.FileManagement;
+namespace ProjectPet.Application.UseCases.FileManagement.DeleteFile;
 
 public class DeleteFileHandler
 {

@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.Application.UseCases.Volunteers;
+﻿namespace ProjectPet.Application.UseCases.Volunteers.DeleteVolunteer;
 
 public record DeleteVolunteerRequest(
     Guid Id)

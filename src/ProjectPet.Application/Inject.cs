@@ -1,7 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ProjectPet.Application.UseCases.FileManagement;
-using ProjectPet.Application.UseCases.Volunteers;
+using ProjectPet.Application.UseCases.FileManagement.DeleteFile;
+using ProjectPet.Application.UseCases.FileManagement.GetFile;
+using ProjectPet.Application.UseCases.FileManagement.UploadFile;
+using ProjectPet.Application.UseCases.Volunteers.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerInfo;
+using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerPayment;
+using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerSocials;
 
 namespace ProjectPet.Application;
 

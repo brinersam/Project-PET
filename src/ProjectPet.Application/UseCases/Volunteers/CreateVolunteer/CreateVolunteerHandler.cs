@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.Volunteers;
+namespace ProjectPet.Application.UseCases.Volunteers.CreateVolunteer;
 
 public class CreateVolunteerHandler
 {
