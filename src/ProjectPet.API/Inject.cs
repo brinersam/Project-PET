@@ -32,7 +32,6 @@ public static class Inject
     public static IServiceCollection AddCustomAutoValidation(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<IVolunteerRepository>();
-        services.AddValidatorsFromAssemblyContaining<UploadFileDtoValidator>();
 
         services.AddFluentValidationAutoValidation(config =>
             config.OverrideDefaultResultFactoryWith<CustomResultFactory>()

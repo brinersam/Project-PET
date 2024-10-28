@@ -14,7 +14,7 @@ public class FileController : CustomControllerBase
     public async Task<IActionResult> UploadFiles(
         [FromServices] UploadFileHandler service,
         [FromServices] IValidator<UploadFileDto> validator,
-        [FromRoute] int debugUserId, // test controller
+        [FromRoute] int debugUserId,
         [FromForm] UploadFileDto dto,
         CancellationToken cancellationToken = default)
     {

@@ -9,7 +9,9 @@ public class UpdateVolunteerInfoRequestValidator : AbstractValidator<UpdateVolun
 {
     public UpdateVolunteerInfoRequestValidator()
     {
-        RuleFor(u => u.Id).NotNull(); //.WithMessage(); // todo
+        RuleFor(u => u.Id)
+            .NotNull()
+            .WithError(Errors.General.ValueIsEmptyOrNull);
     }
 }
 
