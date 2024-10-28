@@ -1,8 +1,7 @@
-﻿namespace ProjectPet.Domain.Shared
+﻿namespace ProjectPet.Domain.Shared;
+
+public interface ISoftDeletable
 {
-    public interface ISoftDeletable
-    {
-        void Delete();
-        void Restore();
-    }
+    void Delete();
+    void Restore();
 }

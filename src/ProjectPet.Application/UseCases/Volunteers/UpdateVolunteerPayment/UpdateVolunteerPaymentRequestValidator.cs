@@ -2,14 +2,13 @@
 using ProjectPet.Application.Validation;
 using ProjectPet.Domain.Models;
 
-namespace ProjectPet.Application.UseCases.Volunteers
+namespace ProjectPet.Application.UseCases.Volunteers;
+
+public class UpdateVolunteerPaymentRequestValidator : AbstractValidator<UpdateVolunteerPaymentRequestDto>
 {
-    public class UpdateVolunteerPaymentRequestValidator : AbstractValidator<UpdateVolunteerPaymentRequestDto>
+    public UpdateVolunteerPaymentRequestValidator()
     {
-        public UpdateVolunteerPaymentRequestValidator()
-        {
-            RuleForEach(c => c.PaymentInfos)
-                .ValidateValueObj(x => PaymentInfo.Create(x.Title, x.Instructions));
-        }
+        RuleForEach(c => c.PaymentInfos)
+            .ValidateValueObj(x => PaymentInfo.Create(x.Title, x.Instructions));
     }
 }

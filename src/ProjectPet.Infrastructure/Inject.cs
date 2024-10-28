@@ -10,42 +10,41 @@ using ProjectPet.Infrastructure.Options;
 using ProjectPet.Infrastructure.Providers;
 using ProjectPet.Infrastructure.Repositories;
 
-namespace ProjectPet.Infrastructure
+namespace ProjectPet.Infrastructure;
+
+public static class Inject
 {
-    public static class Inject
+    public static IHostApplicationBuilder AddInfrastructure(
+        this IHostApplicationBuilder builder)
     {
-        public static IHostApplicationBuilder AddInfrastructure(
-            this IHostApplicationBuilder builder)
+        builder.AddMinio();
+
+        builder.Services.AddScoped<ApplicationDbContext>();
+        builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        return builder;
+    }
+
+    private static IHostApplicationBuilder AddMinio(
+        this IHostApplicationBuilder builder)
+    {
+        builder.Services.Configure<OptionsMinIO>(
+            builder.Configuration.GetSection(OptionsMinIO.SECTION));
+
+        builder.Services.AddMinio(options =>
         {
-            builder.AddMinio();
+            var config = builder.Configuration.GetSection(OptionsMinIO.SECTION).Get<OptionsMinIO>() ??
+                throw new ArgumentNullException("Minio options not defined!");
 
-            builder.Services.AddScoped<ApplicationDbContext>();
-            builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+            options.WithEndpoint(config.Endpoint);
+            options.WithCredentials(config.AccessKey, config.SecretKey);
+            options.WithSSL(config.WithSSL);
+        });
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.AddScoped<IFileProvider, MinioProvider>();
 
-            return builder;
-        }
-
-        private static IHostApplicationBuilder AddMinio(
-            this IHostApplicationBuilder builder)
-        {
-            builder.Services.Configure<OptionsMinIO>(
-                builder.Configuration.GetSection(OptionsMinIO.SECTION));
-
-            builder.Services.AddMinio(options =>
-            {
-                var config = builder.Configuration.GetSection(OptionsMinIO.SECTION).Get<OptionsMinIO>() ?? 
-                    throw new ArgumentNullException("Minio options not defined!");
-
-                options.WithEndpoint(config.Endpoint);
-                options.WithCredentials(config.AccessKey,config.SecretKey);
-                options.WithSSL(config.WithSSL);
-            });
-
-            builder.Services.AddScoped<IFileProvider, MinioProvider>();
-
-            return builder;
-        }
+        return builder;
     }
 }

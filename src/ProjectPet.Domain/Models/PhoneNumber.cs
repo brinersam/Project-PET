@@ -2,34 +2,33 @@
 using ProjectPet.Domain.Shared;
 using System.Text.RegularExpressions;
 
-namespace ProjectPet.Domain.Models
+namespace ProjectPet.Domain.Models;
+
+public record PhoneNumber
 {
-    public record PhoneNumber
+    private const string REGEX = "^\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{2}[\\s.-]?\\d{2}$";
+
+    public string AreaCode { get; } = null!;
+    public string Number { get; } = null!;
+
+    private PhoneNumber(string number, string areaCode)
     {
-        private const string REGEX = "^\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{2}[\\s.-]?\\d{2}$";
+        Number = number;
+        AreaCode = areaCode;
+    }
 
-        public string AreaCode { get; } = null!;
-        public string Number { get; } = null!;
+    public static Result<PhoneNumber, Error> Create(string number, string areaCode)
+    {
+        var result = Validator
+            .ValidatorString(maxLen: 4)
+            .Check(areaCode, nameof(areaCode));
 
-        private PhoneNumber(string number, string areaCode)
-        {
-            Number = number;
-            AreaCode = areaCode;
-        }
+        if (result.IsFailure)
+            return result.Error;
 
-        public static Result<PhoneNumber, Error> Create(string number, string areaCode)
-        {
-            var result = Validator
-                .ValidatorString(maxLen : 4)
-                .Check(areaCode, nameof(areaCode));
+        if (!Regex.IsMatch(number, REGEX))
+            return Error.Validation("value.is.invalid", "Phone number must adhere to format : 123-456-78-90 or 1234567890");
 
-            if (result.IsFailure)
-                return result.Error;
-
-            if (!Regex.IsMatch(number, REGEX))
-                return Error.Validation("value.is.invalid", "Phone number must be 10 characters long, with optional - inbetween number groups");
-
-            return new PhoneNumber(number, areaCode);
-        }
+        return new PhoneNumber(number, areaCode);
     }
 }
