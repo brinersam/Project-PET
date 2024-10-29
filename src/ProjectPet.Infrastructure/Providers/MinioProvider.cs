@@ -212,7 +212,6 @@ public class MinioProvider : IFileProvider
             return await _minioClient.BucketExistsAsync(
                 bucketExistsArgs,
                 cancellationToken);
-            return true;
         }
         catch (Minio.Exceptions.BucketNotFoundException)
         {

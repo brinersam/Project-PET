@@ -15,8 +15,7 @@ public partial class Initial : Migration
             columns: table => new
             {
                 id = table.Column<Guid>(type: "uuid", nullable: false),
-                name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                species_id = table.Column<Guid>(type: "uuid", nullable: false)
+                name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false)
             },
             constraints: table =>
             {
@@ -32,6 +31,7 @@ public partial class Initial : Migration
                 email = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                 description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                 yo_experience = table.Column<int>(type: "integer", nullable: false),
+                is_deleted = table.Column<bool>(type: "boolean", nullable: false),
                 area_code = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                 number = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                 payment_methods = table.Column<string>(type: "jsonb", nullable: true),
@@ -48,14 +48,14 @@ public partial class Initial : Migration
             {
                 id = table.Column<Guid>(type: "uuid", nullable: false),
                 value = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                breed_id = table.Column<Guid>(type: "uuid", nullable: true)
+                species_id = table.Column<Guid>(type: "uuid", nullable: true)
             },
             constraints: table =>
             {
                 table.PrimaryKey("pk_breeds", x => x.id);
                 table.ForeignKey(
-                    name: "fk_breeds_species_breed_id",
-                    column: x => x.breed_id,
+                    name: "fk_breeds_species_species_id",
+                    column: x => x.species_id,
                     principalTable: "species",
                     principalColumn: "id");
             });
@@ -71,6 +71,7 @@ public partial class Initial : Migration
                 status = table.Column<string>(type: "text", nullable: false),
                 date_of_birth = table.Column<DateOnly>(type: "date", nullable: false),
                 created_on = table.Column<DateOnly>(type: "date", nullable: false),
+                is_deleted = table.Column<bool>(type: "boolean", nullable: false),
                 pet_id = table.Column<Guid>(type: "uuid", nullable: true),
                 apartment = table.Column<int>(type: "integer", nullable: false),
                 block = table.Column<string>(type: "text", nullable: true),
@@ -102,9 +103,9 @@ public partial class Initial : Migration
             });
 
         migrationBuilder.CreateIndex(
-            name: "ix_breeds_breed_id",
+            name: "ix_breeds_species_id",
             table: "breeds",
-            column: "breed_id");
+            column: "species_id");
 
         migrationBuilder.CreateIndex(
             name: "ix_pets_pet_id",
