@@ -5,6 +5,7 @@ using Minio;
 using Minio.AspNetCore;
 using ProjectPet.Application.Database;
 using ProjectPet.Application.Providers;
+using ProjectPet.Application.UseCases.AnimalSpecies;
 using ProjectPet.Application.UseCases.Volunteers;
 using ProjectPet.Infrastructure.Options;
 using ProjectPet.Infrastructure.Providers;
@@ -21,6 +22,7 @@ public static class Inject
 
         builder.Services.AddScoped<ApplicationDbContext>();
         builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+        builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
 
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

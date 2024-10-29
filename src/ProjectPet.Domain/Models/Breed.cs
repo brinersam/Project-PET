@@ -13,12 +13,12 @@ public class Breed : EntityBase
         Value = value;
     }
 
-    public static Result<Breed, Error> Create(Guid id, string value)
+    public static Result<Breed, Error> Create(string value)
     {
+        //if we use Guid.NewGuide, then on attempt at creating through one to many relationship we get
+        //The database operation was expected to affect 1 row(s), but actually affected 0 row(s)
+        var id = Guid.Empty;
         var strValidator = Validator.ValidatorString();
-
-        if (id.Equals(Guid.Empty))
-            return Errors.General.ValueIsEmptyOrNull(id, nameof(id));
 
         var result = strValidator.Check(value, nameof(value));
         if (result.IsFailure)
