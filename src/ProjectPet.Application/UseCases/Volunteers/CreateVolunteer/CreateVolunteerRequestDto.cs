@@ -1,4 +1,5 @@
-﻿using ProjectPet.Domain.Models;
+﻿using ProjectPet.Application.Dto;
+using ProjectPet.Domain.Models;
 
 namespace ProjectPet.Application.UseCases.Volunteers.CreateVolunteer;
 

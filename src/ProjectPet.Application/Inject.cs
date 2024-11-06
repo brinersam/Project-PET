@@ -33,13 +33,6 @@ public static class Inject
         builder.Services.AddScoped<DeleteSpeciesHandler>();
         return builder;
     }
-    public static IHostApplicationBuilder AddFileMgmtHandlers(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddScoped<UploadFileHandler>();
-        builder.Services.AddScoped<GetFileInfoHandler>();
-        builder.Services.AddScoped<DeleteFileHandler>();
-        return builder;
-    }
     public static IHostApplicationBuilder AddVolunteerHandlers(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<CreateVolunteerHandler>();

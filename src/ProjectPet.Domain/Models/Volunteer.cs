@@ -11,11 +11,13 @@ public class Volunteer : EntityBase, ISoftDeletable
     public string Description { get; private set; } = null!;
     public int YOExperience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; } = null!;
-    private List<Pet> _ownedPets;
+    private List<Pet> _ownedPets = null!;
     public IReadOnlyList<Pet> OwnedPets => _ownedPets;
     public PaymentMethodsList? PaymentMethods { get; private set; }
     public SocialNetworkList? SocialNetworks { get; private set; }
+#pragma warning disable IDE0052 // Remove unread private members
     private bool _isDeleted = false;
+#pragma warning restore IDE0052 // Remove unread private members
 
     public Volunteer(Guid id) : base(id) { }
 
@@ -132,5 +134,5 @@ public class Volunteer : EntityBase, ISoftDeletable
 }
 public record SocialNetworkList
 {
-    public List<SocialNetwork> Data { get; set; }
+    public List<SocialNetwork> Data { get; set; } = null!;
 }

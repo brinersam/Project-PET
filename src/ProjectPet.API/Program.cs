@@ -1,3 +1,4 @@
+global using Error = ProjectPet.Domain.Shared.Error;
 using ProjectPet.API;
 using ProjectPet.API.MIddlewares;
 using ProjectPet.Application;

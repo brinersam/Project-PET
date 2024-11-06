@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ProjectPet.API.Response;
-using ProjectPet.Domain.Shared;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 
 namespace ProjectPet.API.Validation;
