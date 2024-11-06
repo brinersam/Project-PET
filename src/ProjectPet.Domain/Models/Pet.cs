@@ -102,23 +102,20 @@ public class Pet : EntityBase, ISoftDeletable
 
     public void AddPhotos(IEnumerable<PetPhoto> photos)
     {
-        if (photos.Count() <= 0)
+        if (photos.Any() == false)
             return;
 
-        List<PetPhoto> resultPhotos = [];
-
-        if (photos.Any(photo => photo.IsPrimary == true))
+        if (Photos.Data.Any(photo => photo.IsPrimary == true))
         {
-            resultPhotos = photos.ToList();
+            Photos.Data.AddRange(photos);
+            return;
         }
-        else
-        {
-            resultPhotos = photos.Skip(1).ToList();
 
-            PetPhoto mainPhoto = PetPhoto.Create(photos.First().StoragePath, true).Value;
+        List<PetPhoto> resultPhotos = photos.Skip(1).ToList();
 
-            resultPhotos.Add(mainPhoto);
-        }
+        PetPhoto mainPhoto = PetPhoto.Create(photos.First().StoragePath, true).Value;
+
+        resultPhotos.Insert(0,mainPhoto);
 
         Photos.Data.AddRange(resultPhotos);
     }
