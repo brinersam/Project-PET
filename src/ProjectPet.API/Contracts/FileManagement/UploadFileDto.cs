@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.API.Contracts.FileManagement.UploadFile;
+﻿namespace ProjectPet.API.Contracts.FileManagement;
 
 public record UploadFileDto(
     string Title,

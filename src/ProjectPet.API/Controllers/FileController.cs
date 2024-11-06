@@ -1,9 +1,7 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using ProjectPet.API.Contracts.FileManagement.UploadFile;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProjectPet.API.Contracts.FileManagement;
 using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
-using ProjectPet.API.Response;
 using ProjectPet.Application.UseCases.FileManagement.DeleteFile;
 using ProjectPet.Application.UseCases.FileManagement.Dto;
 using ProjectPet.Application.UseCases.FileManagement.GetFile;
@@ -16,15 +14,10 @@ public class FileController : CustomControllerBase
     [HttpPost("{debugUserId:int}")]
     public async Task<IActionResult> UploadFiles(
         [FromServices] UploadFileHandler service,
-        [FromServices] IValidator<UploadFileDto> validator,
         [FromRoute] int debugUserId,
         [FromForm] UploadFileDto dto,
         CancellationToken cancellationToken = default)
     {
-        var validationResult = validator.Validate(dto);
-        if (validationResult.IsValid == false)
-            return Envelope.ToResponse(validationResult.Errors);
-
         await using (var processor = new FormFileProcessor())
         {
             List<FileDto> filesDto = processor.Process(dto.Files);

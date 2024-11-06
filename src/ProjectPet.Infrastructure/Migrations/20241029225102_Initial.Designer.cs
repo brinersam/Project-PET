@@ -13,7 +13,7 @@ using ProjectPet.Infrastructure;
 namespace ProjectPet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241002222001_Initial")]
+    [Migration("20241029225102_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,21 +33,21 @@ namespace ProjectPet.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid?>("SpeciesId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("species_id");
+
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)")
                         .HasColumnName("value");
 
-                    b.Property<Guid?>("breed_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("breed_id");
-
                     b.HasKey("Id")
                         .HasName("pk_breeds");
 
-                    b.HasIndex("breed_id")
-                        .HasDatabaseName("ix_breeds_breed_id");
+                    b.HasIndex("SpeciesId")
+                        .HasDatabaseName("ix_breeds_species_id");
 
                     b.ToTable("breeds", (string)null);
                 });
@@ -88,6 +88,10 @@ namespace ProjectPet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("status");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.Property<Guid?>("pet_id")
                         .HasColumnType("uuid")
@@ -209,15 +213,6 @@ namespace ProjectPet.Infrastructure.Migrations
                         .HasColumnType("character varying(30)")
                         .HasColumnName("name");
 
-                    b.ComplexProperty<Dictionary<string, object>>("SpeciesId", "ProjectPet.Domain.Models.Species.SpeciesId#SpeciesID", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("species_id");
-                        });
-
                     b.HasKey("Id")
                         .HasName("pk_species");
 
@@ -253,6 +248,10 @@ namespace ProjectPet.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("yo_experience");
 
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
                     b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "ProjectPet.Domain.Models.Volunteer.PhoneNumber#PhoneNumber", b1 =>
                         {
                             b1.IsRequired();
@@ -280,9 +279,9 @@ namespace ProjectPet.Infrastructure.Migrations
                 {
                     b.HasOne("ProjectPet.Domain.Models.Species", null)
                         .WithMany("RelatedBreeds")
-                        .HasForeignKey("breed_id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .HasConstraintName("fk_breeds_species_breed_id");
+                        .HasForeignKey("SpeciesId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .HasConstraintName("fk_breeds_species_species_id");
                 });
 
             modelBuilder.Entity("ProjectPet.Domain.Models.Pet", b =>

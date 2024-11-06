@@ -5,14 +5,14 @@ namespace ProjectPet.Domain.Models;
 
 public record AnimalData
 {
-    public SpeciesID SpeciesID { get; } = null!;
+    public Guid SpeciesID { get; }
     public Guid BreedID { get; }
-    private AnimalData(SpeciesID speciesID, Guid breedID)
+    private AnimalData(Guid speciesID, Guid breedID)
     {
         SpeciesID = speciesID;
         BreedID = breedID;
     }
-    public static Result<AnimalData, Error> Create(SpeciesID speciesID, Guid breedID)
+    public static Result<AnimalData, Error> Create(Guid speciesID, Guid breedID)
     {
         var validator = Validator.ValidatorNull<Guid>();
 
@@ -20,7 +20,7 @@ public record AnimalData
         if (result.IsFailure)
             return result.Error;
 
-        result = validator.Check(speciesID.Value, nameof(speciesID));
+        result = validator.Check(speciesID, nameof(speciesID));
         if (result.IsFailure)
             return result.Error;
 

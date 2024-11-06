@@ -18,10 +18,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         builder.ComplexProperty(e => e.AnimalData, ba =>
         {
-            ba.Property(x => x.SpeciesID)
-                .HasConversion(
-                    push => push.Value,
-                    pull => SpeciesID.New(pull));
+            ba.Property(x => x.SpeciesID).IsRequired();
 
             ba.Property(e => e.BreedID).IsRequired();
         });

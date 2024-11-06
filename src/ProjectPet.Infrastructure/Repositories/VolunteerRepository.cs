@@ -38,14 +38,14 @@ public class VolunteerRepository : IVolunteerRepository
     public async Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         _dbContext.Volunteers.Attach(volunteer);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id;
     }
 
     public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
-        _dbContext.Remove(volunteer);
+        _dbContext.Volunteers.Remove(volunteer);
         await _dbContext.SaveChangesAsync();
 
         return volunteer.Id;
