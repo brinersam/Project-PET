@@ -131,6 +131,19 @@ public class Volunteer : EntityBase, ISoftDeletable
     {
         this.SocialNetworks = new() { Data = infos.ToList() };
     }
+
+    public void AddPet(Pet pet)
+    {
+        _ownedPets.Add(pet);
+    }
+
+    public Result<Pet, Error> GetPetById(Guid id)
+    {
+        Pet? pet = _ownedPets.FirstOrDefault(p => p.Id == id);
+        if (pet is null)
+            return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user {FullName}!");
+        return pet;
+    }
 }
 public record SocialNetworkList
 {

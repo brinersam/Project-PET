@@ -22,6 +22,16 @@ public class MinioProvider : IFileProvider
         _options = options;
     }
 
+    public string FileNamer(params string[] args)
+    {
+        string title = args[0];
+        string petID = args[1];
+        string identifier = args[2];
+        string extensionWithADot = args[3];
+
+        return $"{title}_{petID}_{identifier}{extensionWithADot}";
+    }
+
     public async Task<Result<List<string>, Error>> UploadFilesAsync(
         IEnumerable<FileDataDto> dataList,
         string bucket,

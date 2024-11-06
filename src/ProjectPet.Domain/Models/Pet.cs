@@ -100,6 +100,29 @@ public class Pet : EntityBase, ISoftDeletable
             paymentMethods);
     }
 
+    public void AddPhotos(IEnumerable<PetPhoto> photos)
+    {
+        if (photos.Count() <= 0)
+            return;
+
+        List<PetPhoto> resultPhotos = [];
+
+        if (photos.Any(photo => photo.IsPrimary == true))
+        {
+            resultPhotos = photos.ToList();
+        }
+        else
+        {
+            resultPhotos = photos.Skip(1).ToList();
+
+            PetPhoto mainPhoto = PetPhoto.Create(photos.First().StoragePath, true).Value;
+
+            resultPhotos.Add(mainPhoto);
+        }
+
+        Photos.Data.AddRange(resultPhotos);
+    }
+
     public void Delete()
     {
         _isDeleted = true;
