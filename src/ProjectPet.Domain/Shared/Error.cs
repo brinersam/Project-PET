@@ -26,7 +26,13 @@ public class Error
             return false;
         }
 
-        ErrorType errType = Enum.Parse<ErrorType>(split[2]);
+        bool parseSuccess = Enum.TryParse(split[2], out ErrorType errType);
+        if (parseSuccess == false)
+        {
+            result = null!;
+            return false;
+        }
+
         result = new Error(split[0], split[1], errType);
         return true;
     }

@@ -6,7 +6,9 @@ namespace ProjectPet.Domain.Models;
 
 public class Pet : EntityBase, ISoftDeletable
 {
+#pragma warning disable IDE0052 // Remove unread private members
     private bool _isDeleted = false;
+#pragma warning restore IDE0052 // Remove unread private members
     public string Name { get; private set; } = null!;
     public AnimalData AnimalData { get; private set; } = null!;
     public string Description { get; private set; } = null!;
@@ -17,8 +19,8 @@ public class Pet : EntityBase, ISoftDeletable
     public Status Status { get; private set; }
     public DateOnly DateOfBirth { get; private set; }
     public DateOnly CreatedOn { get; private set; }
-    public PhotoList? Photos { get; private set; }
-    public PaymentMethodsList? PaymentMethods { get; private set; }
+    public PhotoList Photos { get; private set; } = null!;
+    public PaymentMethodsList PaymentMethods { get; private set; } = null!;
     public Pet() : base(Guid.Empty) { } //efcore
 
     private Pet(
@@ -51,7 +53,6 @@ public class Pet : EntityBase, ISoftDeletable
     }
 
     public static Result<Pet, Error> Create(
-        Guid id,
         string name,
         AnimalData animalData,
         string description,
@@ -61,13 +62,11 @@ public class Pet : EntityBase, ISoftDeletable
         PhoneNumber phoneNumber,
         Status status,
         DateOnly dateOfBirth,
-        DateOnly createdOn,
         IEnumerable<PetPhoto> photos,
         IEnumerable<PaymentInfo> paymentMethods)
     {
-        var resultID = Validator.ValidatorNull<Guid>().Check(id, nameof(id));
-        if (resultID.IsFailure)
-            return resultID.Error;
+        var id = Guid.Empty;
+        DateOnly createdOn = DateOnly.FromDateTime(DateTime.Now);
 
         var validatorStr = Validator.ValidatorString();
 
@@ -101,6 +100,26 @@ public class Pet : EntityBase, ISoftDeletable
             paymentMethods);
     }
 
+    public void AddPhotos(IEnumerable<PetPhoto> photos)
+    {
+        if (photos.Any() == false)
+            return;
+
+        if (Photos.Data.Any(photo => photo.IsPrimary == true))
+        {
+            Photos.Data.AddRange(photos);
+            return;
+        }
+
+        List<PetPhoto> resultPhotos = photos.Skip(1).ToList();
+
+        PetPhoto mainPhoto = PetPhoto.Create(photos.First().StoragePath, true).Value;
+
+        resultPhotos.Insert(0,mainPhoto);
+
+        Photos.Data.AddRange(resultPhotos);
+    }
+
     public void Delete()
     {
         _isDeleted = true;
@@ -114,12 +133,12 @@ public class Pet : EntityBase, ISoftDeletable
 
 public record PaymentMethodsList
 {
-    public List<PaymentInfo> Data { get; set; }
+    public List<PaymentInfo> Data { get; set; } = null!;
 }
 
 public record PhotoList
 {
-    public List<PetPhoto> Data { get; set; }
+    public List<PetPhoto> Data { get; set; } = null!;
 }
 
 public enum Status

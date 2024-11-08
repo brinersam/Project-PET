@@ -5,20 +5,22 @@ namespace ProjectPet.Application.Providers;
 
 public interface IFileProvider
 {
+    string FileNamer(params string[] args);
+
     Task<UnitResult<Error>> DeleteFilesAsync(
         string bucket,
-        int userId,
+        Guid userId,
         IEnumerable<string> fileKeys,
         CancellationToken cancellationToken = default);
 
     Task<Result<List<FileInfoDto>, Error>> GetFilesAsync(
         string bucket,
-        int userId,
+        Guid userId,
         CancellationToken cancellationToken = default);
 
     Task<Result<List<string>, Error>> UploadFilesAsync(
         IEnumerable<FileDataDto> dataList,
         string bucket,
-        int userId,
+        Guid userId,
         CancellationToken cancellationToken = default);
 }

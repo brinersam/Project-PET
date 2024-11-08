@@ -2,7 +2,7 @@
 using FluentValidation;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.Validation;
+namespace ProjectPet.Application.Extensions;
 
 public static class CustomValidators
 {

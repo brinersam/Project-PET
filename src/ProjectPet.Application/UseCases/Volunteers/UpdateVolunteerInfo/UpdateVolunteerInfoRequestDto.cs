@@ -1,4 +1,6 @@
-﻿namespace ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerInfo;
+﻿using ProjectPet.Application.Dto;
+
+namespace ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerInfo;
 
 public record UpdateVolunteerInfoRequestDto(
     string? FullName,

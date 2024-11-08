@@ -11,7 +11,7 @@ public record Address
     public string? Block { get; }
     public int? Entrance { get; }
     public int? Floor { get; }
-    public int Apartment { get; }
+    public int? Apartment { get; }
 
     private Address(
         string name,
@@ -20,7 +20,7 @@ public record Address
         string? block,
         int? entrance,
         int? floor,
-        int apartment)
+        int? apartment)
     {
         Name = name;
         Street = street;
@@ -38,7 +38,7 @@ public record Address
         string? block,
         int? entrance,
         int? floor,
-        int apartment)
+        int? apartment)
     {
 
         var strValidator = Validator.ValidatorString();

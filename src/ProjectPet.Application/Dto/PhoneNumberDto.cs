@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.Application.UseCases.Volunteers;
+﻿namespace ProjectPet.Application.Dto;
 
 public record PhoneNumberDto(
     string Phonenumber,

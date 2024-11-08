@@ -11,11 +11,13 @@ public class Volunteer : EntityBase, ISoftDeletable
     public string Description { get; private set; } = null!;
     public int YOExperience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; } = null!;
-    private List<Pet> _ownedPets;
+    private List<Pet> _ownedPets = null!;
     public IReadOnlyList<Pet> OwnedPets => _ownedPets;
     public PaymentMethodsList? PaymentMethods { get; private set; }
     public SocialNetworkList? SocialNetworks { get; private set; }
+#pragma warning disable IDE0052 // Remove unread private members
     private bool _isDeleted = false;
+#pragma warning restore IDE0052 // Remove unread private members
 
     public Volunteer(Guid id) : base(id) { }
 
@@ -129,8 +131,21 @@ public class Volunteer : EntityBase, ISoftDeletable
     {
         this.SocialNetworks = new() { Data = infos.ToList() };
     }
+
+    public void AddPet(Pet pet)
+    {
+        _ownedPets.Add(pet);
+    }
+
+    public Result<Pet, Error> GetPetById(Guid id)
+    {
+        Pet? pet = _ownedPets.FirstOrDefault(p => p.Id == id);
+        if (pet is null)
+            return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user {FullName}!");
+        return pet;
+    }
 }
 public record SocialNetworkList
 {
-    public List<SocialNetwork> Data { get; set; }
+    public List<SocialNetwork> Data { get; set; } = null!;
 }

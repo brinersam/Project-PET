@@ -4,14 +4,13 @@ using ProjectPet.Application.UseCases.AnimalSpecies.CreateBreed;
 using ProjectPet.Application.UseCases.AnimalSpecies.CreateSpecies;
 using ProjectPet.Application.UseCases.AnimalSpecies.DeleteBreed;
 using ProjectPet.Application.UseCases.AnimalSpecies.DeleteSpecies;
-using ProjectPet.Application.UseCases.FileManagement.DeleteFile;
-using ProjectPet.Application.UseCases.FileManagement.GetFile;
-using ProjectPet.Application.UseCases.FileManagement.UploadFile;
+using ProjectPet.Application.UseCases.Volunteers.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.DeleteVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerPayment;
 using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerSocials;
+using ProjectPet.Application.UseCases.Volunteers.UploadPetPhoto;
 
 namespace ProjectPet.Application;
 
@@ -20,7 +19,6 @@ public static class Inject
     public static IHostApplicationBuilder AddApplication(this IHostApplicationBuilder builder)
     {
         return builder
-            .AddFileMgmtHandlers()
             .AddSpeciesHandlers()
             .AddVolunteerHandlers();
     }
@@ -33,13 +31,6 @@ public static class Inject
         builder.Services.AddScoped<DeleteSpeciesHandler>();
         return builder;
     }
-    public static IHostApplicationBuilder AddFileMgmtHandlers(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddScoped<UploadFileHandler>();
-        builder.Services.AddScoped<GetFileInfoHandler>();
-        builder.Services.AddScoped<DeleteFileHandler>();
-        return builder;
-    }
     public static IHostApplicationBuilder AddVolunteerHandlers(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<CreateVolunteerHandler>();
@@ -47,6 +38,9 @@ public static class Inject
         builder.Services.AddScoped<UpdateVolunteerPaymentHandler>();
         builder.Services.AddScoped<UpdateVolunteerSocialsHandler>();
         builder.Services.AddScoped<DeleteVolunteerHandler>();
+
+        builder.Services.AddScoped<CreatePetHandler>();
+        builder.Services.AddScoped<UploadPetPhotoHandler>();
         return builder;
     }
 }

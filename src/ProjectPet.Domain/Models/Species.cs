@@ -7,7 +7,7 @@ namespace ProjectPet.Domain.Models;
 public class Species : EntityBase
 {
     public string Name { get; private set; } = null!;
-    private List<Breed> _relatedBreeds;
+    private List<Breed> _relatedBreeds = null!;
     public IReadOnlyList<Breed> RelatedBreeds => _relatedBreeds;
     public Species(Guid id) : base(id) { } //efcore
     private Species(Guid id, string name) : base(id)
@@ -53,7 +53,7 @@ public class Species : EntityBase
         return Result.Success<Error>();
     }
 
-    private bool TryFindBreedByName(string name, out Breed result)
+    public bool TryFindBreedByName(string name, out Breed result)
     {
         result = RelatedBreeds.FirstOrDefault(x => x.Value == name)!;
         if (result is null)

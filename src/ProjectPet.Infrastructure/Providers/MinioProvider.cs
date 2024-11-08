@@ -22,10 +22,20 @@ public class MinioProvider : IFileProvider
         _options = options;
     }
 
+    public string FileNamer(params string[] args)
+    {
+        string title = args[0];
+        string petID = args[1];
+        string identifier = args[2];
+        string extensionWithADot = args[3];
+
+        return $"{title}_{petID}_{identifier}{extensionWithADot}";
+    }
+
     public async Task<Result<List<string>, Error>> UploadFilesAsync(
         IEnumerable<FileDataDto> dataList,
         string bucket,
-        int userId,
+        Guid userId,
         CancellationToken cancellationToken = default)
     {
         var semaphore = new SemaphoreSlim(_options.Value.MaxConcurrentUpload);
@@ -59,7 +69,7 @@ public class MinioProvider : IFileProvider
 
     public async Task<Result<List<FileInfoDto>, Error>> GetFilesAsync(
         string bucket,
-        int userId,
+        Guid userId,
         CancellationToken cancellationToken = default)
     {
         string userBucket = GetBucketName(bucket, userId);
@@ -67,7 +77,7 @@ public class MinioProvider : IFileProvider
         if (await BucketExistsAsync(userBucket, cancellationToken) == false)
             return ErrorMissingBucket(userBucket);
 
-        var objectNamesRes = await GetObjectsFromBucketAsync(userBucket);
+        var objectNamesRes = await GetObjectsFromBucketAsync(userBucket, cancellationToken);
         if (objectNamesRes.IsFailure)
             return objectNamesRes.Error;
 
@@ -80,7 +90,7 @@ public class MinioProvider : IFileProvider
 
     public async Task<UnitResult<Error>> DeleteFilesAsync(
         string bucket,
-        int userId,
+        Guid userId,
         IEnumerable<string> fileKeys,
         CancellationToken cancellationToken = default)
     {
@@ -191,7 +201,7 @@ public class MinioProvider : IFileProvider
             var makeBucketArgs = new MakeBucketArgs()
                 .WithBucket(bucketName);
 
-            await _minioClient.MakeBucketAsync(makeBucketArgs);
+            await _minioClient.MakeBucketAsync(makeBucketArgs, cancellationToken);
 
             return Result.Success<Error>();
         }
@@ -225,6 +235,6 @@ public class MinioProvider : IFileProvider
     private Error ErrorFailure(string msg)
 => Error.Failure("minio.failure", $"Minio errored: {msg}");
 
-    private static string GetBucketName(string bucket, int userId)
+    private static string GetBucketName(string bucket, Guid userId)
         => $"id{userId}.{bucket}";
 }

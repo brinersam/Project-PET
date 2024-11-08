@@ -1,5 +1,4 @@
 ﻿using ProjectPet.API.Response;
-using ProjectPet.Domain.Shared;
 using System.Net;
 
 namespace ProjectPet.API.MIddlewares;
