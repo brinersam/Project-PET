@@ -9,6 +9,7 @@ public class Pet : EntityBase, ISoftDeletable
 #pragma warning disable IDE0052 // Remove unread private members
     private bool _isDeleted = false;
 #pragma warning restore IDE0052 // Remove unread private members
+    public Position OrderingPosition { get; private set; } = null!;
     public string Name { get; private set; } = null!;
     public AnimalData AnimalData { get; private set; } = null!;
     public string Description { get; private set; } = null!;
@@ -29,6 +30,7 @@ public class Pet : EntityBase, ISoftDeletable
         AnimalData animalData,
         string description,
         string coat,
+        Position orderingPosition,
         HealthInfo healthInfo,
         Address address,
         PhoneNumber phoneNumber,
@@ -42,6 +44,7 @@ public class Pet : EntityBase, ISoftDeletable
         AnimalData = animalData;
         Description = description;
         Coat = coat;
+        OrderingPosition = orderingPosition;
         HealthInfo = healthInfo;
         Address = address;
         PhoneNumber = phoneNumber;
@@ -57,6 +60,7 @@ public class Pet : EntityBase, ISoftDeletable
         AnimalData animalData,
         string description,
         string coat,
+        Position orderingPosition,
         HealthInfo healthInfo,
         Address address,
         PhoneNumber phoneNumber,
@@ -90,6 +94,7 @@ public class Pet : EntityBase, ISoftDeletable
             animalData,
             description,
             coat,
+            orderingPosition,
             healthInfo,
             address,
             phoneNumber,
@@ -129,6 +134,15 @@ public class Pet : EntityBase, ISoftDeletable
     {
         _isDeleted = false;
     }
+
+    public void SetPosition(Position position)
+        => OrderingPosition = position;
+
+    public void MovePositionForward(int amount = 1)
+        => OrderingPosition = OrderingPosition.MoveForward(amount);
+
+    public void MovePositionBackwards(int amount = 1)
+        => OrderingPosition = OrderingPosition.MoveBackward(amount);
 }
 
 public record PaymentMethodsList

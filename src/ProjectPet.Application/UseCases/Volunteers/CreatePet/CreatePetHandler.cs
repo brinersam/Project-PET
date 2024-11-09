@@ -84,12 +84,20 @@ public class CreatePetHandler
         ))
             return healthInfoError!;
 
+        var volunteerRes = await _volunteerRepository.GetByIdAsync(command.Id, cancellationToken);
+        if (volunteerRes.IsFailure)
+            return volunteerRes.Error;
+        var volunteer = volunteerRes.Value;
+
+        var orderingPosition = Position.Create(volunteer.OwnedPets.Count()+1);
+
         if (Ext.IsDelegateFailed(out Pet pet, out var petError,
             Pet.Create(
                 command.Name,
                 animalData,
                 command.Description,
                 command.Coat,
+                orderingPosition,
                 healthInfo,
                 address,
                 phoneNumber,
@@ -99,11 +107,6 @@ public class CreatePetHandler
                 paymentInfos)
         ))
             return petError!;
-
-        var volunteerRes = await _volunteerRepository.GetByIdAsync(command.Id, cancellationToken);
-        if (volunteerRes.IsFailure)
-            return volunteerRes.Error;
-        var volunteer = volunteerRes.Value;
 
         volunteer.AddPet(pet);
         await _volunteerRepository.Save(volunteer, cancellationToken);
