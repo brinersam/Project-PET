@@ -38,8 +38,6 @@ public class MinioProvider : IFileProvider
         Guid userId,
         CancellationToken cancellationToken = default)
     {
-        return Errors.General.NotFound(typeof(int));
-
         var semaphore = new SemaphoreSlim(_options.Value.MaxConcurrentUpload);
         string userBucket = GetBucketName(bucket, userId);
 
