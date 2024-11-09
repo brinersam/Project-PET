@@ -49,7 +49,7 @@ public class FileCleanupBackgroundService : BackgroundService
                 _logger.LogInformation($"Cleaned up scheduled file {fileData.ObjectName}!");
             }
 
-            await Task.Delay(1000, stoppingToken);
+            await Task.Delay(1000 * 60 * 60, stoppingToken);
         }
 
         await Task.CompletedTask;
