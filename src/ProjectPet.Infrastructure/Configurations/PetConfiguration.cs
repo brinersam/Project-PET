@@ -23,6 +23,11 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             ba.Property(e => e.BreedID).IsRequired();
         });
 
+        builder.ComplexProperty(e => e.OrderingPosition, ba =>
+        {
+            ba.Property(x => x.Value).IsRequired();
+        });
+
         builder.Property(e => e.Description)
             .ConfigureString(Constants.STRING_LEN_MEDIUM);
 

@@ -2,4 +2,6 @@
 
 public record FileDataDto(
     Stream Stream,
-    string ObjectName);
+    string ObjectName,
+    Guid UserId,
+    string Bucket);

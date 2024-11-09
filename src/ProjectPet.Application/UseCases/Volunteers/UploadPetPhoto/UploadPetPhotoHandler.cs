@@ -4,6 +4,7 @@ using ProjectPet.Application.Database;
 using ProjectPet.Application.Providers;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
+using ProjectPet.Infrastructure.MessageQueues;
 
 namespace ProjectPet.Application.UseCases.Volunteers.UploadPetPhoto;
 
@@ -16,17 +17,20 @@ public class UploadPetPhotoHandler
     private readonly IFileProvider _fileProvider;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IMessageQueue<IEnumerable<FileDataDto>> _messageQueue;
 
     public UploadPetPhotoHandler(
         ILogger<UploadPetPhotoHandler> logger,
         IFileProvider fileProvider,
         IUnitOfWork unitOfWork,
-        IVolunteerRepository volunteerRepository)
+        IVolunteerRepository volunteerRepository,
+        IMessageQueue<IEnumerable<FileDataDto>> messageQueue)
     {
         _logger = logger;
         _fileProvider = fileProvider;
         _unitOfWork = unitOfWork;
         _volunteerRepository = volunteerRepository;
+        _messageQueue = messageQueue;
     }
 
     public async Task<Result<List<string>, Error>> HandleAsync(
@@ -65,7 +69,7 @@ public class UploadPetPhotoHandler
                     Guid.NewGuid().ToString(),
                     fileExtension);
 
-                fileList.Add(new FileDataDto(file.Stream, fileName));
+                fileList.Add(new FileDataDto(file.Stream, fileName, volunteer.Id, BUCKETNAME));
             }
 
             var fileuploadRes = await _fileProvider.UploadFilesAsync(
@@ -75,7 +79,11 @@ public class UploadPetPhotoHandler
                 cancellationToken);
 
             if (fileuploadRes.IsSuccess == false)
+            {
+                await _messageQueue.WriteAsync(fileList, cancellationToken);
                 return fileuploadRes.Error;
+            }
+                
 
             pet.AddPhotos(fileuploadRes.Value.Select(x => PetPhoto.Create(x).Value));
 
