@@ -139,10 +139,10 @@ public class Pet : EntityBase, ISoftDeletable
         => OrderingPosition = position;
 
     public void MovePositionForward(int amount = 1)
-        => OrderingPosition.MoveForward(amount);
+        => OrderingPosition = OrderingPosition.MoveForward(amount);
 
     public void MovePositionBackwards(int amount = 1)
-        => OrderingPosition.MoveBackward(amount);
+        => OrderingPosition = OrderingPosition.MoveBackward(amount);
 }
 
 public record PaymentMethodsList
