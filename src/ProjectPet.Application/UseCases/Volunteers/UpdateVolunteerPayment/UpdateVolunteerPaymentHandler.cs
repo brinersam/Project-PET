@@ -32,7 +32,7 @@ public class UpdateVolunteerPaymentHandler
 
         volunteerRes.Value.UpdatePaymentMethods(PaymentMethodsList);
 
-        var saveRes = await _volunteerRepository.Save(volunteerRes.Value);
+        var saveRes = await _volunteerRepository.Save(volunteerRes.Value, cancellationToken);
         if (saveRes.IsFailure)
             return saveRes.Error;
 

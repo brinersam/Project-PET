@@ -32,7 +32,7 @@ public class DeleteBreedsHandler
 
         speciesAggregate.RemoveBreed(request.BreedId);
 
-        await _speciesRepository.Save(speciesAggregate);
+        await _speciesRepository.Save(speciesAggregate, cancellationToken);
 
         return Result.Success<Error>();
     }

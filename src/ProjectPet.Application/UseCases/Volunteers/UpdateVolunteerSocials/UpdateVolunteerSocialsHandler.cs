@@ -32,7 +32,7 @@ public class UpdateVolunteerSocialsHandler
 
         volunteerRes.Value.UpdateSocialNetworks(SocialNetworksList);
 
-        var saveRes = await _volunteerRepository.Save(volunteerRes.Value);
+        var saveRes = await _volunteerRepository.Save(volunteerRes.Value, cancellationToken);
         if (saveRes.IsFailure)
             return saveRes.Error;
 
