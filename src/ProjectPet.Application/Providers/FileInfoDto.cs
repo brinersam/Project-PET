@@ -2,4 +2,5 @@
 
 public record FileInfoDto(
     string ObjectName,
-    string ObjectLink);
+    string ObjectLink,
+    string BucketName);

@@ -114,8 +114,8 @@ public class MinioProvider : IFileProvider
     }
 
     private async Task<Result<List<FileInfoDto>, Error>> ObjectNamesToUrlPairs(
-    string bucketName,
-    IEnumerable<string> objectNames)
+        string bucketName,
+        IEnumerable<string> objectNames)
     {
         List<FileInfoDto> result = [];
         foreach (string oName in objectNames)
@@ -128,7 +128,7 @@ public class MinioProvider : IFileProvider
                                                   .WithExpiry(60 * 30); // sec
 
                 var url = await _minioClient.PresignedGetObjectAsync(args);
-                result.Add(new FileInfoDto(oName, url));
+                result.Add(new FileInfoDto(oName, url, bucketName));
             }
             catch (Exception ex)
             {
@@ -230,10 +230,10 @@ public class MinioProvider : IFileProvider
     }
 
     private Error ErrorMissingBucket(string bucketName)
-    => Error.NotFound("minio.missing.bucket", $"Requested bucket {bucketName} is not found!");
+        => Error.NotFound("minio.missing.bucket", $"Requested bucket {bucketName} is not found!");
 
     private Error ErrorFailure(string msg)
-=> Error.Failure("minio.failure", $"Minio errored: {msg}");
+        => Error.Failure("minio.failure", $"Minio errored: {msg}");
 
     private static string GetBucketName(string bucket, Guid userId)
         => $"id{userId}.{bucket}";
