@@ -16,7 +16,7 @@ public class Pet : EntityBase, ISoftDeletable
     public string Coat { get; private set; } = null!;
     public HealthInfo HealthInfo { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
-    public PhoneNumber PhoneNumber { get; private set; } = null!;
+    public Phonenumber PhoneNumber { get; private set; } = null!;
     public Status Status { get; private set; }
     public DateOnly DateOfBirth { get; private set; }
     public DateOnly CreatedOn { get; private set; }
@@ -33,7 +33,7 @@ public class Pet : EntityBase, ISoftDeletable
         Position orderingPosition,
         HealthInfo healthInfo,
         Address address,
-        PhoneNumber phoneNumber,
+        Phonenumber phoneNumber,
         Status status,
         DateOnly dateOfBirth,
         DateOnly createdOn,
@@ -63,7 +63,7 @@ public class Pet : EntityBase, ISoftDeletable
         Position orderingPosition,
         HealthInfo healthInfo,
         Address address,
-        PhoneNumber phoneNumber,
+        Phonenumber phoneNumber,
         Status status,
         DateOnly dateOfBirth,
         IEnumerable<PetPhoto> photos,
@@ -120,7 +120,7 @@ public class Pet : EntityBase, ISoftDeletable
 
         PetPhoto mainPhoto = PetPhoto.Create(photos.First().StoragePath, true).Value;
 
-        resultPhotos.Insert(0,mainPhoto);
+        resultPhotos.Insert(0, mainPhoto);
 
         Photos.Data.AddRange(resultPhotos);
     }

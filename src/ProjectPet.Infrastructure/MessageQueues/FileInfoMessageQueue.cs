@@ -1,4 +1,5 @@
-﻿using ProjectPet.Application.Providers;
+﻿using ProjectPet.Application.Messaging;
+using ProjectPet.Application.Providers;
 using System.Threading.Channels;
 
 namespace ProjectPet.Infrastructure.MessageQueues;

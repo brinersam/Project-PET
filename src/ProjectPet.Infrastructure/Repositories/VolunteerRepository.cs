@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Application.UseCases.Volunteers;
+using ProjectPet.Application.Repositories;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 

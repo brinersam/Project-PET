@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ProjectPet.API.Contracts.FileManagement;
 using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
+using ProjectPet.API.Requests.Shared;
+using ProjectPet.API.Requests.Volunteers;
 using ProjectPet.Application.Dto;
-using ProjectPet.Application.UseCases.Volunteers;
-using ProjectPet.Application.UseCases.Volunteers.CreatePet;
-using ProjectPet.Application.UseCases.Volunteers.CreateVolunteer;
-using ProjectPet.Application.UseCases.Volunteers.DeleteVolunteer;
-using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerInfo;
-using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerPayment;
-using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerSocials;
-using ProjectPet.Application.UseCases.Volunteers.UploadPetPhoto;
+using ProjectPet.Application.Repositories;
+using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UploadPetPhoto;
 
 namespace ProjectPet.API.Controllers;
 
@@ -27,10 +28,11 @@ public class VolunteerController : CustomControllerBase
     [HttpPost]
     public async Task<ActionResult<Guid>> Post(
         [FromServices] CreateVolunteerHandler handler,
-        [FromBody] CreateVolunteerRequestDto dto,
+        [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
-        var result = await handler.HandleAsync(dto, cancellationToken);
+        var cmd = request.ToCommand();
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -45,19 +47,7 @@ public class VolunteerController : CustomControllerBase
         [FromBody] CreatePetRequest request,
         CancellationToken cancellationToken = default)
     {
-        var cmd = new CreatePetCommand(
-            id,
-            request.Name,
-            request.Coat,
-            request.Description,
-            DateOnly.FromDateTime(request.DateOfBirth),
-            request.AnimalData_SpeciesId,
-            request.AnimalData_BreedName,
-            request.HealthInfo,
-            request.PaymentInfos,
-            request.Address,
-            request.PhoneNumber,
-            request.Status);
+        var cmd = request.ToCommand(id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -72,20 +62,16 @@ public class VolunteerController : CustomControllerBase
         [FromServices] UploadPetPhotoHandler service,
         [FromRoute] Guid id,
         [FromRoute] Guid petid,
-        [FromForm] UploadFileDto dto,
+        [FromForm] UploadFileRequest req,
         CancellationToken cancellationToken = default)
     {
         await using (var processor = new FormFileProcessor())
         {
-            List<FileDto> filesDto = processor.Process(dto.Files);
+            List<FileDto> filesDto = processor.Process(req.Files);
 
-            var request = new UploadPetPhotoRequest(
-                    id,
-                    petid,
-                    dto.Title,
-                    filesDto);
+            var cmd = req.ToCommand(id, petid, filesDto);
 
-            var result = await service.HandleAsync(request, cancellationToken);
+            var result = await service.HandleAsync(cmd, cancellationToken);
 
             if (result.IsFailure)
                 return result.Error.ToResponse();
@@ -97,11 +83,11 @@ public class VolunteerController : CustomControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Guid>> Delete(
         [FromServices] DeleteVolunteerHandler handler,
-        [FromServices] IValidator<DeleteVolunteerRequest> validator,
+        [FromServices] IValidator<DeleteVolunteerCommand> validator,
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var request = new DeleteVolunteerRequest(id);
+        var request = new DeleteVolunteerCommand(id);
 
         var validatorRes = await validator.ValidateAsync(request, cancellationToken);
         if (validatorRes.IsValid == false)
@@ -118,13 +104,13 @@ public class VolunteerController : CustomControllerBase
     [HttpPatch("{id:guid}/main")]
     public async Task<ActionResult<Guid>> PatchInfo(
         [FromServices] UpdateVolunteerInfoHandler handler,
-        [FromBody] UpdateVolunteerInfoRequestDto dto,
+        [FromBody] UpdateVolunteerInfoRequest request,
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateVolunteerInfoRequest(id, dto);
+        var cmd = new UpdateVolunteerInfoCommand(id, request.dto);
 
-        var result = await handler.HandleAsync(request, cancellationToken);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -136,10 +122,10 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchPayment(
         [FromServices] UpdateVolunteerPaymentHandler handler,
         [FromRoute] Guid id,
-        [FromBody] UpdateVolunteerPaymentRequestDto dto,
+        [FromBody] UpdateVolunteerPaymentRequest dto,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateVolunteerPaymentRequest(id, dto);
+        var request = new UpdateVolunteerPaymentCommand(id, dto.PaymentInfos);
 
         var result = await handler.HandleAsync(request, cancellationToken);
 
@@ -154,10 +140,10 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchSocial(
         [FromServices] UpdateVolunteerSocialsHandler handler,
         [FromRoute] Guid id,
-        [FromBody] UpdateVolunteerSocialsRequestDto dto,
+        [FromBody] UpdateVolunteerSocialsRequest dto,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateVolunteerSocialsRequest(id, dto);
+        var request = new UpdateVolunteerSocialsCommand(id, dto.SocialNetworks);
 
         var result = await handler.HandleAsync(request, cancellationToken);
 

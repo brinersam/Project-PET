@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using ProjectPet.API.Validation;
-using ProjectPet.Application.UseCases.Volunteers;
+using ProjectPet.Application.Repositories;
 using Serilog;
 using Serilog.Events;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
