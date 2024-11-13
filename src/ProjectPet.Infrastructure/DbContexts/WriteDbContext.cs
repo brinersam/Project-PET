@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Application.Dto;
 using ProjectPet.Domain.Models;
 using ProjectPet.Infrastructure.Interceptors;
 

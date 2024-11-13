@@ -1,9 +1,6 @@
 ﻿using FluentValidation;
-using ProjectPet.API.Validation;
-using ProjectPet.Application.Repositories;
 using Serilog;
 using Serilog.Events;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 namespace ProjectPet.API;
 
@@ -28,14 +25,9 @@ public static class Inject
         builder.Services.AddSerilog();
         return builder;
     }
-    public static IServiceCollection AddCustomAutoValidation(this IServiceCollection services)
+    public static IServiceCollection AddValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<IVolunteerRepository>();
-
-        services.AddFluentValidationAutoValidation(config =>
-            config.OverrideDefaultResultFactoryWith<CustomResultFactory>()
-        );
-
+        services.AddValidatorsFromAssemblyContaining<Program>();
         return services;
     }
 }

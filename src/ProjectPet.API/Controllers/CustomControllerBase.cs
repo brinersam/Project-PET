@@ -10,7 +10,7 @@ public abstract class CustomControllerBase : ControllerBase
 {
     public BadRequestObjectResult BadRequest<T>([ActionResultObjectValue] T[] error)
     {
-        var envelope = Envelope.Error(error);
+        var envelope = Envelope.Error([error]);
         return new BadRequestObjectResult(envelope);
     }
     public override BadRequestObjectResult BadRequest([ActionResultObjectValue] object? error)

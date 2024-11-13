@@ -4,6 +4,7 @@ using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
 using ProjectPet.API.Requests.Shared;
 using ProjectPet.API.Requests.Volunteers;
+using ProjectPet.API.Response;
 using ProjectPet.Application.Dto;
 using ProjectPet.Application.Repositories;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
@@ -28,9 +29,14 @@ public class VolunteerController : CustomControllerBase
     [HttpPost]
     public async Task<ActionResult<Guid>> Post(
         [FromServices] CreateVolunteerHandler handler,
+        IValidator<CreateVolunteerRequest> validator,
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var cmd = request.ToCommand();
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -83,8 +89,8 @@ public class VolunteerController : CustomControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Guid>> Delete(
         [FromServices] DeleteVolunteerHandler handler,
-        [FromServices] IValidator<DeleteVolunteerCommand> validator,
         [FromRoute] Guid id,
+        IValidator<DeleteVolunteerCommand> validator,
         CancellationToken cancellationToken = default)
     {
         var request = new DeleteVolunteerCommand(id);
@@ -106,8 +112,13 @@ public class VolunteerController : CustomControllerBase
         [FromServices] UpdateVolunteerInfoHandler handler,
         [FromBody] UpdateVolunteerInfoRequest request,
         [FromRoute] Guid id,
+        IValidator<UpdateVolunteerInfoRequest> validator,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var cmd = new UpdateVolunteerInfoCommand(id, request.dto);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
@@ -122,12 +133,17 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchPayment(
         [FromServices] UpdateVolunteerPaymentHandler handler,
         [FromRoute] Guid id,
-        [FromBody] UpdateVolunteerPaymentRequest dto,
+        IValidator<UpdateVolunteerPaymentRequest> validator,
+        [FromBody] UpdateVolunteerPaymentRequest request,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateVolunteerPaymentCommand(id, dto.PaymentInfos);
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
 
-        var result = await handler.HandleAsync(request, cancellationToken);
+        var cmd = new UpdateVolunteerPaymentCommand(id, request.PaymentInfos);
+
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -140,12 +156,17 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchSocial(
         [FromServices] UpdateVolunteerSocialsHandler handler,
         [FromRoute] Guid id,
-        [FromBody] UpdateVolunteerSocialsRequest dto,
+        IValidator<UpdateVolunteerSocialsRequest> validator,
+        [FromBody] UpdateVolunteerSocialsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateVolunteerSocialsCommand(id, dto.SocialNetworks);
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
 
-        var result = await handler.HandleAsync(request, cancellationToken);
+        var cmd = new UpdateVolunteerSocialsCommand(id, request.SocialNetworks);
+
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
