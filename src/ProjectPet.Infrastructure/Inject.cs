@@ -23,7 +23,7 @@ public static class Inject
     {
         builder.AddMinio();
 
-        builder.Services.AddScoped<ApplicationDbContext>();
+        builder.Services.AddScoped<WriteDbContext>();
         builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
         builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
 

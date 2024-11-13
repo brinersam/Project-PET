@@ -3,14 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using ProjectPet.Application.Repositories;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
+using ProjectPet.Infrastructure.DbContexts;
 
 namespace ProjectPet.Infrastructure.Repositories;
 
 public class SpeciesRepository : ISpeciesRepository
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly WriteDbContext _dbContext;
 
-    public SpeciesRepository(ApplicationDbContext dbContext)
+    public SpeciesRepository(WriteDbContext dbContext)
     {
         _dbContext = dbContext;
     }

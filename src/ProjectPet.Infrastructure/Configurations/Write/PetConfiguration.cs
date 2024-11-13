@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Infrastructure.Configurations;
+using CConstants = ProjectPet.Domain.Shared.Constants;
 
-namespace ProjectPet.Infrastructure.Configurations;
+namespace ProjectPet.Infrastructure.Configurations.Write;
 
 public class PetConfiguration : IEntityTypeConfiguration<Pet>
 {
@@ -29,14 +30,14 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         });
 
         builder.Property(e => e.Description)
-            .ConfigureString(Constants.STRING_LEN_MEDIUM);
+            .ConfigureString(CConstants.STRING_LEN_MEDIUM);
 
         builder.Property(e => e.Coat);
 
         builder.ComplexProperty(e => e.HealthInfo, ba =>
         {
             ba.Property(e => e.Health)
-                .ConfigureString(Constants.STRING_LEN_MEDIUM)
+                .ConfigureString(CConstants.STRING_LEN_MEDIUM)
                 .HasColumnName("health_info");
 
             ba.Property(e => e.IsSterilized)
@@ -115,7 +116,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                                 .ConfigureString();
 
                             i.Property(payInfo => payInfo.Instructions)
-                                .ConfigureString(Constants.STRING_LEN_MEDIUM);
+                                .ConfigureString(CConstants.STRING_LEN_MEDIUM);
                         });
                 });
 

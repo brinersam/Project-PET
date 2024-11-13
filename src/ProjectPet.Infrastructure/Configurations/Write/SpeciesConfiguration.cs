@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.Domain.Models;
 
-namespace ProjectPet.Infrastructure.Configurations;
+namespace ProjectPet.Infrastructure.Configurations.Write;
 
 public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
 {
@@ -17,7 +17,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
 
         builder.HasMany(x => x.RelatedBreeds)
             .WithOne()
-            .HasForeignKey("SpeciesId")
+            .HasForeignKey("species-id")
             .OnDelete(DeleteBehavior.ClientCascade);
     }
 }

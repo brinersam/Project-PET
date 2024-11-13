@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Infrastructure.Configurations;
+using CConstants = ProjectPet.Domain.Shared.Constants;
 
-namespace ProjectPet.Infrastructure.Configurations;
+namespace ProjectPet.Infrastructure.Configurations.Write;
 
 public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 {
@@ -14,24 +15,24 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.HasKey(e => e.Id);
 
         builder.Property(e => e.FullName)
-            .ConfigureString(Constants.STRING_LEN_MEDIUM);
+            .ConfigureString(CConstants.STRING_LEN_MEDIUM);
 
         builder.Property(e => e.Email)
-            .ConfigureString(Constants.STRING_LEN_MEDIUM);
+            .ConfigureString(CConstants.STRING_LEN_MEDIUM);
 
         builder.Property(e => e.Description)
-            .ConfigureString(Constants.STRING_LEN_MEDIUM);
+            .ConfigureString(CConstants.STRING_LEN_MEDIUM);
 
         builder.Property(e => e.YOExperience);
 
-        builder.ComplexProperty(e => e.PhoneNumber, ba =>
+        builder.ComplexProperty(e => e.Phonenumber, ba =>
         {
             ba.Property(e => e.Number)
                 .ConfigureString()
                 .HasColumnName("number");
 
             ba.Property(e => e.AreaCode)
-                .HasMaxLength(Constants.STRING_LEN_SMALL)
+                .HasMaxLength(CConstants.STRING_LEN_SMALL)
                 .HasColumnName("area_code");
         });
 
@@ -49,7 +50,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .ConfigureString();
 
                 i.Property(payInfo => payInfo.Instructions)
-                    .ConfigureString(Constants.STRING_LEN_MEDIUM);
+                    .ConfigureString(CConstants.STRING_LEN_MEDIUM);
             });
         });
 
@@ -62,7 +63,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .ConfigureString();
 
                 i.Property(network => network.Link)
-                    .ConfigureString(Constants.STRING_LEN_MEDIUM);
+                    .ConfigureString(CConstants.STRING_LEN_MEDIUM);
             });
         });
 

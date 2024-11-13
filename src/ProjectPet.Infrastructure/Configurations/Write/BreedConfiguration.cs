@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.Domain.Models;
 
-namespace ProjectPet.Infrastructure.Configurations;
+namespace ProjectPet.Infrastructure.Configurations.Write;
 
 public class BreedConfiguration : IEntityTypeConfiguration<Breed>
 {
