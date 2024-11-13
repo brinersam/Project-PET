@@ -4,8 +4,12 @@ using Microsoft.Extensions.Hosting;
 using Minio;
 using Minio.AspNetCore;
 using ProjectPet.Application.Database;
+using ProjectPet.Application.Messaging;
 using ProjectPet.Application.Providers;
 using ProjectPet.Application.Repositories;
+using ProjectPet.Infrastructure.BackgroundServices;
+using ProjectPet.Infrastructure.DbContexts;
+using ProjectPet.Infrastructure.MessageQueues;
 using ProjectPet.Infrastructure.Options;
 using ProjectPet.Infrastructure.Providers;
 using ProjectPet.Infrastructure.Repositories;
@@ -24,6 +28,10 @@ public static class Inject
         builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
 
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        builder.Services.AddHostedService<FileCleanupBackgroundService>();
+
+        builder.Services.AddSingleton<IMessageQueue<IEnumerable<FileDataDto>>, FileInfoMessageQueue>();
 
         return builder;
     }

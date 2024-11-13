@@ -5,7 +5,7 @@ public interface IToCommand<TCmd> where TCmd : class
     public TCmd ToCommand();
 }
 
-public interface IToCommand<TCmd,TArg1> where TCmd : class
+public interface IToCommand<TCmd, TArg1> where TCmd : class
 {
     public TCmd ToCommand(TArg1 arg1);
 }

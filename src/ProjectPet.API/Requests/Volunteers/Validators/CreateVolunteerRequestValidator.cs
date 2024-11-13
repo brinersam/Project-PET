@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
-using ProjectPet.API.Requests.Volunteers;
 using ProjectPet.Application.Extensions;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
+namespace ProjectPet.API.Requests.Volunteers.Validators;
 
 public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest>
 {

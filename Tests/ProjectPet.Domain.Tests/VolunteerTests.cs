@@ -98,7 +98,6 @@ public class VolunteerTests
             1,
             Phonenumber.Create("123-456-78-98", $"{idx}").Value,
             [],
-            [],
             []).Value;
     }
 

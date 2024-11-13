@@ -1,7 +1,6 @@
 ﻿using ProjectPet.API.Etc;
 using ProjectPet.Application.Dto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
-using ProjectPet.Domain.Models;
 
 namespace ProjectPet.API.Requests.Volunteers;
 

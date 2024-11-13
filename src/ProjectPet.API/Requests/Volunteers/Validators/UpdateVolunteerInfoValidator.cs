@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using ProjectPet.API.Requests.Volunteers;
 using ProjectPet.Application.Extensions;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
+namespace ProjectPet.API.Requests.Volunteers.Validators;
 
 public class UpdateVolunteerInfoValidator : AbstractValidator<UpdateVolunteerInfoCommand>
 {
