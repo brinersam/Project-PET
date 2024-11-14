@@ -29,11 +29,11 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             ba.Property(e => e.Number)
                 .ConfigureString()
-                .HasColumnName("number");
+                .HasColumnName("phonenumber");
 
             ba.Property(e => e.AreaCode)
                 .HasMaxLength(CConstants.STRING_LEN_SMALL)
-                .HasColumnName("area_code");
+                .HasColumnName("phonenumber_area_code");
         });
 
         builder.HasMany(e => e.OwnedPets)

@@ -24,8 +24,8 @@ public class CreateVolunteerHandler
         CancellationToken cancellationToken = default)
     {
         var phoneNumberRes = Phonenumber.Create(
-            cmd.PhonenumberDto.Phonenumber,
-            cmd.PhonenumberDto.PhonenumberAreaCode).Value;
+            cmd.VolunteerDto.Phonenumber.Phonenumber,
+            cmd.VolunteerDto.Phonenumber.PhonenumberAreaCode).Value;
 
         var paymentInfos = cmd.PaymentInfoDtos ?? [];
         var socialNetworks = cmd.SocialNetworkDtos ?? [];

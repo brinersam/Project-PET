@@ -11,7 +11,7 @@ public class SpeciesDtoConfiguration : IEntityTypeConfiguration<SpeciesReadDto>
 
         builder.HasKey(x => x.Id);
 
-        builder.HasMany(x => x.RelatedBreeds)
+        builder.HasMany<BreedReadDto>(x => x.RelatedBreeds)
             .WithOne()
             .HasForeignKey("species-id")
             .OnDelete(DeleteBehavior.NoAction);
