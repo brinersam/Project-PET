@@ -1,20 +1,20 @@
 ﻿namespace ProjectPet.Application.Dto;
 
-public record VolunteerDto(
+public record CreateVolunteerDto(
     string FullName,
     string Email,
     string Description,
     int YOExperience,
     PhoneNumberDto Phonenumber);
 
-public record VolunteerNullableDto(
+public record CreateVolunteerNullableDto(
     string? FullName,
     string? Email,
     string? Description,
     int? YOExperience,
     PhoneNumberDto? Phonenumber);
 
-public class VolunteerReadDto
+public class VolunteerDto
 {
     public Guid Id { get; init; }
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

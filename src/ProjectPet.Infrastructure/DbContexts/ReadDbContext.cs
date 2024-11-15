@@ -11,8 +11,8 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
     private readonly string DATABASE = configuration[Constants.DATABASE]
         ?? throw new ArgumentNullException(Constants.DATABASE);
 
-    public DbSet<SpeciesReadDto> Species => Set<SpeciesReadDto>();
-    public DbSet<VolunteerReadDto> Volunteers => Set<VolunteerReadDto>();
+    public DbSet<SpeciesDto> Species => Set<SpeciesDto>();
+    public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

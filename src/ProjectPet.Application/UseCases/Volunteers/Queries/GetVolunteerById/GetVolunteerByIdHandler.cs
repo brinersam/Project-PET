@@ -15,7 +15,7 @@ public class GetVolunteerByIdHandler
         _readDbContext = readDbContext;
     }
 
-    public async Task<Result<VolunteerReadDto, Error>> HandleAsync(
+    public async Task<Result<VolunteerDto, Error>> HandleAsync(
         GetVolunteerByIdQuery query,
         CancellationToken cancellationToken = default)
     {
@@ -23,7 +23,7 @@ public class GetVolunteerByIdHandler
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
         if (volunteer is null)
-            return Errors.General.NotFound(typeof(VolunteerDto));
+            return Errors.General.NotFound(typeof(CreateVolunteerDto));
 
         return volunteer;
     }

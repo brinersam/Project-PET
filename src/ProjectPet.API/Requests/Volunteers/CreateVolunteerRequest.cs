@@ -5,7 +5,7 @@ using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 namespace ProjectPet.API.Requests.Volunteers;
 
 public record CreateVolunteerRequest(
-    VolunteerDto VolunteerDto,
+    CreateVolunteerDto VolunteerDto,
     List<PaymentInfoDto>? PaymentInfoDtos,
     List<SocialNetworkDto>? SocialNetworkDtos) : IToCommand<CreateVolunteerCommand>
 {

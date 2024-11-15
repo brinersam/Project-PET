@@ -16,7 +16,7 @@ public class GetVolunteerPaginatedHandler
         _readDbContext = readDbContext;
     }
 
-    public async Task<Result<PagedList<VolunteerReadDto>, Error>> HandleAsync(
+    public async Task<Result<PagedList<VolunteerDto>, Error>> HandleAsync(
         GetVolunteerPaginatedQuery query,
         CancellationToken cancellationToken = default)
     {

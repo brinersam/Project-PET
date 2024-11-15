@@ -2,4 +2,4 @@
 
 namespace ProjectPet.API.Requests.Volunteers;
 
-public record UpdateVolunteerInfoRequest(VolunteerNullableDto dto);
+public record UpdateVolunteerInfoRequest(CreateVolunteerNullableDto dto);

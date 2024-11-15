@@ -4,4 +4,4 @@ namespace ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInf
 
 public record UpdateVolunteerInfoCommand(
     Guid Id,
-    VolunteerNullableDto Dto);
+    CreateVolunteerNullableDto Dto);
