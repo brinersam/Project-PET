@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.Domain.Models.DDD;
 using ProjectPet.Domain.Shared;
+using System.IO;
 
 namespace ProjectPet.Domain.Models;
 
@@ -149,12 +150,37 @@ public class Pet : EntityBase, ISoftDeletable
 
     public void DeletePhotos(string[] photoPaths)
     {
-        var data = Photos.Data;
-        List<int> idxToDelete = [];
-        for (int idx = 0; idx < photoPaths.Length; idx++)
-            data.RemoveAll(x => x.StoragePath == photoPaths[idx]);
+        bool primaryPhotoWasDeleted = false;
+        bool deletedAtLeastOnePhoto = false;
 
-        Photos = new PhotoList() { Data = data };
+        var data = Photos.Data;
+        foreach (var path in photoPaths)
+        {
+            int photoToDeleteIdx = data.FindIndex(x => String.Equals(path.ToLower(), x.StoragePath.ToLower()));
+            if (photoToDeleteIdx == -1)
+                continue;
+
+            var photoToDelete = data[photoToDeleteIdx];
+
+            if (photoToDelete.IsPrimary)
+                primaryPhotoWasDeleted = true;
+
+            data.RemoveAt(photoToDeleteIdx);
+            deletedAtLeastOnePhoto = true;
+        }
+
+        if (deletedAtLeastOnePhoto == false)
+            return;
+
+        if (primaryPhotoWasDeleted && data.Count > 0)
+        {
+            var firstPhotoMadePrimary = PetPhoto.Create(data[0].StoragePath, true).Value;
+            data[0] = firstPhotoMadePrimary;
+        }
+
+        var deepCopyData = data.Select(x => PetPhoto.Create(x.StoragePath, x.IsPrimary).Value).ToList();
+
+        Photos = new PhotoList() { Data = deepCopyData };
     }
 }
 
