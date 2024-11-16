@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ProjectPet.Application.Messaging;
 using ProjectPet.Application.Providers;
-using ProjectPet.Infrastructure.MessageQueues;
 
 namespace ProjectPet.Infrastructure.BackgroundServices;
 public class FileCleanupBackgroundService : BackgroundService

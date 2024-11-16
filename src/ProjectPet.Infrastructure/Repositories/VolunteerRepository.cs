@@ -1,16 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Application.UseCases.Volunteers;
+using ProjectPet.Application.Repositories;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
+using ProjectPet.Infrastructure.DbContexts;
 
 namespace ProjectPet.Infrastructure.Repositories;
 
 public class VolunteerRepository : IVolunteerRepository
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly WriteDbContext _dbContext;
 
-    public VolunteerRepository(ApplicationDbContext dbContext)
+    public VolunteerRepository(WriteDbContext dbContext)
     {
         _dbContext = dbContext;
     }

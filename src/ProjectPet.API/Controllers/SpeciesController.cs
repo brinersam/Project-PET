@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectPet.API.Contracts.Species;
 using ProjectPet.API.Extentions;
-using ProjectPet.Application.UseCases.AnimalSpecies;
-using ProjectPet.Application.UseCases.AnimalSpecies.CreateBreed;
-using ProjectPet.Application.UseCases.AnimalSpecies.CreateSpecies;
-using ProjectPet.Application.UseCases.AnimalSpecies.DeleteBreed;
-using ProjectPet.Application.UseCases.AnimalSpecies.DeleteSpecies;
+using ProjectPet.API.Requests.AnimalSpecies;
+using ProjectPet.Application.Repositories;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateBreed;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateSpecies;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteBreed;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteSpecies;
 
 namespace ProjectPet.API.Controllers;
 
@@ -21,10 +21,10 @@ public class SpeciesController : CustomControllerBase
     [HttpPost]
     public async Task<IActionResult> PostSpecies(
         [FromServices] CreateSpeciesHandler service,
-        [FromBody] CreateSpeciesRequestDto dto,
+        [FromBody] CreateSpeciesCommand cmd,
         CancellationToken cancellationToken = default)
     {
-        var result = await service.HandleAsync(dto, cancellationToken);
+        var result = await service.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -38,7 +38,7 @@ public class SpeciesController : CustomControllerBase
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var request = new DeleteSpeciesRequest(id);
+        var request = new DeleteSpeciesCommand(id);
         var result = await service.HandleAsync(request, cancellationToken);
 
         if (result.IsFailure)
@@ -51,11 +51,11 @@ public class SpeciesController : CustomControllerBase
     public async Task<IActionResult> PostBreed(
         [FromServices] CreateBreedsHandler service,
         [FromRoute] Guid id,
-        [FromBody] CreateBreedsRequestDto dto,
+        [FromBody] CreateBreedsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var request = new CreateBreedsRequest(id, dto.BreedName);
-        var result = await service.HandleAsync(request, cancellationToken);
+        var cmd = request.ToCommand(id);
+        var result = await service.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -66,13 +66,13 @@ public class SpeciesController : CustomControllerBase
     [HttpDelete("{id:guid}/breeds")]
     public async Task<ActionResult> DeleteBreed(
         [FromServices] DeleteBreedsHandler service,
-        [FromBody] DeleteBreedsHandlerDto dto,
+        [FromBody] DeleteBreedRequest request,
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var request = new DeleteBreedsRequest(id, dto.BreedId);
+        var cmd = new DeleteBreedsCommand(id, request.BreedId);
 
-        var result = await service.HandleAsync(request, cancellationToken);
+        var result = await service.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();

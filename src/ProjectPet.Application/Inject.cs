@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ProjectPet.Application.UseCases.AnimalSpecies.CreateBreed;
-using ProjectPet.Application.UseCases.AnimalSpecies.CreateSpecies;
-using ProjectPet.Application.UseCases.AnimalSpecies.DeleteBreed;
-using ProjectPet.Application.UseCases.AnimalSpecies.DeleteSpecies;
-using ProjectPet.Application.UseCases.Volunteers.CreatePet;
-using ProjectPet.Application.UseCases.Volunteers.CreateVolunteer;
-using ProjectPet.Application.UseCases.Volunteers.DeleteVolunteer;
-using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerInfo;
-using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerPayment;
-using ProjectPet.Application.UseCases.Volunteers.UpdateVolunteerSocials;
-using ProjectPet.Application.UseCases.Volunteers.UploadPetPhoto;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateBreed;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateSpecies;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteBreed;
+using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteSpecies;
+using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UploadPetPhoto;
 
 namespace ProjectPet.Application;
 

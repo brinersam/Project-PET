@@ -10,7 +10,7 @@ public class Validator<T>
     private T _item = default!;
     private string _itemName = null!;
     private Validator() { }
-    public static Validator<T> Create<T>()
+    public static Validator<T> Create()
     {
         return new Validator<T>();
     }
@@ -71,7 +71,7 @@ public class Validator<T>
         return _item;
     }
 
-    private Error ValueIsEmptyOrNull<T>(T? value, string valueName)
+    private Error ValueIsEmptyOrNull(T? value, string valueName)
     {
         return Errors.General.ValueIsEmptyOrNull(_item, _itemName);
     }
@@ -87,7 +87,7 @@ public static class Validator
 {
     public static Validator<T> NewForType<T>()
     {
-        return Validator<T>.Create<T>();
+        return Validator<T>.Create();
     }
 
     public static Validator<string> ValidatorString(int maxLen = Constants.STRING_LEN_SMALL)

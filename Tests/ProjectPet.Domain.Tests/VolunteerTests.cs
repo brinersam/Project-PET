@@ -10,7 +10,7 @@ public class VolunteerTests
         var volunteer = VolunteerWithPets(3);
         Pet[] pets = volunteer.OwnedPets.ToArray();
 
-        volunteer.SetPetPosition(2,2);
+        volunteer.SetPetPosition(2, 2);
 
         Assert.Equal(1, pets[0].OrderingPosition.Value);
         Assert.Equal(2, pets[1].OrderingPosition.Value);
@@ -96,8 +96,7 @@ public class VolunteerTests
             $"{idx}gmail@email.com",
             $"{idx}:description",
             1,
-            PhoneNumber.Create("123-456-78-98", $"{idx}").Value,
-            [],
+            Phonenumber.Create("123-456-78-98", $"{idx}").Value,
             [],
             []).Value;
     }
@@ -105,11 +104,11 @@ public class VolunteerTests
     private Pet CreatePet(Volunteer volunteer, int idx = 1)
     {
         var animalData = AnimalData.Create(Guid.NewGuid(), Guid.NewGuid());
-        var phonenumber = PhoneNumber.Create($"123-456-90-90", $"{idx}");
-        var address = Address.Create("name", "street", "building", null, null , null , null);
+        var phonenumber = Phonenumber.Create($"123-456-90-90", $"{idx}");
+        var address = Address.Create("name", "street", "building", null, null, null, null);
         var healthInfo = HealthInfo.Create("healthy", true, true, 1, 1);
         var orderingPosition = Position.Create(idx);
-        var pet =  Pet.Create(
+        var pet = Pet.Create(
             "Name",
             animalData.Value,
             "Description",

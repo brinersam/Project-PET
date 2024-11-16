@@ -10,7 +10,7 @@ public class Volunteer : EntityBase, ISoftDeletable
     public string Email { get; private set; } = null!;
     public string Description { get; private set; } = null!;
     public int YOExperience { get; private set; }
-    public PhoneNumber PhoneNumber { get; private set; } = null!;
+    public Phonenumber Phonenumber { get; private set; } = null!;
     private List<Pet> _ownedPets = null!;
     public IReadOnlyList<Pet> OwnedPets => _ownedPets;
     public PaymentMethodsList? PaymentMethods { get; private set; }
@@ -27,7 +27,7 @@ public class Volunteer : EntityBase, ISoftDeletable
         string email,
         string description,
         int yOExperience,
-        PhoneNumber phoneNumber,
+        Phonenumber phoneNumber,
         IEnumerable<Pet> ownedPets,
         IEnumerable<PaymentInfo> paymentMethods,
         IEnumerable<SocialNetwork> socialNetworks) : base(id)
@@ -36,21 +36,19 @@ public class Volunteer : EntityBase, ISoftDeletable
         Email = email;
         Description = description;
         YOExperience = yOExperience;
-        PhoneNumber = phoneNumber;
+        Phonenumber = phoneNumber;
         _ownedPets = ownedPets.ToList();
         PaymentMethods = new() { Data = paymentMethods.ToList() };
         SocialNetworks = new() { Data = socialNetworks.ToList() };
     }
 
-    public static Result<Volunteer, Error> Create
-        (
+    public static Result<Volunteer, Error> Create(
         Guid id,
         string fullName,
         string email,
         string description,
         int yOExperience,
-        PhoneNumber phoneNumber,
-        IEnumerable<Pet> ownedPets,
+        Phonenumber phoneNumber,
         IEnumerable<PaymentInfo> paymentMethods,
         IEnumerable<SocialNetwork> socialNetworks)
     {
@@ -83,7 +81,7 @@ public class Volunteer : EntityBase, ISoftDeletable
                 description,
                 yOExperience,
                 phoneNumber,
-                ownedPets,
+                [],
                 paymentMethods,
                 socialNetworks
             );
@@ -97,7 +95,7 @@ public class Volunteer : EntityBase, ISoftDeletable
         string? Email,
         string? Description,
         int? YOExperience,
-        PhoneNumber? PhoneNumber)
+        Phonenumber? PhoneNumber)
     {
         if (!String.IsNullOrEmpty(FullName))
             this.FullName = FullName;
@@ -109,7 +107,7 @@ public class Volunteer : EntityBase, ISoftDeletable
             this.Description = Description ?? this.Description;
 
         this.YOExperience = YOExperience ?? this.YOExperience;
-        this.PhoneNumber = PhoneNumber ?? this.PhoneNumber;
+        this.Phonenumber = PhoneNumber ?? this.Phonenumber;
     }
 
     public void Delete()
@@ -144,7 +142,6 @@ public class Volunteer : EntityBase, ISoftDeletable
             return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user {FullName}!");
         return pet;
     }
-
     public void SetPetPositionToFront(int x)
         => SetPetPosition(x, int.MinValue);
 
@@ -155,7 +152,7 @@ public class Volunteer : EntityBase, ISoftDeletable
     {
         // cap both positions to a range of 1 to ownedPets count
         int minPosition = 1;
-        int maxPosition = _ownedPets.Count();
+        int maxPosition = _ownedPets.Count;
 
         initialPos = Math.Max(initialPos, minPosition);
         targetPos = Math.Max(targetPos, minPosition);
@@ -172,14 +169,14 @@ public class Volunteer : EntityBase, ISoftDeletable
             .Where(pet =>
                    pet.OrderingPosition.Value >= Math.Min(initialPos, targetPos)
                 && Math.Max(initialPos, targetPos) >= pet.OrderingPosition.Value
-                && ReferenceEquals(pet,movedPet) == false)
+                && ReferenceEquals(pet, movedPet) == false)
             .ToArray();
 
         movedPet.SetPosition(targetPos);
 
         if (initialPos > targetPos)
         {
-            foreach(var pet in petsToMove)
+            foreach (var pet in petsToMove)
                 pet.MovePositionForward();
         }
 
@@ -190,6 +187,7 @@ public class Volunteer : EntityBase, ISoftDeletable
         }
     }
 }
+
 
 public record SocialNetworkList
 {

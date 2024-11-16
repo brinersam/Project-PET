@@ -1,4 +1,4 @@
-﻿    namespace ProjectPet.Infrastructure.MessageQueues;
+﻿namespace ProjectPet.Application.Messaging;
 
 public interface IMessageQueue<T>
 {

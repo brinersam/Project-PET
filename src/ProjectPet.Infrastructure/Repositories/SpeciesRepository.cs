@@ -1,16 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Application.UseCases.AnimalSpecies;
+using ProjectPet.Application.Repositories;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
+using ProjectPet.Infrastructure.DbContexts;
 
 namespace ProjectPet.Infrastructure.Repositories;
 
 public class SpeciesRepository : ISpeciesRepository
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly WriteDbContext _dbContext;
 
-    public SpeciesRepository(ApplicationDbContext dbContext)
+    public SpeciesRepository(WriteDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -35,7 +36,7 @@ public class SpeciesRepository : ISpeciesRepository
         return result;
     }
 
-    public Result<Guid, Error> Update(Species species, CancellationToken cancellationToken = default)
+    public Result<Guid, Error> Update(Species species)
     {
         _dbContext.Species.Update(species);
         return species.Id;

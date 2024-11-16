@@ -20,8 +20,4 @@
     <ProjectReference Include="..\ProjectPet.Application\ProjectPet.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Dto\" />
-  </ItemGroup>
-
 </Project>

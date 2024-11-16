@@ -4,10 +4,11 @@ using Microsoft.Extensions.Hosting;
 using Minio;
 using Minio.AspNetCore;
 using ProjectPet.Application.Database;
+using ProjectPet.Application.Messaging;
 using ProjectPet.Application.Providers;
-using ProjectPet.Application.UseCases.AnimalSpecies;
-using ProjectPet.Application.UseCases.Volunteers;
+using ProjectPet.Application.Repositories;
 using ProjectPet.Infrastructure.BackgroundServices;
+using ProjectPet.Infrastructure.DbContexts;
 using ProjectPet.Infrastructure.MessageQueues;
 using ProjectPet.Infrastructure.Options;
 using ProjectPet.Infrastructure.Providers;
@@ -22,7 +23,7 @@ public static class Inject
     {
         builder.AddMinio();
 
-        builder.Services.AddScoped<ApplicationDbContext>();
+        builder.Services.AddScoped<WriteDbContext>();
         builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
         builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
 
