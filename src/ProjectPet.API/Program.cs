@@ -19,7 +19,7 @@ builder.AddInfrastructure();
 builder.AddApplication();
 #endregion
 
-builder.Services.AddCustomAutoValidation();
+builder.Services.AddValidation();
 
 var app = builder.Build();
 

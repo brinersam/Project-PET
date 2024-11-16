@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using ProjectPet.Application.Extensions;
+using ProjectPet.API.Validation;
 using ProjectPet.Domain.Models;
 
 namespace ProjectPet.API.Requests.Volunteers.Validators;

@@ -31,7 +31,7 @@ public class CustomExceptionHandlerMiddleware
 
             var err = Error.Failure("exception", ex.Message);
 
-            await context.Response.WriteAsJsonAsync(Envelope.Error(err));
+            await context.Response.WriteAsJsonAsync(Envelope.Error([err]));
         }
     }
 }

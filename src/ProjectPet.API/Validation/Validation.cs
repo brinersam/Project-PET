@@ -1,8 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using FluentValidation.Results;
 using ProjectPet.Domain.Shared;
 
-namespace ProjectPet.Application.Extensions;
+namespace ProjectPet.API.Validation;
 
 public static class CustomValidators
 {
@@ -17,7 +18,14 @@ public static class CustomValidators
             if (result.IsSuccess)
                 return;
 
-            context.AddFailure(result.Error.Serialize());
+            ValidationFailure failure = new()
+            {
+                ErrorMessage = result.Error.Message,
+                PropertyName = context.PropertyName,
+                ErrorCode = result.Error.Code
+            };
+
+            context.AddFailure(failure);
         });
     }
 
@@ -32,7 +40,7 @@ public static class CustomValidators
         ruleBuilder.WithErrorCode(errorFactory.Invoke(default, string.Empty).Code); // ugly
         return ruleBuilder
             .WithMessage((x, y) =>
-                $"{errorFactory.Invoke(y, "{PropertyName}").Serialize()}");
+                $"{errorFactory.Invoke(y, "{PropertyName}").Message}");
     }
 
     public static IRuleBuilderOptions<T, string> MaxLengthWithError<T, TProperty>(
@@ -43,7 +51,7 @@ public static class CustomValidators
             .MaximumLength(maxLen)
             .WithErrorCode(Errors.General.ValueLengthMoreThan(0, string.Empty, 0).Code) // ugly
             .WithMessage((x, y) =>
-                $"{Errors.General.ValueLengthMoreThan(y, "{PropertyName}", maxLen).Serialize()}");
+                $"{Errors.General.ValueLengthMoreThan(y, "{PropertyName}", maxLen).Message}");
     }
 
     #endregion

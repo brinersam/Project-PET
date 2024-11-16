@@ -1,6 +1,5 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using ErrorClass = ProjectPet.Domain.Shared.Error;
 
 namespace ProjectPet.API.Response;
 
@@ -23,9 +22,6 @@ public record Envelope
 
     public static Envelope<T> Error<T>(IEnumerable<T> errors)
         => Envelope<T>.Create(errors);
-
-    public static Envelope<T> Error<T>(T error)
-        => Envelope<T>.Create([error]);
 }
 
 public record Envelope<T> : Envelope
@@ -45,15 +41,7 @@ public record Envelope<T> : Envelope
         List<FieldError> fieldErrors = [];
 
         foreach (var error in errors)
-        {
-            if (ErrorClass.TryDeserialize(error.ErrorMessage, out ErrorClass deserialized))
-            {
-                fieldErrors.Add(new FieldError(
-                    deserialized.Code, deserialized.Message, error.PropertyName));
-            }
-            else
-                fieldErrors.Add(new FieldError(error.ErrorCode ?? "value.is.invalid", error.ErrorMessage, error.PropertyName));
-        }
+            fieldErrors.Add(new FieldError(error.ErrorCode ?? "value.is.invalid", error.ErrorMessage, error.PropertyName));
 
         var envelope = new Envelope<FieldError>(null, fieldErrors);
 
