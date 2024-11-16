@@ -146,6 +146,16 @@ public class Pet : EntityBase, ISoftDeletable
 
     public void MovePositionBackwards(int amount = 1)
         => OrderingPosition = OrderingPosition.MoveBackward(amount);
+
+    public void DeletePhotos(string[] photoPaths)
+    {
+        var data = Photos.Data;
+        List<int> idxToDelete = [];
+        for (int idx = 0; idx < photoPaths.Length; idx++)
+            data.RemoveAll(x => x.StoragePath == photoPaths[idx]);
+
+        Photos = new PhotoList() { Data = data };
+    }
 }
 
 public record PaymentMethodsList

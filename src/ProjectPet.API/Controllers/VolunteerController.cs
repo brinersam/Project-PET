@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
@@ -8,6 +9,7 @@ using ProjectPet.API.Response;
 using ProjectPet.Application.Dto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
@@ -58,7 +60,7 @@ public class VolunteerController : CustomControllerBase
         return Ok(result.Value);
     }
 
-    [HttpPost("{id:guid}/Pet/{petid:guid}/Photos")]
+    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos")]
     public async Task<IActionResult> UploadPetPhoto(
         [FromServices] UploadPetPhotoHandler service,
         [FromRoute] Guid volunteerId,
@@ -210,5 +212,21 @@ public class VolunteerController : CustomControllerBase
 
         return Ok();
     }
-}
 
+    [HttpDelete("{volunteerId:guid}/pet/{petid:guid}/photos")]
+    public async Task<IActionResult> DeletePetPhotos(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromServices] DeletePetPhotosHandler handler,
+        [FromBody] DeletePetPhotosRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = new DeletePetPhotosCommand(volunteerId, petid, request.photoPathsToDelete);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+}
