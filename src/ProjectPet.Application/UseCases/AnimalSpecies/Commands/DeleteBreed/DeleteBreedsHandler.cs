@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using ProjectPet.Application.Database;
 using ProjectPet.Application.Repositories;
 using ProjectPet.Domain.Shared;
 
@@ -8,13 +9,16 @@ namespace ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteBreed;
 public class DeleteBreedsHandler
 {
     private readonly ISpeciesRepository _speciesRepository;
+    private readonly IReadDbContext _readDbContext;
     private readonly ILogger<DeleteBreedsHandler> _logger;
 
     public DeleteBreedsHandler(
         ISpeciesRepository speciesRepository,
+        IReadDbContext readDbContext,
         ILogger<DeleteBreedsHandler> logger)
     {
         _speciesRepository = speciesRepository;
+        _readDbContext = readDbContext;
         _logger = logger;
     }
 
@@ -30,6 +34,11 @@ public class DeleteBreedsHandler
             return getSpeciesRes.Error;
 
         var speciesAggregate = getSpeciesRes.Value;
+
+        var isBreedInUse = _readDbContext.Pets.Any(x => x.AnimalDataBreedID == request.BreedId);
+
+        if (isBreedInUse)
+            return Error.Conflict("illegal.state", "Can not delete breed that is currently in use by at least one pet!");
 
         speciesAggregate.RemoveBreed(request.BreedId);
 

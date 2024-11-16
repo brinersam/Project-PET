@@ -113,11 +113,15 @@ public class Volunteer : EntityBase, ISoftDeletable
     public void Delete()
     {
         _isDeleted = true;
+        foreach (var pet in _ownedPets)
+            pet.Delete();
     }
 
     public void Restore()
     {
         _isDeleted = false;
+        foreach (var pet in _ownedPets)
+            pet.Restore();
     }
 
     public void UpdatePaymentMethods(IEnumerable<PaymentInfo> infos)

@@ -13,6 +13,8 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
 
     public DbSet<SpeciesDto> Species => Set<SpeciesDto>();
     public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public DbSet<BreedDto> Breeds => Set<BreedDto>();
+    public DbSet<PetDto> Pets => Set<PetDto>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

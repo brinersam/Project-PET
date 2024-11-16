@@ -10,10 +10,5 @@ public class SpeciesDtoConfiguration : IEntityTypeConfiguration<SpeciesDto>
         builder.ToTable("species");
 
         builder.HasKey(x => x.Id);
-
-        builder.HasMany<BreedDto>(x => x.RelatedBreeds)
-            .WithOne()
-            .HasForeignKey("species-id")
-            .OnDelete(DeleteBehavior.NoAction);
     }
 }
