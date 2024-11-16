@@ -83,14 +83,9 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> Delete(
         [FromServices] DeleteVolunteerHandler handler,
         [FromRoute] Guid id,
-        IValidator<DeleteVolunteerCommand> validator,
         CancellationToken cancellationToken = default)
     {
         var request = new DeleteVolunteerCommand(id);
-
-        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
-        if (validatorRes.IsValid == false)
-            return BadRequest(validatorRes.Errors);
 
         var result = await handler.HandleAsync(request, cancellationToken);
 

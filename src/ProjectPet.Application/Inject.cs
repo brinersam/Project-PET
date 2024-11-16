@@ -4,6 +4,8 @@ using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateBreed;
 using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateSpecies;
 using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteBreed;
 using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteSpecies;
+using ProjectPet.Application.UseCases.AnimalSpecies.Queries.GetAllBreedsById;
+using ProjectPet.Application.UseCases.AnimalSpecies.Queries.GetAllSpecies;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
@@ -28,10 +30,14 @@ public static class Inject
 
     public static IHostApplicationBuilder AddSpeciesHandlers(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddScoped<CreateBreedsHandler>();
         builder.Services.AddScoped<CreateSpeciesHandler>();
-        builder.Services.AddScoped<DeleteBreedsHandler>();
         builder.Services.AddScoped<DeleteSpeciesHandler>();
+        builder.Services.AddScoped<GetAllSpeciesHandler>();
+
+        builder.Services.AddScoped<CreateBreedsHandler>();
+        builder.Services.AddScoped<DeleteBreedsHandler>();
+        builder.Services.AddScoped<GetAllBreedsByIdHandler>();
+
         return builder;
     }
     public static IHostApplicationBuilder AddVolunteerHandlers(this IHostApplicationBuilder builder)

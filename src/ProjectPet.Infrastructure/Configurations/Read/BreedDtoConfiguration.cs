@@ -8,5 +8,9 @@ public class BreedDtoConfiguration : IEntityTypeConfiguration<BreedDto>
     public void Configure(EntityTypeBuilder<BreedDto> builder)
     {
         builder.HasKey(x => x.Id);
+
+        builder.HasOne<SpeciesDto>()
+            .WithMany()
+            .HasForeignKey(x => x.SpeciesId);
     }
 }

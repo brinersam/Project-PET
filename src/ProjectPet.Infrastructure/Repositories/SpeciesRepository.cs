@@ -50,7 +50,7 @@ public class SpeciesRepository : ISpeciesRepository
         return species.Id;
     }
 
-    public async Task<Result<Guid, Error>> DeleteAndSaveChangesasync(Species species, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, Error>> DeleteAndSaveChangesAsync(Species species, CancellationToken cancellationToken = default)
     {
         _dbContext.Species.Remove(species);
         await _dbContext.SaveChangesAsync(cancellationToken);
