@@ -5,6 +5,6 @@ namespace ProjectPet.Application.Database;
 
 public interface IReadDbContext
 {
-    public DbSet<SpeciesReadDto> Species { get; }
-    public DbSet<VolunteerReadDto> Volunteers { get; }
+    public DbSet<SpeciesDto> Species { get; }
+    public DbSet<VolunteerDto> Volunteers { get; }
 }

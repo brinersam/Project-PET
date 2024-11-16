@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.Application.Dto;
 
 namespace ProjectPet.Infrastructure.Configurations.Read;
-public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
+public class BreedDtoConfiguration : IEntityTypeConfiguration<BreedDto>
 {
-    public void Configure(EntityTypeBuilder<VolunteerDto> builder)
+    public void Configure(EntityTypeBuilder<BreedDto> builder)
     {
-        builder.ToTable("volunteers");
-
         builder.HasKey(x => x.Id);
     }
 }

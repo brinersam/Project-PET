@@ -6,7 +6,6 @@ using ProjectPet.API.Requests.Shared;
 using ProjectPet.API.Requests.Volunteers;
 using ProjectPet.API.Response;
 using ProjectPet.Application.Dto;
-using ProjectPet.Application.Repositories;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
@@ -14,18 +13,13 @@ using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UploadPetPhoto;
+using ProjectPet.Application.UseCases.Volunteers.Queries.GetVolunteerById;
+using ProjectPet.Application.UseCases.Volunteers.Queries.GetVolunteers;
 
 namespace ProjectPet.API.Controllers;
 
 public class VolunteerController : CustomControllerBase
 {
-    private readonly IVolunteerRepository _volunteerRepository;
-
-    public VolunteerController(IVolunteerRepository volunteerRepository)
-    {
-        _volunteerRepository = volunteerRepository;
-    }
-
     [HttpPost]
     public async Task<ActionResult<Guid>> Post(
         [FromServices] CreateVolunteerHandler handler,
@@ -71,19 +65,18 @@ public class VolunteerController : CustomControllerBase
         [FromForm] UploadFileRequest req,
         CancellationToken cancellationToken = default)
     {
-        await using (var processor = new FormFileProcessor())
-        {
-            List<FileDto> filesDto = processor.Process(req.Files);
+        await using var processor = new FormFileProcessor();
 
-            var cmd = req.ToCommand(id, petid, filesDto);
+        List<FileDto> filesDto = processor.Process(req.Files);
 
-            var result = await service.HandleAsync(cmd, cancellationToken);
+        var cmd = req.ToCommand(id, petid, filesDto);
 
-            if (result.IsFailure)
-                return result.Error.ToResponse();
+        var result = await service.HandleAsync(cmd, cancellationToken);
 
-            return Ok(result.Value);
-        }
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
     }
 
     [HttpDelete("{id:guid}")]
@@ -173,4 +166,36 @@ public class VolunteerController : CustomControllerBase
 
         return Ok(result.Value);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetVolunteersPaginated(
+        [FromServices] GetVolunteerPaginatedHandler handler,
+        [FromQuery] GetVolunteerPaginatedRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var query = request.ToCommand();
+        var result = await handler.HandleAsync(query, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetVolunteerById(
+        [FromServices] GetVolunteerByIdHandler handler,
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetVolunteerByIdQuery(id);
+        var result = await handler.HandleAsync(query, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
 }
+

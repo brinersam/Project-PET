@@ -3,7 +3,6 @@
 namespace ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 
 public record CreateVolunteerCommand(
-    VolunteerDto VolunteerDto,
-    PhoneNumberDto PhonenumberDto,
+    CreateVolunteerDto VolunteerDto,
     List<PaymentInfoDto>? PaymentInfoDtos,
     List<SocialNetworkDto>? SocialNetworkDtos);
