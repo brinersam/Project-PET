@@ -15,4 +15,4 @@ public record CreatePetCommand(
     List<PaymentInfoDto> PaymentInfos,
     AddressDto Address,
     PhoneNumberDto PhoneNumber,
-    Status Status = Status.NotSet);
+    PetStatus Status = PetStatus.NotSet);

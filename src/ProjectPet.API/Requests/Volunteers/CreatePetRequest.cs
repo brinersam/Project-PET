@@ -15,7 +15,7 @@ public record CreatePetRequest(
     List<PaymentInfoDto> PaymentInfos,
     AddressDto Address,
     PhoneNumberDto PhoneNumber,
-    Status Status = Status.NotSet) : IToCommand<CreatePetCommand, Guid>
+    PetStatus Status = PetStatus.NotSet) : IToCommand<CreatePetCommand, Guid>
 {
     public CreatePetCommand ToCommand(Guid id)
     {

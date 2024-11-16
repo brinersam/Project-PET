@@ -98,7 +98,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             .IsRequired()
             .HasConversion(
                 status => status.ToString(),
-                status => Enum.Parse<Status>(status)
+                status => Enum.Parse<PetStatus>(status)
             );
 
         builder.Property(e => e.DateOfBirth)

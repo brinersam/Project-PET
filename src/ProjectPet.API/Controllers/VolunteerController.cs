@@ -9,6 +9,7 @@ using ProjectPet.Application.Dto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
@@ -60,7 +61,7 @@ public class VolunteerController : CustomControllerBase
     [HttpPost("{id:guid}/Pet/{petid:guid}/Photos")]
     public async Task<IActionResult> UploadPetPhoto(
         [FromServices] UploadPetPhotoHandler service,
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petid,
         [FromForm] UploadFileRequest req,
         CancellationToken cancellationToken = default)
@@ -69,7 +70,7 @@ public class VolunteerController : CustomControllerBase
 
         List<FileDto> filesDto = processor.Process(req.Files);
 
-        var cmd = req.ToCommand(id, petid, filesDto);
+        var cmd = req.ToCommand(volunteerId, petid, filesDto);
 
         var result = await service.HandleAsync(cmd, cancellationToken);
 
@@ -191,6 +192,23 @@ public class VolunteerController : CustomControllerBase
             return result.Error.ToResponse();
 
         return Ok(result.Value);
+    }
+
+    [HttpPut("{volunteerId:guid}/pet/{petid:guid}/status")]
+    public async Task<IActionResult> UpdatePetStatus(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromServices] UpdatePetStatusHandler handler,
+        [FromForm] UpdatePetStatusRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = new UpdatePetStatusCommand(volunteerId, petid, request.Status);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
     }
 }
 

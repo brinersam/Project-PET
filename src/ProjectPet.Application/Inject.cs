@@ -9,6 +9,7 @@ using ProjectPet.Application.UseCases.AnimalSpecies.Queries.GetAllSpecies;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
@@ -48,10 +49,12 @@ public static class Inject
         builder.Services.AddScoped<UpdateVolunteerPaymentHandler>();
         builder.Services.AddScoped<UpdateVolunteerSocialsHandler>();
         builder.Services.AddScoped<DeleteVolunteerHandler>();
+        builder.Services.AddScoped<UpdatePetStatusHandler>();
 
         // read
         builder.Services.AddScoped<GetVolunteerPaginatedHandler>();
         builder.Services.AddScoped<GetVolunteerByIdHandler>();
+
 
         return builder;
     }

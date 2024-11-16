@@ -28,7 +28,6 @@ public class Volunteer : EntityBase, ISoftDeletable
         string description,
         int yOExperience,
         Phonenumber phoneNumber,
-        IEnumerable<Pet> ownedPets,
         IEnumerable<PaymentInfo> paymentMethods,
         IEnumerable<SocialNetwork> socialNetworks) : base(id)
     {
@@ -37,12 +36,13 @@ public class Volunteer : EntityBase, ISoftDeletable
         Description = description;
         YOExperience = yOExperience;
         Phonenumber = phoneNumber;
-        _ownedPets = ownedPets.ToList();
+        _ownedPets = [];
         PaymentMethods = new() { Data = paymentMethods.ToList() };
         SocialNetworks = new() { Data = socialNetworks.ToList() };
     }
 
-    public static Result<Volunteer, Error> Create(
+    public static Result<Volunteer, Error> Create
+        (
         Guid id,
         string fullName,
         string email,
@@ -81,15 +81,14 @@ public class Volunteer : EntityBase, ISoftDeletable
                 description,
                 yOExperience,
                 phoneNumber,
-                [],
                 paymentMethods,
                 socialNetworks
             );
     }
 
-    public int PetsHoused() => _ownedPets.Count(x => x.Status == Status.Home_Found);
-    public int PetsLookingForHome() => _ownedPets.Count(x => x.Status == Status.Looking_For_Home);
-    public int PetsInCare() => _ownedPets.Count(x => x.Status == Status.Requires_Care);
+    public int PetsHoused() => _ownedPets.Count(x => x.Status == PetStatus.Home_Found);
+    public int PetsLookingForHome() => _ownedPets.Count(x => x.Status == PetStatus.Looking_For_Home);
+    public int PetsInCare() => _ownedPets.Count(x => x.Status == PetStatus.Requires_Care);
 
     public void UpdateGeneralInfo(string? FullName,
         string? Email,
@@ -146,6 +145,7 @@ public class Volunteer : EntityBase, ISoftDeletable
             return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user {FullName}!");
         return pet;
     }
+
     public void SetPetPositionToFront(int x)
         => SetPetPosition(x, int.MinValue);
 
@@ -190,8 +190,17 @@ public class Volunteer : EntityBase, ISoftDeletable
                 pet.MovePositionBackwards();
         }
     }
-}
 
+    public UnitResult<Error> SetPetStatus(Guid petId, PetStatus status)
+    {
+        var pet = _ownedPets.FirstOrDefault(x => x.Id == petId);
+        if (pet is null)
+            return Errors.General.NotFound(typeof(Pet));
+
+        pet.SetPetStatus(status);
+        return Result.Success<Error>();
+    }
+}
 
 public record SocialNetworkList
 {

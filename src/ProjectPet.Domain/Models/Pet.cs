@@ -17,7 +17,7 @@ public class Pet : EntityBase, ISoftDeletable
     public HealthInfo HealthInfo { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
     public Phonenumber PhoneNumber { get; private set; } = null!;
-    public Status Status { get; private set; }
+    public PetStatus Status { get; private set; }
     public DateOnly DateOfBirth { get; private set; }
     public DateOnly CreatedOn { get; private set; }
     public PhotoList Photos { get; private set; } = null!;
@@ -34,7 +34,7 @@ public class Pet : EntityBase, ISoftDeletable
         HealthInfo healthInfo,
         Address address,
         Phonenumber phoneNumber,
-        Status status,
+        PetStatus status,
         DateOnly dateOfBirth,
         DateOnly createdOn,
         IEnumerable<PetPhoto> photos,
@@ -64,7 +64,7 @@ public class Pet : EntityBase, ISoftDeletable
         HealthInfo healthInfo,
         Address address,
         Phonenumber phoneNumber,
-        Status status,
+        PetStatus status,
         DateOnly dateOfBirth,
         IEnumerable<PetPhoto> photos,
         IEnumerable<PaymentInfo> paymentMethods)
@@ -85,7 +85,7 @@ public class Pet : EntityBase, ISoftDeletable
         if (result.IsFailure)
             return result.Error;
 
-        if (status == Status.NotSet)
+        if (status == PetStatus.NotSet)
             return Error.Validation("value.is.invalid", "Pet status must be set!");
 
         return new Pet(
@@ -135,6 +135,9 @@ public class Pet : EntityBase, ISoftDeletable
         _isDeleted = false;
     }
 
+    public void SetPetStatus(PetStatus status)
+        => Status = status;
+
     public void SetPosition(Position position)
         => OrderingPosition = position;
 
@@ -155,7 +158,7 @@ public record PhotoList
     public List<PetPhoto> Data { get; set; } = null!;
 }
 
-public enum Status
+public enum PetStatus
 {
     NotSet,
     Requires_Care,
