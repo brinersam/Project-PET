@@ -48,8 +48,13 @@ public class VolunteerController : CustomControllerBase
         [FromRoute] Guid id,
         [FromServices] CreatePetHandler handler,
         [FromBody] CreatePetRequest request,
+        IValidator<CreatePetRequest> validator,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var cmd = request.ToCommand(id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);

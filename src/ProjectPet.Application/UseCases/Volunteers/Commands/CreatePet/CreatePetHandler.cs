@@ -30,62 +30,13 @@ public class CreatePetHandler
         CreatePetCommand command,
         CancellationToken cancellationToken)
     {
-        var doesSpeciesExist = _readDbContext.Species.Any(x => x.Id == command.AnimalData_SpeciesId);
+        var doesSpeciesExist = _readDbContext.Species.Any(x => x.Id == command.AnimalData.SpeciesId);
         if (doesSpeciesExist == false)
-            return Error.Validation("record.not.found", $"Species with id \"{command.AnimalData_SpeciesId}\" was not found!");
+            return Error.Validation("record.not.found", $"Species with id \"{command.AnimalData.SpeciesId}\" was not found!");
 
-        var breed = _readDbContext.Breeds.FirstOrDefault(x => x.SpeciesId == command.AnimalData_SpeciesId && x.Value == command.AnimalData_BreedName);
+        var breed = _readDbContext.Breeds.FirstOrDefault(x => x.SpeciesId == command.AnimalData.SpeciesId && x.Value == command.AnimalData.BreedName);
         if (breed is null)
-            return Error.Validation("record.not.found", $"Breed with name \"{command.AnimalData_BreedName}\" was not found!");
-
-        if (Ext.IsDelegateFailed(out AnimalData animalData, out var animalDataError,
-            AnimalData.Create(
-                command.AnimalData_SpeciesId,
-                breed.Id)
-        ))
-            return animalDataError!;
-
-        List<PaymentInfo> paymentInfos = [];
-        foreach (var paymentInfoDto in command.PaymentInfos)
-        {
-            if (Ext.IsDelegateFailed(out PaymentInfo paymentInfo, out var paymentInfoError,
-                PaymentInfo.Create(
-                    paymentInfoDto.Title,
-                    paymentInfoDto.Instructions)
-            ))
-                return paymentInfoError!;
-
-            paymentInfos.Add(paymentInfo);
-        }
-
-        if (Ext.IsDelegateFailed(out Phonenumber phoneNumber, out var phoneNumberError,
-            Phonenumber.Create(
-                command.PhoneNumber.Phonenumber,
-                command.PhoneNumber.PhonenumberAreaCode)
-        ))
-            return phoneNumberError!;
-
-        if (Ext.IsDelegateFailed(out Address address, out var addressError,
-            Address.Create(
-                command.Address.Name,
-                command.Address.Street,
-                command.Address.Building,
-                command.Address.Block,
-                command.Address.Entrance,
-                command.Address.Floor,
-                command.Address.Apartment)
-        ))
-            return addressError!;
-
-        if (Ext.IsDelegateFailed(out HealthInfo healthInfo, out var healthInfoError,
-            HealthInfo.Create(
-                command.HealthInfo.Health,
-                command.HealthInfo.IsSterilized,
-                command.HealthInfo.IsVaccinated,
-                command.HealthInfo.Weight,
-                command.HealthInfo.Height)
-        ))
-            return healthInfoError!;
+            return Error.Validation("record.not.found", $"Breed with name \"{command.AnimalData.BreedName}\" was not found!");
 
         var volunteerRes = await _volunteerRepository.GetByIdAsync(command.Id, cancellationToken);
         if (volunteerRes.IsFailure)
@@ -93,6 +44,33 @@ public class CreatePetHandler
         var volunteer = volunteerRes.Value;
 
         var orderingPosition = Position.Create(volunteer.OwnedPets.Count() + 1);
+
+        var animalData = AnimalData.Create(command.AnimalData.SpeciesId, breed.Id).Value;
+
+        List<PaymentInfo> paymentInfos = command.PaymentInfos
+            .Select(x => 
+                PaymentInfo.Create(x.Title,x.Instructions).Value)
+            .ToList();
+
+        var phoneNumber = Phonenumber.Create(
+                command.PhoneNumber.Phonenumber,
+                command.PhoneNumber.PhonenumberAreaCode).Value;
+
+        var address = Address.Create(
+                command.Address.Name,
+                command.Address.Street,
+                command.Address.Building,
+                command.Address.Block,
+                command.Address.Entrance,
+                command.Address.Floor,
+                command.Address.Apartment).Value;
+
+        var healthInfo = HealthInfo.Create(
+                command.HealthInfo.Health,
+                command.HealthInfo.IsSterilized,
+                command.HealthInfo.IsVaccinated,
+                command.HealthInfo.Weight,
+                command.HealthInfo.Height).Value;
 
         if (Ext.IsDelegateFailed(out Pet pet, out var petError,
             Pet.Create(

@@ -193,9 +193,10 @@ public class Volunteer : EntityBase, ISoftDeletable
 
     public UnitResult<Error> SetPetStatus(Guid petId, PetStatus status)
     {
-        var pet = _ownedPets.FirstOrDefault(x => x.Id == petId);
-        if (pet is null)
-            return Errors.General.NotFound(typeof(Pet));
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+        var pet = petRes.Value;
 
         pet.SetPetStatus(status);
         return Result.Success<Error>();
@@ -203,9 +204,10 @@ public class Volunteer : EntityBase, ISoftDeletable
 
     public UnitResult<Error> DeletePhotos(Guid petId, string[] photoPaths)
     {
-        var pet = _ownedPets.FirstOrDefault(x => x.Id == petId);
-        if (pet is null)
-            return Errors.General.NotFound(typeof(Pet));
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+        var pet = petRes.Value;
 
         pet.DeletePhotos(photoPaths);
         return Result.Success<Error>();

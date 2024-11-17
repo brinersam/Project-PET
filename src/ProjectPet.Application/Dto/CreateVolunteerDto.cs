@@ -5,14 +5,14 @@ public record CreateVolunteerDto(
     string Email,
     string Description,
     int YOExperience,
-    PhoneNumberDto Phonenumber);
+    PhonenumberDto Phonenumber);
 
 public record CreateVolunteerNullableDto(
     string? FullName,
     string? Email,
     string? Description,
     int? YOExperience,
-    PhoneNumberDto? Phonenumber);
+    PhonenumberDto? Phonenumber);
 
 public class VolunteerDto
 {
