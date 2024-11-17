@@ -1,8 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Application.Database;
 using ProjectPet.Application.Providers;
 using ProjectPet.Application.Repositories;
-using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
 namespace ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 

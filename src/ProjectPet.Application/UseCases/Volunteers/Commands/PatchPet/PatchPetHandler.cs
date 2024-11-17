@@ -1,10 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.Application.Database;
-using ProjectPet.Application.Dto;
 using ProjectPet.Application.Repositories;
 using ProjectPet.Domain.Models;
 using ProjectPet.Domain.Shared;
-using System.Xml.Linq;
 
 namespace ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
 

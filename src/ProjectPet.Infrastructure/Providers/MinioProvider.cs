@@ -103,7 +103,7 @@ public class MinioProvider : IFileProvider
             _logger.LogWarning($"Attempt at deleting 0 files for user with id {userId} ! Letting it slide...");
             return Result.Success<Error>();
         }
-            
+
 
         string userBucket = GetBucketName(bucket, userId);
 

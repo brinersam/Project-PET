@@ -48,8 +48,8 @@ public class CreatePetHandler
         var animalData = AnimalData.Create(command.AnimalData.SpeciesId, breed.Id).Value;
 
         List<PaymentInfo> paymentInfos = command.PaymentInfos
-            .Select(x => 
-                PaymentInfo.Create(x.Title,x.Instructions).Value)
+            .Select(x =>
+                PaymentInfo.Create(x.Title, x.Instructions).Value)
             .ToList();
 
         var phoneNumber = Phonenumber.Create(
