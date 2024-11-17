@@ -157,7 +157,7 @@ public class Pet : EntityBase, ISoftDeletable
         var data = Photos.Data;
         foreach (var path in photoPaths)
         {
-            int photoToDeleteIdx = data.FindIndex(x => String.Equals(path.ToLower(), x.StoragePath.ToLower()));
+            int photoToDeleteIdx = data.FindIndex(x => String.Equals(path, x.StoragePath));
             if (photoToDeleteIdx == -1)
                 continue;
 
@@ -200,6 +200,32 @@ public class Pet : EntityBase, ISoftDeletable
         HealthInfo = healthInfo ?? HealthInfo;
         Address = address ?? Address;
         Phonenumber = phonenumber ?? Phonenumber;
+    }
+
+    public UnitResult<Error> SetMainPhoto(string PhotoPath)
+    {
+        var data = Photos.Data;
+
+        var photoIdx = data.FindIndex(x => String.Equals(x.StoragePath, PhotoPath));
+        if (photoIdx == -1)
+            return Errors.General.NotFound(typeof(PetPhoto));
+
+        var oldMainPhoto = data.FindIndex(x => x.IsPrimary == true);
+        if (oldMainPhoto != -1)
+        {
+            var oldPrimaryPhotoMadeRegular = PetPhoto.Create(data[oldMainPhoto].StoragePath, false).Value;
+            data[oldMainPhoto] = oldPrimaryPhotoMadeRegular;
+        }
+
+        var aPhotoMadePrimary = PetPhoto.Create(data[photoIdx].StoragePath, true).Value;
+
+        data.RemoveAt(photoIdx);
+        data.Insert(0, aPhotoMadePrimary);
+
+        var deepCopyData = data.Select(x => PetPhoto.Create(x.StoragePath, x.IsPrimary).Value).ToList();
+        Photos = new PhotoList() { Data = deepCopyData };
+
+        return Result.Success<Error>();
     }
 }
 

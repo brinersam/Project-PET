@@ -12,6 +12,7 @@ using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.SetMainPetPhoto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
@@ -69,7 +70,7 @@ public static class Inject
         builder.Services.AddScoped<DeletePetPhotosHandler>();
         builder.Services.AddScoped<PatchPetHandler>();
         builder.Services.AddScoped<DeletePetHandler>();
-
+        builder.Services.AddScoped<SetMainPetPhotoHandler>();
 
         return builder;
     }

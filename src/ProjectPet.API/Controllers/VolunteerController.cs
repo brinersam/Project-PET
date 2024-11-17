@@ -13,6 +13,7 @@ using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.SetMainPetPhoto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
@@ -261,11 +262,11 @@ public class VolunteerController : CustomControllerBase
 
     [HttpDelete("{volunteerId:guid}/pet/{petid:guid}")]
     public async Task<IActionResult> DeletePet(
-    [FromRoute] Guid volunteerId,
-    [FromRoute] Guid petid,
-    [FromQuery] bool softDelete,
-    [FromServices] DeletePetHandler handler,
-    CancellationToken cancellationToken = default)
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromQuery] bool softDelete,
+        [FromServices] DeletePetHandler handler,
+        CancellationToken cancellationToken = default)
     {
         var cmd = new DeletePetCommand(volunteerId, petid, softDelete);
         var result = await handler.HandleAsync(cmd, cancellationToken);
@@ -275,4 +276,23 @@ public class VolunteerController : CustomControllerBase
 
         return Ok();
     }
+
+    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos/main")]
+    public async Task<IActionResult> SetMainPetPhoto(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromBody] SetMainPetPhotoRequest request,
+        [FromServices] SetMainPetPhotoHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = new SetMainPetPhotoCommand(volunteerId, petid, request.PhotoPath);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
 }
+
+
