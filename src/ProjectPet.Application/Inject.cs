@@ -10,6 +10,7 @@ using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
@@ -65,6 +66,7 @@ public static class Inject
         builder.Services.AddScoped<UploadPetPhotoHandler>();
         builder.Services.AddScoped<UpdatePetStatusHandler>();
         builder.Services.AddScoped<DeletePetPhotosHandler>();
+        builder.Services.AddScoped<PatchPetHandler>();
 
         return builder;
     }

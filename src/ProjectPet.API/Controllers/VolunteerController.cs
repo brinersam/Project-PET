@@ -11,6 +11,7 @@ using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
@@ -104,7 +105,7 @@ public class VolunteerController : CustomControllerBase
     }
 
     [HttpPatch("{id:guid}/main")]
-    public async Task<ActionResult<Guid>> PatchInfo(
+    public async Task<ActionResult<Guid>> PatchVolunteer(
         [FromServices] UpdateVolunteerInfoHandler handler,
         [FromBody] UpdateVolunteerInfoRequest request,
         [FromRoute] Guid id,
@@ -206,7 +207,7 @@ public class VolunteerController : CustomControllerBase
         [FromRoute] Guid volunteerId,
         [FromRoute] Guid petid,
         [FromServices] UpdatePetStatusHandler handler,
-        [FromForm] UpdatePetStatusRequest request,
+        [FromBody] UpdatePetStatusRequest request,
         CancellationToken cancellationToken = default)
     {
         var cmd = new UpdatePetStatusCommand(volunteerId, petid, request.Status);
@@ -227,6 +228,28 @@ public class VolunteerController : CustomControllerBase
         CancellationToken cancellationToken = default)
     {
         var cmd = new DeletePetPhotosCommand(volunteerId, petid, request.photoPathsToDelete);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpPatch("{volunteerId:guid}/pet/{petid:guid}")]
+    public async Task<IActionResult> PatchPet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromServices] PatchPetHandler handler,
+        [FromBody] PatchPetRequest request,
+        IValidator<PatchPetRequest> validator,
+        CancellationToken cancellationToken = default)
+    {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
+        var cmd = request.ToCommand(volunteerId, petid);
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)

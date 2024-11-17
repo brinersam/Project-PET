@@ -212,6 +212,33 @@ public class Volunteer : EntityBase, ISoftDeletable
         pet.DeletePhotos(photoPaths);
         return Result.Success<Error>();
     }
+
+    public UnitResult<Error> PatchPet(
+        Guid petId,
+        string? name,
+        AnimalData? animalData,
+        string? description,
+        string? coat,
+        HealthInfo? healthInfo,
+        Address? address,
+        Phonenumber? phonenumber)
+    {
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+        var pet = petRes.Value;
+
+        pet.PatchInfo(
+            name,
+            animalData,
+            description,
+            coat,
+            healthInfo,
+            address,
+            phonenumber);
+
+        return Result.Success<Error>();
+    }
 }
 
 public record SocialNetworkList

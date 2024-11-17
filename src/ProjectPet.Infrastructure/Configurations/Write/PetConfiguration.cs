@@ -83,7 +83,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("apartment");
         });
 
-        builder.ComplexProperty(e => e.PhoneNumber, ba =>
+        builder.ComplexProperty(e => e.Phonenumber, ba =>
         {
             ba.Property(e => e.Number)
                 .ConfigureString();

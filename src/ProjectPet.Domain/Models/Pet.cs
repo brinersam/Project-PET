@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.Domain.Models.DDD;
 using ProjectPet.Domain.Shared;
-using System.IO;
 
 namespace ProjectPet.Domain.Models;
 
@@ -17,7 +16,7 @@ public class Pet : EntityBase, ISoftDeletable
     public string Coat { get; private set; } = null!;
     public HealthInfo HealthInfo { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
-    public Phonenumber PhoneNumber { get; private set; } = null!;
+    public Phonenumber Phonenumber { get; private set; } = null!;
     public PetStatus Status { get; private set; }
     public DateOnly DateOfBirth { get; private set; }
     public DateOnly CreatedOn { get; private set; }
@@ -48,7 +47,7 @@ public class Pet : EntityBase, ISoftDeletable
         OrderingPosition = orderingPosition;
         HealthInfo = healthInfo;
         Address = address;
-        PhoneNumber = phoneNumber;
+        Phonenumber = phoneNumber;
         Status = status;
         DateOfBirth = dateOfBirth;
         CreatedOn = createdOn;
@@ -181,6 +180,24 @@ public class Pet : EntityBase, ISoftDeletable
         var deepCopyData = data.Select(x => PetPhoto.Create(x.StoragePath, x.IsPrimary).Value).ToList();
 
         Photos = new PhotoList() { Data = deepCopyData };
+    }
+
+    public void PatchInfo(
+        string? name,
+        AnimalData? animalData,
+        string? description,
+        string? coat,
+        HealthInfo? healthInfo,
+        Address? address,
+        Phonenumber? phonenumber)
+    {
+        Name = name ?? Name;
+        AnimalData = animalData ?? AnimalData;
+        Description = description ?? Description;
+        Coat = coat ?? Coat;
+        HealthInfo = healthInfo ?? HealthInfo;
+        Address = address ?? Address;
+        Phonenumber = phonenumber ?? Phonenumber;
     }
 }
 
