@@ -9,6 +9,7 @@ public class Pet : EntityBase, ISoftDeletable
 #pragma warning disable IDE0052 // Remove unread private members
     private bool _isDeleted = false;
 #pragma warning restore IDE0052 // Remove unread private members
+    public Guid VolunteerId { get; private set; }
     public Position OrderingPosition { get; private set; } = null!;
     public string Name { get; private set; } = null!;
     public AnimalData AnimalData { get; private set; } = null!;
@@ -26,6 +27,7 @@ public class Pet : EntityBase, ISoftDeletable
 
     private Pet(
         Guid id,
+        Guid volunteerId,
         string name,
         AnimalData animalData,
         string description,
@@ -69,7 +71,6 @@ public class Pet : EntityBase, ISoftDeletable
         IEnumerable<PetPhoto> photos,
         IEnumerable<PaymentInfo> paymentMethods)
     {
-        var id = Guid.Empty;
         DateOnly createdOn = DateOnly.FromDateTime(DateTime.Now);
 
         var validatorStr = Validator.ValidatorString();
@@ -89,7 +90,8 @@ public class Pet : EntityBase, ISoftDeletable
             return Error.Validation("value.is.invalid", "Pet status must be set!");
 
         return new Pet(
-            id,
+            Guid.Empty,
+            Guid.Empty,
             name,
             animalData,
             description,

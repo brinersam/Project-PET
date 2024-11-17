@@ -8,7 +8,7 @@ namespace ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 
 public class DeletePetPhotosHandler
 {
-    private string BUCKETNAME = Constants.PET_PHOTOS_BUCKETNAME;
+    private readonly string BUCKETNAME = Constants.PET_PHOTOS_BUCKETNAME;
     private readonly IFileProvider _fileProvider;
     private readonly IVolunteerRepository _volunteerRepository;
 

@@ -138,11 +138,33 @@ public class Volunteer : EntityBase, ISoftDeletable
         _ownedPets.Add(pet);
     }
 
+    public UnitResult<Error> DeletePet(Guid petId)
+    {
+        var petIdx = _ownedPets.FindIndex(x => x.Id == petId);
+        if (petIdx == -1)
+            return Error.NotFound("record.not.found", $"No pet with id \"{petId}\" was found for user {FullName}!");
+
+        _ownedPets.RemoveAt(petIdx);
+
+        return Result.Success<Error>();
+
+    }
+    public UnitResult<Error> SoftDeletePet(Guid petId)
+    {
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+
+        petRes.Value.Delete();
+
+        return Result.Success<Error>();
+    }
+
     public Result<Pet, Error> GetPetById(Guid id)
     {
         Pet? pet = _ownedPets.FirstOrDefault(p => p.Id == id);
         if (pet is null)
-            return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user {FullName}!");
+            return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user with {Id} !");
         return pet;
     }
 

@@ -9,6 +9,7 @@ using ProjectPet.API.Response;
 using ProjectPet.Application.Dto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
@@ -250,6 +251,23 @@ public class VolunteerController : CustomControllerBase
             return Envelope.ToResponse(validatorRes.Errors);
 
         var cmd = request.ToCommand(volunteerId, petid);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpDelete("{volunteerId:guid}/pet/{petid:guid}")]
+    public async Task<IActionResult> DeletePet(
+    [FromRoute] Guid volunteerId,
+    [FromRoute] Guid petid,
+    [FromQuery] bool softDelete,
+    [FromServices] DeletePetHandler handler,
+    CancellationToken cancellationToken = default)
+    {
+        var cmd = new DeletePetCommand(volunteerId, petid, softDelete);
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)

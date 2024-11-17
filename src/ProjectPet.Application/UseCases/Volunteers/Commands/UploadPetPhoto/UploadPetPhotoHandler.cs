@@ -12,7 +12,7 @@ namespace ProjectPet.Application.UseCases.Volunteers.Commands.UploadPetPhoto;
 public class UploadPetPhotoHandler
 {
     private static HashSet<string> allowedFileExtensions = [".png", ".jpg"];
-    private string BUCKETNAME = Constants.PET_PHOTOS_BUCKETNAME;
+    private readonly string BUCKETNAME = Constants.PET_PHOTOS_BUCKETNAME;
 
     private readonly ILogger<UploadPetPhotoHandler> _logger;
     private readonly IFileProvider _fileProvider;
