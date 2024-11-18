@@ -9,6 +9,7 @@ public class Pet : EntityBase, ISoftDeletable
 #pragma warning disable IDE0052 // Remove unread private members
     private bool _isDeleted = false;
 #pragma warning restore IDE0052 // Remove unread private members
+    public Guid VolunteerId { get; private set; }
     public Position OrderingPosition { get; private set; } = null!;
     public string Name { get; private set; } = null!;
     public AnimalData AnimalData { get; private set; } = null!;
@@ -16,8 +17,8 @@ public class Pet : EntityBase, ISoftDeletable
     public string Coat { get; private set; } = null!;
     public HealthInfo HealthInfo { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
-    public Phonenumber PhoneNumber { get; private set; } = null!;
-    public Status Status { get; private set; }
+    public Phonenumber Phonenumber { get; private set; } = null!;
+    public PetStatus Status { get; private set; }
     public DateOnly DateOfBirth { get; private set; }
     public DateOnly CreatedOn { get; private set; }
     public PhotoList Photos { get; private set; } = null!;
@@ -26,6 +27,7 @@ public class Pet : EntityBase, ISoftDeletable
 
     private Pet(
         Guid id,
+        Guid volunteerId,
         string name,
         AnimalData animalData,
         string description,
@@ -34,7 +36,7 @@ public class Pet : EntityBase, ISoftDeletable
         HealthInfo healthInfo,
         Address address,
         Phonenumber phoneNumber,
-        Status status,
+        PetStatus status,
         DateOnly dateOfBirth,
         DateOnly createdOn,
         IEnumerable<PetPhoto> photos,
@@ -47,7 +49,7 @@ public class Pet : EntityBase, ISoftDeletable
         OrderingPosition = orderingPosition;
         HealthInfo = healthInfo;
         Address = address;
-        PhoneNumber = phoneNumber;
+        Phonenumber = phoneNumber;
         Status = status;
         DateOfBirth = dateOfBirth;
         CreatedOn = createdOn;
@@ -64,12 +66,11 @@ public class Pet : EntityBase, ISoftDeletable
         HealthInfo healthInfo,
         Address address,
         Phonenumber phoneNumber,
-        Status status,
+        PetStatus status,
         DateOnly dateOfBirth,
         IEnumerable<PetPhoto> photos,
         IEnumerable<PaymentInfo> paymentMethods)
     {
-        var id = Guid.Empty;
         DateOnly createdOn = DateOnly.FromDateTime(DateTime.Now);
 
         var validatorStr = Validator.ValidatorString();
@@ -85,11 +86,12 @@ public class Pet : EntityBase, ISoftDeletable
         if (result.IsFailure)
             return result.Error;
 
-        if (status == Status.NotSet)
+        if (status == PetStatus.NotSet)
             return Error.Validation("value.is.invalid", "Pet status must be set!");
 
         return new Pet(
-            id,
+            Guid.Empty,
+            Guid.Empty,
             name,
             animalData,
             description,
@@ -135,6 +137,9 @@ public class Pet : EntityBase, ISoftDeletable
         _isDeleted = false;
     }
 
+    public void SetPetStatus(PetStatus status)
+        => Status = status;
+
     public void SetPosition(Position position)
         => OrderingPosition = position;
 
@@ -143,6 +148,85 @@ public class Pet : EntityBase, ISoftDeletable
 
     public void MovePositionBackwards(int amount = 1)
         => OrderingPosition = OrderingPosition.MoveBackward(amount);
+
+    public void DeletePhotos(string[] photoPaths)
+    {
+        bool primaryPhotoWasDeleted = false;
+        bool deletedAtLeastOnePhoto = false;
+
+        var data = Photos.Data;
+        foreach (var path in photoPaths)
+        {
+            int photoToDeleteIdx = data.FindIndex(x => String.Equals(path, x.StoragePath));
+            if (photoToDeleteIdx == -1)
+                continue;
+
+            var photoToDelete = data[photoToDeleteIdx];
+
+            if (photoToDelete.IsPrimary)
+                primaryPhotoWasDeleted = true;
+
+            data.RemoveAt(photoToDeleteIdx);
+            deletedAtLeastOnePhoto = true;
+        }
+
+        if (deletedAtLeastOnePhoto == false)
+            return;
+
+        if (primaryPhotoWasDeleted && data.Count > 0)
+        {
+            var firstPhotoMadePrimary = PetPhoto.Create(data[0].StoragePath, true).Value;
+            data[0] = firstPhotoMadePrimary;
+        }
+
+        var deepCopyData = data.Select(x => PetPhoto.Create(x.StoragePath, x.IsPrimary).Value).ToList();
+
+        Photos = new PhotoList() { Data = deepCopyData };
+    }
+
+    public void PatchInfo(
+        string? name,
+        AnimalData? animalData,
+        string? description,
+        string? coat,
+        HealthInfo? healthInfo,
+        Address? address,
+        Phonenumber? phonenumber)
+    {
+        Name = name ?? Name;
+        AnimalData = animalData ?? AnimalData;
+        Description = description ?? Description;
+        Coat = coat ?? Coat;
+        HealthInfo = healthInfo ?? HealthInfo;
+        Address = address ?? Address;
+        Phonenumber = phonenumber ?? Phonenumber;
+    }
+
+    public UnitResult<Error> SetMainPhoto(string PhotoPath)
+    {
+        var data = Photos.Data;
+
+        var photoIdx = data.FindIndex(x => String.Equals(x.StoragePath, PhotoPath));
+        if (photoIdx == -1)
+            return Errors.General.NotFound(typeof(PetPhoto));
+
+        var oldMainPhoto = data.FindIndex(x => x.IsPrimary == true);
+        if (oldMainPhoto != -1)
+        {
+            var oldPrimaryPhotoMadeRegular = PetPhoto.Create(data[oldMainPhoto].StoragePath, false).Value;
+            data[oldMainPhoto] = oldPrimaryPhotoMadeRegular;
+        }
+
+        var aPhotoMadePrimary = PetPhoto.Create(data[photoIdx].StoragePath, true).Value;
+
+        data.RemoveAt(photoIdx);
+        data.Insert(0, aPhotoMadePrimary);
+
+        var deepCopyData = data.Select(x => PetPhoto.Create(x.StoragePath, x.IsPrimary).Value).ToList();
+        Photos = new PhotoList() { Data = deepCopyData };
+
+        return Result.Success<Error>();
+    }
 }
 
 public record PaymentMethodsList
@@ -155,7 +239,7 @@ public record PhotoList
     public List<PetPhoto> Data { get; set; } = null!;
 }
 
-public enum Status
+public enum PetStatus
 {
     NotSet,
     Requires_Care,

@@ -8,7 +8,12 @@ using ProjectPet.Application.UseCases.AnimalSpecies.Queries.GetAllBreedsById;
 using ProjectPet.Application.UseCases.AnimalSpecies.Queries.GetAllSpecies;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.SetMainPetPhoto;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
@@ -53,6 +58,7 @@ public static class Inject
         builder.Services.AddScoped<GetVolunteerPaginatedHandler>();
         builder.Services.AddScoped<GetVolunteerByIdHandler>();
 
+
         return builder;
     }
     public static IHostApplicationBuilder AddPetHandlers(this IHostApplicationBuilder builder)
@@ -60,6 +66,11 @@ public static class Inject
         // write
         builder.Services.AddScoped<CreatePetHandler>();
         builder.Services.AddScoped<UploadPetPhotoHandler>();
+        builder.Services.AddScoped<UpdatePetStatusHandler>();
+        builder.Services.AddScoped<DeletePetPhotosHandler>();
+        builder.Services.AddScoped<PatchPetHandler>();
+        builder.Services.AddScoped<DeletePetHandler>();
+        builder.Services.AddScoped<SetMainPetPhotoHandler>();
 
         return builder;
     }

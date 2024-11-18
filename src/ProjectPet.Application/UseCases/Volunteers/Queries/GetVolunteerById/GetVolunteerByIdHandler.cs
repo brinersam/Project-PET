@@ -23,7 +23,7 @@ public class GetVolunteerByIdHandler
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
         if (volunteer is null)
-            return Errors.General.NotFound(typeof(CreateVolunteerDto));
+            return Errors.General.NotFound(typeof(VolunteerDto));
 
         return volunteer;
     }

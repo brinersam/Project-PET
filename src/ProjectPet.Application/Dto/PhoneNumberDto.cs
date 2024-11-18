@@ -1,5 +1,5 @@
 ﻿namespace ProjectPet.Application.Dto;
 
-public record PhoneNumberDto(
+public record PhonenumberDto(
     string Phonenumber,
     string PhonenumberAreaCode);

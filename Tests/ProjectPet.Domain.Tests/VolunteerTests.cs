@@ -117,7 +117,7 @@ public class VolunteerTests
             healthInfo.Value,
             address.Value,
             phonenumber.Value,
-            Status.Looking_For_Home,
+            PetStatus.Looking_For_Home,
             DateOnly.FromDateTime(DateTime.Now),
             [],
             []);

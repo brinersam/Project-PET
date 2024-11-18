@@ -28,7 +28,6 @@ public class Volunteer : EntityBase, ISoftDeletable
         string description,
         int yOExperience,
         Phonenumber phoneNumber,
-        IEnumerable<Pet> ownedPets,
         IEnumerable<PaymentInfo> paymentMethods,
         IEnumerable<SocialNetwork> socialNetworks) : base(id)
     {
@@ -37,12 +36,13 @@ public class Volunteer : EntityBase, ISoftDeletable
         Description = description;
         YOExperience = yOExperience;
         Phonenumber = phoneNumber;
-        _ownedPets = ownedPets.ToList();
+        _ownedPets = [];
         PaymentMethods = new() { Data = paymentMethods.ToList() };
         SocialNetworks = new() { Data = socialNetworks.ToList() };
     }
 
-    public static Result<Volunteer, Error> Create(
+    public static Result<Volunteer, Error> Create
+        (
         Guid id,
         string fullName,
         string email,
@@ -81,15 +81,14 @@ public class Volunteer : EntityBase, ISoftDeletable
                 description,
                 yOExperience,
                 phoneNumber,
-                [],
                 paymentMethods,
                 socialNetworks
             );
     }
 
-    public int PetsHoused() => _ownedPets.Count(x => x.Status == Status.Home_Found);
-    public int PetsLookingForHome() => _ownedPets.Count(x => x.Status == Status.Looking_For_Home);
-    public int PetsInCare() => _ownedPets.Count(x => x.Status == Status.Requires_Care);
+    public int PetsHoused() => _ownedPets.Count(x => x.Status == PetStatus.Home_Found);
+    public int PetsLookingForHome() => _ownedPets.Count(x => x.Status == PetStatus.Looking_For_Home);
+    public int PetsInCare() => _ownedPets.Count(x => x.Status == PetStatus.Requires_Care);
 
     public void UpdateGeneralInfo(string? FullName,
         string? Email,
@@ -139,13 +138,36 @@ public class Volunteer : EntityBase, ISoftDeletable
         _ownedPets.Add(pet);
     }
 
+    public UnitResult<Error> DeletePet(Guid petId)
+    {
+        var petIdx = _ownedPets.FindIndex(x => x.Id == petId);
+        if (petIdx == -1)
+            return Error.NotFound("record.not.found", $"No pet with id \"{petId}\" was found for user {FullName}!");
+
+        _ownedPets.RemoveAt(petIdx);
+
+        return Result.Success<Error>();
+
+    }
+    public UnitResult<Error> SoftDeletePet(Guid petId)
+    {
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+
+        petRes.Value.Delete();
+
+        return Result.Success<Error>();
+    }
+
     public Result<Pet, Error> GetPetById(Guid id)
     {
         Pet? pet = _ownedPets.FirstOrDefault(p => p.Id == id);
         if (pet is null)
-            return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user {FullName}!");
+            return Error.NotFound("record.not.found", $"No pet with id \"{id}\" was found for user with {Id} !");
         return pet;
     }
+
     public void SetPetPositionToFront(int x)
         => SetPetPosition(x, int.MinValue);
 
@@ -190,8 +212,56 @@ public class Volunteer : EntityBase, ISoftDeletable
                 pet.MovePositionBackwards();
         }
     }
-}
 
+    public UnitResult<Error> SetPetStatus(Guid petId, PetStatus status)
+    {
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+        var pet = petRes.Value;
+
+        pet.SetPetStatus(status);
+        return Result.Success<Error>();
+    }
+
+    public UnitResult<Error> DeletePhotos(Guid petId, string[] photoPaths)
+    {
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+        var pet = petRes.Value;
+
+        pet.DeletePhotos(photoPaths);
+        return Result.Success<Error>();
+    }
+
+    public UnitResult<Error> PatchPet(
+        Guid petId,
+        string? name,
+        AnimalData? animalData,
+        string? description,
+        string? coat,
+        HealthInfo? healthInfo,
+        Address? address,
+        Phonenumber? phonenumber)
+    {
+        var petRes = GetPetById(petId);
+        if (petRes.IsFailure)
+            return petRes.Error;
+        var pet = petRes.Value;
+
+        pet.PatchInfo(
+            name,
+            animalData,
+            description,
+            coat,
+            healthInfo,
+            address,
+            phonenumber);
+
+        return Result.Success<Error>();
+    }
+}
 
 public record SocialNetworkList
 {

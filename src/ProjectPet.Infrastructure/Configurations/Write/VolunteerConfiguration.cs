@@ -38,8 +38,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
         builder.HasMany(e => e.OwnedPets)
             .WithOne()
-            .HasForeignKey("volunteer_id")
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(p => p.VolunteerId)
+            .OnDelete(DeleteBehavior.ClientCascade);
 
         builder.OwnsOne(e => e.PaymentMethods, d =>
         {

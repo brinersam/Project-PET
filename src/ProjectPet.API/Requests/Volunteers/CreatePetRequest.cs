@@ -9,13 +9,12 @@ public record CreatePetRequest(
     string Coat,
     string Description,
     DateTime DateOfBirth,
-    Guid AnimalData_SpeciesId,
-    string AnimalData_BreedName,
+    AnimalDataDto AnimalData,
     HealthInfoDto HealthInfo,
     List<PaymentInfoDto> PaymentInfos,
     AddressDto Address,
-    PhoneNumberDto PhoneNumber,
-    Status Status = Status.NotSet) : IToCommand<CreatePetCommand, Guid>
+    PhonenumberDto Phonenumber,
+    PetStatus Status = PetStatus.NotSet) : IToCommand<CreatePetCommand, Guid>
 {
     public CreatePetCommand ToCommand(Guid id)
     {
@@ -25,12 +24,11 @@ public record CreatePetRequest(
             Coat,
             Description,
             DateOnly.FromDateTime(DateOfBirth),
-            AnimalData_SpeciesId,
-            AnimalData_BreedName,
+            AnimalData,
             HealthInfo,
             PaymentInfos,
             Address,
-            PhoneNumber,
+            Phonenumber,
             Status);
     }
 }

@@ -9,10 +9,9 @@ public record CreatePetCommand(
     string Coat,
     string Description,
     DateOnly DateOfBirth,
-    Guid AnimalData_SpeciesId,
-    string AnimalData_BreedName,
+    AnimalDataDto AnimalData,
     HealthInfoDto HealthInfo,
     List<PaymentInfoDto> PaymentInfos,
     AddressDto Address,
-    PhoneNumberDto PhoneNumber,
-    Status Status = Status.NotSet);
+    PhonenumberDto PhoneNumber,
+    PetStatus Status = PetStatus.NotSet);

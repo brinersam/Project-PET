@@ -25,9 +25,9 @@ public class DeleteVolunteerHandler
         if (volunteerRes.IsFailure)
             return volunteerRes.Error;
 
-        var result = await _volunteerRepository.Delete(volunteerRes.Value, cancellationToken);
+        var result = await _volunteerRepository.SoftDelete(volunteerRes.Value, cancellationToken);
 
-        _logger.LogInformation("Volunteer with id {id} was deleted successfully!", request.Id);
+        _logger.LogInformation("Volunteer with id {id} was soft deleted successfully!", request.Id);
 
         return result.Value;
     }

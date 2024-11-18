@@ -8,7 +8,12 @@ using ProjectPet.API.Response;
 using ProjectPet.Application.Dto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
+using ProjectPet.Application.UseCases.Volunteers.Commands.SetMainPetPhoto;
+using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
@@ -45,8 +50,13 @@ public class VolunteerController : CustomControllerBase
         [FromRoute] Guid id,
         [FromServices] CreatePetHandler handler,
         [FromBody] CreatePetRequest request,
+        IValidator<CreatePetRequest> validator,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var cmd = request.ToCommand(id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
@@ -57,10 +67,10 @@ public class VolunteerController : CustomControllerBase
         return Ok(result.Value);
     }
 
-    [HttpPost("{id:guid}/Pet/{petid:guid}/Photos")]
+    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos")]
     public async Task<IActionResult> UploadPetPhoto(
         [FromServices] UploadPetPhotoHandler service,
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petid,
         [FromForm] UploadFileRequest req,
         CancellationToken cancellationToken = default)
@@ -69,7 +79,7 @@ public class VolunteerController : CustomControllerBase
 
         List<FileDto> filesDto = processor.Process(req.Files);
 
-        var cmd = req.ToCommand(id, petid, filesDto);
+        var cmd = req.ToCommand(volunteerId, petid, filesDto);
 
         var result = await service.HandleAsync(cmd, cancellationToken);
 
@@ -96,7 +106,7 @@ public class VolunteerController : CustomControllerBase
     }
 
     [HttpPatch("{id:guid}/main")]
-    public async Task<ActionResult<Guid>> PatchInfo(
+    public async Task<ActionResult<Guid>> PatchVolunteer(
         [FromServices] UpdateVolunteerInfoHandler handler,
         [FromBody] UpdateVolunteerInfoRequest request,
         [FromRoute] Guid id,
@@ -192,5 +202,96 @@ public class VolunteerController : CustomControllerBase
 
         return Ok(result.Value);
     }
+
+    [HttpPut("{volunteerId:guid}/pet/{petid:guid}/status")]
+    public async Task<IActionResult> UpdatePetStatus(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromServices] UpdatePetStatusHandler handler,
+        [FromBody] UpdatePetStatusRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = new UpdatePetStatusCommand(volunteerId, petid, request.Status);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpDelete("{volunteerId:guid}/pet/{petid:guid}/photos")]
+    public async Task<IActionResult> DeletePetPhotos(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromServices] DeletePetPhotosHandler handler,
+        [FromBody] DeletePetPhotosRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = new DeletePetPhotosCommand(volunteerId, petid, request.photoPathsToDelete);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpPatch("{volunteerId:guid}/pet/{petid:guid}")]
+    public async Task<IActionResult> PatchPet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromServices] PatchPetHandler handler,
+        [FromBody] PatchPetRequest request,
+        IValidator<PatchPetRequest> validator,
+        CancellationToken cancellationToken = default)
+    {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
+        var cmd = request.ToCommand(volunteerId, petid);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpDelete("{volunteerId:guid}/pet/{petid:guid}")]
+    public async Task<IActionResult> DeletePet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromQuery] bool softDelete,
+        [FromServices] DeletePetHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = new DeletePetCommand(volunteerId, petid, softDelete);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos/main")]
+    public async Task<IActionResult> SetMainPetPhoto(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromBody] SetMainPetPhotoRequest request,
+        [FromServices] SetMainPetPhotoHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = new SetMainPetPhotoCommand(volunteerId, petid, request.PhotoPath);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
 }
+
 

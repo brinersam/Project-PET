@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
@@ -13,13 +14,16 @@ public class MinioProvider : IFileProvider
 {
     private readonly IMinioClient _minioClient;
     private readonly IOptions<OptionsMinIO> _options;
+    private readonly ILogger<MinioProvider> _logger;
 
     public MinioProvider(
         IMinioClient minioClient,
-        IOptions<OptionsMinIO> options)
+        IOptions<OptionsMinIO> options,
+        ILogger<MinioProvider> logger)
     {
         _minioClient = minioClient;
         _options = options;
+        _logger = logger;
     }
 
     public string FileNamer(params string[] args)
@@ -94,6 +98,13 @@ public class MinioProvider : IFileProvider
         IEnumerable<string> fileKeys,
         CancellationToken cancellationToken = default)
     {
+        if (fileKeys.Count() <= 0)
+        {
+            _logger.LogWarning($"Attempt at deleting 0 files for user with id {userId} ! Letting it slide...");
+            return Result.Success<Error>();
+        }
+
+
         string userBucket = GetBucketName(bucket, userId);
 
         if (await BucketExistsAsync(userBucket, cancellationToken) == false)
