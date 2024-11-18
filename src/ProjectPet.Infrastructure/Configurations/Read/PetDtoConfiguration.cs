@@ -13,15 +13,15 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
 
         builder.HasOne<VolunteerDto>()
             .WithMany()
-            .HasForeignKey(x => x.volunteer_id);
+            .HasForeignKey(x => x.VolunteerId);
 
         builder.HasOne<SpeciesDto>()
             .WithMany()
-            .HasForeignKey(x => x.AnimalDataSpeciesID);
+            .HasForeignKey(x => x.SpeciesID);
 
 
         builder.HasOne<BreedDto>()
             .WithMany()
-            .HasForeignKey(x => x.AnimalDataBreedID);
+            .HasForeignKey(x => x.BreedID);
     }
 }

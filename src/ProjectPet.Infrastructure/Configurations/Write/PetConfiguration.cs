@@ -19,9 +19,11 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         builder.ComplexProperty(e => e.AnimalData, ba =>
         {
-            ba.Property(x => x.SpeciesID).IsRequired();
+            ba.Property(x => x.SpeciesID).IsRequired()
+            .HasColumnName("species_id");
 
-            ba.Property(e => e.BreedID).IsRequired();
+            ba.Property(e => e.BreedID).IsRequired()
+            .HasColumnName("breed_id");
         });
 
         builder.ComplexProperty(e => e.OrderingPosition, ba =>

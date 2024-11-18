@@ -33,7 +33,7 @@ public class DeleteSpeciesHandler
         if (getSpeciesRes.IsFailure)
             return getSpeciesRes.Error;
 
-        var isSpeciesInUse = _readDbContext.Pets.Any(x => x.AnimalDataSpeciesID == request.Id);
+        var isSpeciesInUse = _readDbContext.Pets.Any(x => x.SpeciesID == request.Id);
 
         if (isSpeciesInUse)
             return Error.Conflict("illegal.state", "Can not delete species that is currently in use by at least one pet!");

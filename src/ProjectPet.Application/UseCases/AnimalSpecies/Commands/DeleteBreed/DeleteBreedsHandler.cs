@@ -35,7 +35,7 @@ public class DeleteBreedsHandler
 
         var speciesAggregate = getSpeciesRes.Value;
 
-        var isBreedInUse = _readDbContext.Pets.Any(x => x.AnimalDataBreedID == request.BreedId);
+        var isBreedInUse = _readDbContext.Pets.Any(x => x.BreedID == request.BreedId);
 
         if (isBreedInUse)
             return Error.Conflict("illegal.state", "Can not delete breed that is currently in use by at least one pet!");

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
@@ -6,6 +7,7 @@ using ProjectPet.API.Requests.Shared;
 using ProjectPet.API.Requests.Volunteers;
 using ProjectPet.API.Response;
 using ProjectPet.Application.Dto;
+using ProjectPet.Application.Models;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;
@@ -18,6 +20,7 @@ using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
 using ProjectPet.Application.UseCases.Volunteers.Commands.UploadPetPhoto;
+using ProjectPet.Application.UseCases.Volunteers.Queries.GetPetById;
 using ProjectPet.Application.UseCases.Volunteers.Queries.GetVolunteerById;
 using ProjectPet.Application.UseCases.Volunteers.Queries.GetVolunteers;
 
@@ -292,6 +295,21 @@ public class VolunteerController : CustomControllerBase
 
         return Ok();
     }
+
+    [HttpGet("{volunteerId:guid}/pet/{petid:guid}")]
+    public async Task<ActionResult<Guid>> GetPetById(
+    [FromServices] GetPetByIdHandler handler,
+    [FromRoute] Guid volunteerId,
+    [FromRoute] Guid petid,
+    CancellationToken cancellationToken = default)
+    {
+        var query = new GetPetByIdQuery(volunteerId, petid);
+
+        var result = await handler.HandleAsync(query, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
 }
-
-
