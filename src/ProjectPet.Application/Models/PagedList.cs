@@ -2,7 +2,7 @@
 
 namespace ProjectPet.Application.Models;
 
-public class PagedList<T> : IEnumerable<T>
+public class PagedList<T>
 {
     public IReadOnlyList<T>? Data { get; init; }
     public int TotalCount { get; init; }
@@ -13,7 +13,4 @@ public class PagedList<T> : IEnumerable<T>
 
     public IEnumerator<T> GetEnumerator()
         => Data.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator()
-        => GetEnumerator();
 }
