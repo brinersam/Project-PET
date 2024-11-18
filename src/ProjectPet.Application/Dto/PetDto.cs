@@ -7,5 +7,7 @@ public class PetDto
     public Guid BreedID { get; set; }
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
+    public string Coat { get; set; } = null!;
+    public DateOnly DateOfBirth { get; set; }
     public string Status { get; set; } = null!;
 }

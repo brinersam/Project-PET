@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectPet.Application.Models;
 using ProjectPet.Domain.Shared;
+using System.Linq.Expressions;
 
 namespace ProjectPet.Application.Extensions;
 public static class Ext
@@ -20,6 +21,14 @@ public static class Ext
             error = null!;
             return false;
         }
+    }
+
+    public static IQueryable<TType> NullableWhere<TType,TParam>(
+        this IQueryable<TType> query,
+        TParam value,
+        Expression<Func<TType, bool>> expression)
+    {
+        return value is null? query : query.Where(expression);
     }
 
     public static async Task<PagedList<T>> ToPagedListAsync<T>(
