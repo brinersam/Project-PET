@@ -6,11 +6,11 @@ public record GetPetsPaginatedSorting(
     bool? Coat,
     bool SortAsc = false)
 {
-    public IEnumerable<(string key,bool? value)> Properties()
+    public IEnumerable<(string key, bool? value)> Properties()
     {
-        yield return (nameof(VolunteerId),VolunteerId);
-        yield return (nameof(Name),Name);
-        yield return (nameof(Age),Age);
-        yield return (nameof(Coat),Coat);
+        yield return (nameof(VolunteerId), VolunteerId);
+        yield return (nameof(Name), Name);
+        yield return (nameof(Age), Age);
+        yield return (nameof(Coat), Coat);
     }
 };

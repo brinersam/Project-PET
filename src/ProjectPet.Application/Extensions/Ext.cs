@@ -23,12 +23,12 @@ public static class Ext
         }
     }
 
-    public static IQueryable<TType> NullableWhere<TType,TParam>(
+    public static IQueryable<TType> NullableWhere<TType, TParam>(
         this IQueryable<TType> query,
         TParam value,
         Expression<Func<TType, bool>> expression)
     {
-        return value is null? query : query.Where(expression);
+        return value is null ? query : query.Where(expression);
     }
 
     public static async Task<PagedList<T>> ToPagedListAsync<T>(

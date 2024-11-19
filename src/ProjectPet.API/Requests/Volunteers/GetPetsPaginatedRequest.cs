@@ -1,5 +1,4 @@
 ﻿using ProjectPet.API.Etc;
-using ProjectPet.Application.UseCases.Volunteers.Queries.GetPets;
 using ProjectPet.Application.UseCases.Volunteers.Queries.GetPetsPaginated;
 
 namespace ProjectPet.API.Requests.Volunteers;

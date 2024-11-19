@@ -7,7 +7,7 @@ using ProjectPet.Application.Models;
 using ProjectPet.Domain.Shared;
 using System.Linq.Expressions;
 
-namespace ProjectPet.Application.UseCases.Volunteers.Queries.GetPets;
+namespace ProjectPet.Application.UseCases.Volunteers.Queries.GetPetsPaginated;
 
 public class GetPetsPaginatedHandler
 {
@@ -45,10 +45,10 @@ public class GetPetsPaginatedHandler
 
         Expression<Func<PetDto, object>> key = sortingValue.key switch
         {
-            "VolunteerId" => (PetDto x) => x.VolunteerId,
-            "Name" => (PetDto x) => x.Name,
-            "Age" => (PetDto x) => x.DateOfBirth,
-            "Coat" => (PetDto x) => x.Coat 
+            "VolunteerId" => (x) => x.VolunteerId,
+            "Name" => (x) => x.Name,
+            "Age" => (x) => x.DateOfBirth,
+            "Coat" => (x) => x.Coat
             // todo maybe rewrite to dapper so we can use SpeciesName and BreedName for sorting
         };
 
@@ -84,7 +84,7 @@ public class GetPetsPaginatedHandler
         dbQuery = dbQuery.NullableWhere(VolunteerId, x => x.VolunteerId == VolunteerId);
         dbQuery = dbQuery.NullableWhere(Name, x => x.Name.Contains(Name!));
         dbQuery = dbQuery.NullableWhere(Coat, x => x.Coat == Coat);
-        dbQuery = dbQuery.NullableWhere(Age, x => (DateOnly.FromDateTime(DateTime.Now).Year - x.DateOfBirth.Year) == Age);
+        dbQuery = dbQuery.NullableWhere(Age, x => DateOnly.FromDateTime(DateTime.Now).Year - x.DateOfBirth.Year == Age);
 
         if (speciesNameId is not null)
             dbQuery = dbQuery.NullableWhere(speciesNameId, x => x.SpeciesID == speciesNameId);

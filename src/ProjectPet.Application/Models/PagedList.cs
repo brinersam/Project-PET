@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace ProjectPet.Application.Models;
+﻿namespace ProjectPet.Application.Models;
 
 public class PagedList<T>
 {
