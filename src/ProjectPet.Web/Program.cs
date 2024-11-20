@@ -1,7 +1,7 @@
-using ProjectPet.API;
-using ProjectPet.API.MIddlewares;
 using ProjectPet.Application;
 using ProjectPet.Infrastructure;
+using ProjectPet.Web;
+using ProjectPet.Web.MIddlewares;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endregion
-#region App layers 
+#region App modules 
 builder.AddInfrastructure();
 builder.AddApplication();
 #endregion
