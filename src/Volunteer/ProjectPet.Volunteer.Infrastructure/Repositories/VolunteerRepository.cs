@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Application.Repositories;
+using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.VolunteerModule.Domain.Models;
-using ProjectPet.Domain.Shared;
 using ProjectPet.VolunteerModule.Infrastructure.Database;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Repositories;

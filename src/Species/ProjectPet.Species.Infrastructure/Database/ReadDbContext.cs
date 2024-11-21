@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Core.Abstractions;
-using ProjectPet.SharedKernel.Dto;
+using ProjectPet.SpeciesModule.Application.Interfaces;
+using ProjectPet.SpeciesModule.Contracts.Dto;
 
 namespace ProjectPet.SpeciesModule.Infrastructure.Database;
 
@@ -12,9 +12,7 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
         ?? throw new ArgumentNullException(Constants.DATABASE);
 
     public DbSet<SpeciesDto> Species => Set<SpeciesDto>();
-    public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
     public DbSet<BreedDto> Breeds => Set<BreedDto>();
-    public DbSet<PetDto> Pets => Set<PetDto>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

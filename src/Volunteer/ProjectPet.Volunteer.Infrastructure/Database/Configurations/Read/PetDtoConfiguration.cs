@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectPet.SharedKernel.Dto;
+using ProjectPet.SpeciesModule.Contracts.Dto;
+using ProjectPet.VolunteerModule.Contracts.Dto;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Database.Configurations.Read;
 public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>

@@ -21,7 +21,6 @@
     <ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
     <ProjectReference Include="..\..\Core\ProjectPet.SharedKernel\ProjectPet.SharedKernel.csproj" />
     <ProjectReference Include="..\ProjectPet.Volunteer.Application\ProjectPet.VolunteerModule.Application.csproj" />
-    <ProjectReference Include="..\ProjectPet.Volunteer.Domain\ProjectPet.VolunteerModule.Domain.csproj" />
   </ItemGroup>
 
 </Project>

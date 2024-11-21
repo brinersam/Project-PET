@@ -1,17 +1,19 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Core.Abstractions;
 using ProjectPet.Core.HelperModels;
 using ProjectPet.Core.Extensions;
-using ProjectPet.SharedKernel.Dto;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.Linq.Expressions;
+using ProjectPet.VolunteerModule.Contracts.Dto;
+using ProjectPet.VolunteerModule.Application.Interfaces;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
 
 public class GetPetsPaginatedHandler
 {
     private readonly IReadDbContext _readDbContext;
+
+    public IReadDbContext ReadDbContext => _readDbContext;
 
     public GetPetsPaginatedHandler(IReadDbContext readDbContext)
     {
@@ -20,16 +22,16 @@ public class GetPetsPaginatedHandler
 
     public async Task<Result<PagedList<PetDto>, Error>> HandleAsync(GetPetsPaginatedQuery query, CancellationToken cancellationToken)
     {
-        var dbQuery = _readDbContext.Pets.AsQueryable();
+        var dbQuery = ReadDbContext.Pets.AsQueryable();
 
-        dbQuery = await ApplyFiltersAsync(dbQuery, query, _readDbContext, cancellationToken);
+        dbQuery = await ApplyFiltersAsync(dbQuery, query, ReadDbContext, cancellationToken);
 
         dbQuery = ApplySorting(dbQuery, query);
 
         return await dbQuery.ToPagedListAsync(query, cancellationToken);
     }
 
-    private IQueryable<PetDto> ApplySorting(
+    private static IQueryable<PetDto> ApplySorting(
         IQueryable<PetDto> dbQuery,
         GetPetsPaginatedQuery query)
     {
@@ -61,7 +63,7 @@ public class GetPetsPaginatedHandler
         return dbQuery;
     }
 
-    private async Task<IQueryable<PetDto>> ApplyFiltersAsync(
+    private async static Task<IQueryable<PetDto>> ApplyFiltersAsync(
         IQueryable<PetDto> dbQuery,
         GetPetsPaginatedQuery query,
         IReadDbContext _readDbContext,
@@ -103,10 +105,11 @@ public class GetPetsPaginatedHandler
         if (name is null)
             return null;
 
-        return await _readDbContext.Breeds
-            .Where(x => x.Value.Contains(name))
-            .Select(x => x.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        return null;
+            //await _readDbContext.Breeds // todo interact
+            //.Where(x => x.Value.Contains(name))
+            //.Select(x => x.Id)
+            //.FirstOrDefaultAsync(cancellationToken);
     }
 
     private static async Task<Guid?> SpeciesNameToId(
@@ -117,9 +120,10 @@ public class GetPetsPaginatedHandler
         if (name is null)
             return null;
 
-        return await _readDbContext.Species
-            .Where(x => x.Name.Contains(name))
-            .Select(x => x.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        return null;
+            //await _readDbContext.Species // todo interact
+            //.Where(x => x.Name.Contains(name))
+            //.Select(x => x.Id)
+            //.FirstOrDefaultAsync(cancellationToken);
     }
 }

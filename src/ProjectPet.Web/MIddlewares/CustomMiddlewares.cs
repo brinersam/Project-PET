@@ -1,5 +1,4 @@
-﻿using ProjectPet.API.Response;
-using ProjectPet.Framework;
+﻿using ProjectPet.Framework;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.Net;
 

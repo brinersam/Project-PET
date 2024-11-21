@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using ProjectPet.SharedKernel.Dto;
+using ProjectPet.Core.Providers;
 
 namespace ProjectPet.Framework;
 

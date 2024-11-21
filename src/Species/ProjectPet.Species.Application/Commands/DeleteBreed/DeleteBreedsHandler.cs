@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Core.Abstractions;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SpeciesModule.Application.Interfaces;
 
@@ -35,7 +34,7 @@ public class DeleteBreedsHandler
 
         var speciesAggregate = getSpeciesRes.Value;
 
-        var isBreedInUse = _readDbContext.Pets.Any(x => x.BreedID == request.BreedId);
+        var isBreedInUse = true; //_readDbContext.Pets.Any(x => x.BreedID == request.BreedId); // todo interact with other service
 
         if (isBreedInUse)
             return Error.Conflict("illegal.state", "Can not delete breed that is currently in use by at least one pet!");

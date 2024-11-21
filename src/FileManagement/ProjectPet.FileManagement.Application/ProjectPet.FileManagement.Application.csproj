@@ -10,4 +10,9 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Species\ProjectPet.Species.Contracts\ProjectPet.SpeciesModule.Contracts.csproj" />
+	  <ProjectReference Include="..\..\Species\ProjectPet.Species.Domain\ProjectPet.SpeciesModule.Domain.csproj" />
+	</ItemGroup>
+
 </Project>

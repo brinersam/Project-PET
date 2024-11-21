@@ -1,6 +1,6 @@
 ﻿namespace ProjectPet.Core.Abstractions;
 
-public interface IToCommand<TCmd> where TCmd : class
+public interface ITCommand<TCmd> where TCmd : class
 {
     public TCmd ToCommand();
 }

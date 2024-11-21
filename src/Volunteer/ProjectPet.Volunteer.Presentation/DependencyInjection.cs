@@ -2,31 +2,30 @@
 using Microsoft.Extensions.Hosting;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetById;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.CreatePet;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.CreateVolunteer;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.DeletePet;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.DeletePetPhotos;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.DeleteVolunteer;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.PatchPet;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.SetMainPetPhoto;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.UpdatePetStatus;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.UpdateVolunteerInfo;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.UpdateVolunteerPayment;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.UpdateVolunteerSocials;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.UploadPetPhoto;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Queries.GetVolunteerById;
-using ProjectPet.VolunteerModule.Application.Features.Volunteer.Queries.GetVolunteers;
-using ProjectPet.VolunteerModule.Infrastructure;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePet;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePetPhotos;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.PatchPet;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.SetMainPetPhoto;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdatePetStatus;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerInfo;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerPayment;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerSocials;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteerById;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteers;
 
 namespace ProjectPet.VolunteerModule.Presentation;
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder AddVolunteerModule(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddVolunteerModuleHandlers(this IHostApplicationBuilder builder)
     {
         return builder
             .AddPetHandlers()
-            .AddVolunteerHandlers()
-            .AddVolunteerInfrastructure();
+            .AddVolunteerHandlers();
+
     }
     public static IHostApplicationBuilder AddVolunteerHandlers(this IHostApplicationBuilder builder)
     {

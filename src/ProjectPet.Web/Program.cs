@@ -1,5 +1,8 @@
+using ProjectPet.FileManagement.Infrastructure;
 using ProjectPet.FileManagement.Presentation;
+using ProjectPet.SpeciesModule.Infrastructure;
 using ProjectPet.SpeciesModule.Presentation;
+using ProjectPet.VolunteerModule.Infrastructure;
 using ProjectPet.VolunteerModule.Presentation;
 using ProjectPet.Web;
 using ProjectPet.Web.MIddlewares;
@@ -15,9 +18,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endregion
 #region App modules 
-builder.AddVolunteerModule();
-builder.AddSpeciesModule();
-builder.AddFileManagementModule();
+builder.AddVolunteerHandlers();
+builder.AddVolunteerInfrastructure();
+
+builder.AddSpeciesHandlers();
+builder.AddSpeciesInfrastructure();
+
+builder.AddFileManagementInfrastructure();
 #endregion
 
 builder.Services.AddValidation();

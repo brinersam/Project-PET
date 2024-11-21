@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Core.Abstractions;
 using ProjectPet.Core.HelperModels;
 using ProjectPet.Core.Extensions;
-using ProjectPet.SharedKernel.Dto;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.SpeciesModule.Contracts.Dto;
+using ProjectPet.SpeciesModule.Application.Interfaces;
 
 namespace ProjectPet.SpeciesModule.Application.Queries.GetAllSpecies;
 

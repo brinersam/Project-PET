@@ -21,7 +21,7 @@ public static class CustomFluentValidators
             ValidationFailure failure = new()
             {
                 ErrorMessage = result.Error.Message,
-                PropertyName = context.PropertyName,
+                PropertyName = context.PropertyPath,
                 ErrorCode = result.Error.Code
             };
 

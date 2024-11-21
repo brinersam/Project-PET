@@ -6,18 +6,17 @@ using ProjectPet.SpeciesModule.Application.Commands.DeleteBreed;
 using ProjectPet.SpeciesModule.Application.Commands.DeleteSpecies;
 using ProjectPet.SpeciesModule.Application.Queries.GetAllBreedsById;
 using ProjectPet.SpeciesModule.Application.Queries.GetAllSpecies;
-using ProjectPet.SpeciesModule.Infrastructure;
 
 namespace ProjectPet.SpeciesModule.Presentation;
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder AddSpeciesModule(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddSpeciesHandlers(this IHostApplicationBuilder builder)
     {
         return builder.
-            AddSpeciesInfrastructure();
+            AddHandlers();
     }
 
-    private static IHostApplicationBuilder AddSpeciesHandlers(this IHostApplicationBuilder builder)
+    private static IHostApplicationBuilder AddHandlers(this IHostApplicationBuilder builder)
     {
         // write
         builder.Services.AddScoped<CreateSpeciesHandler>();

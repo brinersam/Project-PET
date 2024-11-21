@@ -4,7 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "projectpet.api": "StartDebugging"
+        "projectpet.api": "StartDebugging",
+        "projectpet.web": "StartDebugging"
       }
     }
   }

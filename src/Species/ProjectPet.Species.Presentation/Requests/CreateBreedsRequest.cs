@@ -1,5 +1,5 @@
-﻿using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateBreed;
-using ProjectPet.Core.Abstractions;
+﻿using ProjectPet.Core.Abstractions;
+using ProjectPet.SpeciesModule.Application.Commands.CreateBreed;
 
 namespace ProjectPet.SpeciesModule.Presentation.Requests;
 

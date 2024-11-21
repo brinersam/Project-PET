@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Core.Abstractions;
 using ProjectPet.Core.Validator;
 using ProjectPet.SharedKernel;
 using ProjectPet.SharedKernel.Entities.AbstractBase;

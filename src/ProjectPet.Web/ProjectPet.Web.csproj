@@ -7,6 +7,7 @@
     <UserSecretsId>f6b07810-d866-48c7-b90b-316a5193f7dc</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -32,8 +33,11 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Core\ProjectPet.Core\ProjectPet.Core.csproj" />
+	  <ProjectReference Include="..\FileManagement\ProjectPet.FileManagement.Infrastructure\ProjectPet.FileManagement.Infrastructure.csproj" />
 	  <ProjectReference Include="..\FileManagement\ProjectPet.FileManagement.Presentation\ProjectPet.FileManagement.Presentation.csproj" />
+	  <ProjectReference Include="..\Species\ProjectPet.Species.Infrastructure\ProjectPet.SpeciesModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Species\ProjectPet.Species.Presentation\ProjectPet.SpeciesModule.Presentation.csproj" />
+	  <ProjectReference Include="..\Volunteer\ProjectPet.Volunteer.Infrastructure\ProjectPet.VolunteerModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Volunteer\ProjectPet.Volunteer.Presentation\ProjectPet.VolunteerModule.Presentation.csproj" />
 	</ItemGroup>
 

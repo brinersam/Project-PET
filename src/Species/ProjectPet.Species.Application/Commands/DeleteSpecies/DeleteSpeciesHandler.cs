@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Core.Abstractions;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SpeciesModule.Application.Interfaces;
 
@@ -33,7 +32,7 @@ public class DeleteSpeciesHandler
         if (getSpeciesRes.IsFailure)
             return getSpeciesRes.Error;
 
-        var isSpeciesInUse = _readDbContext.Pets.Any(x => x.SpeciesID == request.Id);
+        var isSpeciesInUse = true; //_readDbContext.Pets.Any(x => x.SpeciesID == request.Id); todo interact with other service
 
         if (isSpeciesInUse)
             return Error.Conflict("illegal.state", "Can not delete species that is currently in use by at least one pet!");

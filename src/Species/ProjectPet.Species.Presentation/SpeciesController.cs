@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Framework;
+using ProjectPet.SpeciesModule.Application.Commands.CreateBreed;
 using ProjectPet.SpeciesModule.Application.Commands.CreateSpecies;
+using ProjectPet.SpeciesModule.Application.Commands.DeleteBreed;
 using ProjectPet.SpeciesModule.Application.Commands.DeleteSpecies;
 using ProjectPet.SpeciesModule.Application.Interfaces;
+using ProjectPet.SpeciesModule.Application.Queries.GetAllBreedsById;
+using ProjectPet.SpeciesModule.Application.Queries.GetAllSpecies;
 using ProjectPet.SpeciesModule.Presentation.Requests;
 
 namespace ProjectPet.SpeciesModule.Presentation;

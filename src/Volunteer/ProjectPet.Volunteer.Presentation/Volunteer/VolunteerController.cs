@@ -1,24 +1,22 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ProjectPet.API.Extentions;
-using ProjectPet.API.Processors;
-using ProjectPet.API.Response;
-using ProjectPet.SharedKernel.Dto;
-using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
-using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
-using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;
-using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePetPhotos;
-using ProjectPet.Application.UseCases.Volunteers.Commands.DeleteVolunteer;
-using ProjectPet.Application.UseCases.Volunteers.Commands.PatchPet;
-using ProjectPet.Application.UseCases.Volunteers.Commands.SetMainPetPhoto;
-using ProjectPet.Application.UseCases.Volunteers.Commands.UpdatePetStatus;
-using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerInfo;
-using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerPayment;
-using ProjectPet.Application.UseCases.Volunteers.Commands.UpdateVolunteerSocials;
-using ProjectPet.Application.UseCases.Volunteers.Commands.UploadPetPhoto;
-using ProjectPet.Application.UseCases.Volunteers.Queries.GetVolunteerById;
-using ProjectPet.Application.UseCases.Volunteers.Queries.GetVolunteers;
-using ProjectPet.VolunteerModule.Presentation.Volunteer.Requests;
+using ProjectPet.Core.Providers;
+using ProjectPet.Framework;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreateVolunteer;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePet;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePetPhotos;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.PatchPet;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.SetMainPetPhoto;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdatePetStatus;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerInfo;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerPayment;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerSocials;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteerById;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteers;
+using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Presentation.Volunteer;
 
@@ -27,7 +25,7 @@ public class VolunteerController : CustomControllerBase
     [HttpPost]
     public async Task<ActionResult<Guid>> Post(
         [FromServices] CreateVolunteerHandler handler,
-        IValidator<CreateVolunteerRequest> validator,
+        [FromServices] IValidator<CreateVolunteerRequest> validator,
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -35,7 +33,7 @@ public class VolunteerController : CustomControllerBase
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        var cmd = request.ToCommand();
+        var cmd = CreateVolunteerCommand.FromRequest(request);
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
@@ -49,14 +47,14 @@ public class VolunteerController : CustomControllerBase
         [FromRoute] Guid id,
         [FromServices] CreatePetHandler handler,
         [FromBody] CreatePetRequest request,
-        IValidator<CreatePetRequest> validator,
+        [FromServices] IValidator<CreatePetRequest> validator,
         CancellationToken cancellationToken = default)
     {
         var validatorRes = await validator.ValidateAsync(request, cancellationToken);
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        var cmd = request.ToCommand(id);
+        var cmd = CreatePetCommand.FromRequest(request, id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -78,7 +76,7 @@ public class VolunteerController : CustomControllerBase
 
         List<FileDto> filesDto = processor.Process(req.Files);
 
-        var cmd = req.ToCommand(volunteerId, petid, filesDto);
+        var cmd = UploadPetPhotoCommand.FromRequest(req, volunteerId, petid, filesDto);
 
         var result = await service.HandleAsync(cmd, cancellationToken);
 
@@ -109,14 +107,14 @@ public class VolunteerController : CustomControllerBase
         [FromServices] UpdateVolunteerInfoHandler handler,
         [FromBody] UpdateVolunteerInfoRequest request,
         [FromRoute] Guid id,
-        IValidator<UpdateVolunteerInfoRequest> validator,
+        [FromServices] IValidator<UpdateVolunteerInfoRequest> validator,
         CancellationToken cancellationToken = default)
     {
         var validatorRes = await validator.ValidateAsync(request, cancellationToken);
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        var cmd = new UpdateVolunteerInfoCommand(id, request.dto);
+        var cmd = UpdateVolunteerInfoCommand.FromRequest(request, id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -130,7 +128,7 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchPayment(
         [FromServices] UpdateVolunteerPaymentHandler handler,
         [FromRoute] Guid id,
-        IValidator<UpdateVolunteerPaymentRequest> validator,
+        [FromServices] IValidator<UpdateVolunteerPaymentRequest> validator,
         [FromBody] UpdateVolunteerPaymentRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -138,7 +136,7 @@ public class VolunteerController : CustomControllerBase
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        var cmd = new UpdateVolunteerPaymentCommand(id, request.PaymentInfos);
+        var cmd = UpdateVolunteerPaymentCommand.FromRequest(request, id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -153,7 +151,7 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchSocial(
         [FromServices] UpdateVolunteerSocialsHandler handler,
         [FromRoute] Guid id,
-        IValidator<UpdateVolunteerSocialsRequest> validator,
+        [FromServices] IValidator<UpdateVolunteerSocialsRequest> validator,
         [FromBody] UpdateVolunteerSocialsRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -161,7 +159,7 @@ public class VolunteerController : CustomControllerBase
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        var cmd = new UpdateVolunteerSocialsCommand(id, request.SocialNetworks);
+        var cmd = UpdateVolunteerSocialsCommand.FromRequest(request, id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -177,7 +175,7 @@ public class VolunteerController : CustomControllerBase
         [FromQuery] GetVolunteerPaginatedRequest request,
         CancellationToken cancellationToken = default)
     {
-        var query = request.ToCommand();
+        var query = GetVolunteerPaginatedQuery.FromRequest(request);
         var result = await handler.HandleAsync(query, cancellationToken);
 
         if (result.IsFailure)
@@ -242,14 +240,14 @@ public class VolunteerController : CustomControllerBase
         [FromRoute] Guid petid,
         [FromServices] PatchPetHandler handler,
         [FromBody] PatchPetRequest request,
-        IValidator<PatchPetRequest> validator,
+        [FromServices] IValidator<PatchPetRequest> validator,
         CancellationToken cancellationToken = default)
     {
         var validatorRes = await validator.ValidateAsync(request, cancellationToken);
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        var cmd = request.ToCommand(volunteerId, petid);
+        var cmd = PatchPetCommand.FromRequest(request, volunteerId, petid);
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)

@@ -10,11 +10,11 @@ public static class DependencyInjection
 {
     public static IHostApplicationBuilder AddVolunteerInfrastructure(this IHostApplicationBuilder builder)
     {
-
         builder.Services.AddScoped<IReadDbContext, ReadDbContext>();
+
         builder.Services.AddScoped<WriteDbContext>();
+
         builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
-        
 
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         return builder;

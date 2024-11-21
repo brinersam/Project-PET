@@ -9,8 +9,8 @@ public class WriteDbContext(IConfiguration configuration) : DbContext
 {
     private readonly string DATABASE = configuration[Constants.DATABASE]
         ?? throw new ArgumentNullException(Constants.DATABASE);
-
     public DbSet<Species> Species => Set<Species>();
+    public DbSet<Breed> Breeds => Set<Breed>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
