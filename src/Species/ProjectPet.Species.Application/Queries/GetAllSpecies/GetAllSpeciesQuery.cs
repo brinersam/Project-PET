@@ -1,4 +1,4 @@
-﻿using ProjectPet.Application.Models;
+﻿using ProjectPet.Core.HelperModels;
 
 namespace ProjectPet.SpeciesModule.Application.Queries.GetAllSpecies;
 

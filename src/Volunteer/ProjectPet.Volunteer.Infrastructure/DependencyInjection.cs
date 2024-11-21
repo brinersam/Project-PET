@@ -1,10 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.VolunteerModule.Infrastructure.Database;
+using ProjectPet.VolunteerModule.Infrastructure.Repositories;
 
 namespace ProjectPet.VolunteerModule.Infrastructure;
-internal class DependencyInjection
+public static class DependencyInjection
 {
+    public static IHostApplicationBuilder AddVolunteerInfrastructure(this IHostApplicationBuilder builder)
+    {
+
+        builder.Services.AddScoped<IReadDbContext, ReadDbContext>();
+        builder.Services.AddScoped<WriteDbContext>();
+        builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+        
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return builder;
+    }
 }

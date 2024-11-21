@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Application.Database;
-using ProjectPet.Application.Dto;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.SharedKernel.Dto;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Database;
 

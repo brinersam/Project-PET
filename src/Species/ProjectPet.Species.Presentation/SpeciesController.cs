@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectPet.API.Extentions;
-using ProjectPet.Application.Repositories;
-using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateBreed;
-using ProjectPet.Application.UseCases.AnimalSpecies.Commands.CreateSpecies;
-using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteBreed;
-using ProjectPet.Application.UseCases.AnimalSpecies.Commands.DeleteSpecies;
-using ProjectPet.Application.UseCases.AnimalSpecies.Queries.GetAllBreedsById;
-using ProjectPet.Application.UseCases.AnimalSpecies.Queries.GetAllSpecies;
 using ProjectPet.Framework;
+using ProjectPet.SpeciesModule.Application.Commands.CreateSpecies;
+using ProjectPet.SpeciesModule.Application.Commands.DeleteSpecies;
+using ProjectPet.SpeciesModule.Application.Interfaces;
 using ProjectPet.SpeciesModule.Presentation.Requests;
 
 namespace ProjectPet.SpeciesModule.Presentation;

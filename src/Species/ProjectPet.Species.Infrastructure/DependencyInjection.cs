@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ProjectPet.SpeciesModule.Application.Interfaces;
+using ProjectPet.SpeciesModule.Infrastructure.Repositories;
 
 namespace ProjectPet.SpeciesModule.Infrastructure;
-internal class DependencyInjection
+public static class DependencyInjection
 {
+    public static IHostApplicationBuilder AddSpeciesInfrastructure(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+        return builder;
+    }
 }

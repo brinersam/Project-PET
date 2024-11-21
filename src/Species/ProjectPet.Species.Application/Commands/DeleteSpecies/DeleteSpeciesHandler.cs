@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Application.Database;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SpeciesModule.Application.Interfaces;
 
 namespace ProjectPet.SpeciesModule.Application.Commands.DeleteSpecies;

@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.CreateVolunteer;
 
@@ -29,6 +29,8 @@ public class CreateVolunteerHandler
 
         var paymentInfos = cmd.PaymentInfoDtos ?? [];
         var socialNetworks = cmd.SocialNetworkDtos ?? [];
+
+
 
         var volunteerRes = Volunteer.Create(
             Guid.NewGuid(),

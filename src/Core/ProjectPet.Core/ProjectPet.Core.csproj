@@ -16,9 +16,9 @@
  	</PackageReference>
  	<PackageReference Include="Scrutor" Version="5.0.2" />
   </ItemGroup>
-		
-	<ItemGroup>
-	  <ProjectReference Include="..\ProjectPet.SharedKernel\ProjectPet.SharedKernel.csproj" />
-	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectPet.SharedKernel\ProjectPet.SharedKernel.csproj" />
+  </ItemGroup>
 	
 </Project>

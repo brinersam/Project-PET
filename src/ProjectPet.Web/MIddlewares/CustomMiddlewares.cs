@@ -1,6 +1,6 @@
 ﻿using ProjectPet.API.Response;
-using ProjectPet.Core.HelperModels;
-using ProjectPet.SharedKernel.Errors;
+using ProjectPet.Framework;
+using ProjectPet.SharedKernel.ErrorClasses;
 using System.Net;
 
 namespace ProjectPet.Web.MIddlewares;

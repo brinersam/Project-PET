@@ -1,5 +1,5 @@
-﻿using ProjectPet.Application.Dto;
-using ProjectPet.Domain.Models;
+﻿using ProjectPet.SharedKernel.Dto;
+using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.CreatePet;
 

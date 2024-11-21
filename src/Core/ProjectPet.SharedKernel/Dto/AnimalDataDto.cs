@@ -1,2 +1,2 @@
-﻿namespace ProjectPet.Core.Dto;
+﻿namespace ProjectPet.SharedKernel.Dto;
 public record AnimalDataDto(Guid SpeciesId, string BreedName);

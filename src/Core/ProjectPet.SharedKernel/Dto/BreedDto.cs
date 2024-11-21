@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.Core.Dto;
+﻿namespace ProjectPet.SharedKernel.Dto;
 public class BreedDto
 {
     public Guid Id { get; set; }

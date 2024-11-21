@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.VolunteerModule.Domain.Models;
+using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.UpdateVolunteerInfo;

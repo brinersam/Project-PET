@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.PatchPet;
 

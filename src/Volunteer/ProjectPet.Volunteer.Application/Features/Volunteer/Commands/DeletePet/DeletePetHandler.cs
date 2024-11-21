@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Application.Database;
-using ProjectPet.Application.Providers;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.DeletePet;

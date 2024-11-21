@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Application.Database;
-using ProjectPet.Application.Dto;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.SharedKernel.Dto;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.SpeciesModule.Application.Queries.GetAllBreedsById;
 

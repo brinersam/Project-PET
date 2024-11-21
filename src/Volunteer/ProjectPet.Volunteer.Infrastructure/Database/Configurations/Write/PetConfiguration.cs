@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectPet.Domain.Models;
+using ProjectPet.VolunteerModule.Domain.Models;
 using CConstants = ProjectPet.Domain.Shared.Constants;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Database.Configurations.Write;

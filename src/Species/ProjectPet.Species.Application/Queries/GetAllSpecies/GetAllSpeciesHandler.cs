@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Application.Database;
-using ProjectPet.Application.Dto;
-using ProjectPet.Application.Extensions;
-using ProjectPet.Application.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.HelperModels;
+using ProjectPet.Core.Extensions;
+using ProjectPet.SharedKernel.Dto;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.SpeciesModule.Application.Queries.GetAllSpecies;
 

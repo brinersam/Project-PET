@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.Core.Dto;
+﻿namespace ProjectPet.SharedKernel.Dto;
 public record HealthInfoDto(
     string Health,
     bool IsSterilized,

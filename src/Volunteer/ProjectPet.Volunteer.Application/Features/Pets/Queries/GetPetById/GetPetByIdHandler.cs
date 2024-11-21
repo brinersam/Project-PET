@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.Application.Database;
-using ProjectPet.Application.Dto;
-using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.SharedKernel.Dto;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.VolunteerModule.Domain.Models;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetById;
 

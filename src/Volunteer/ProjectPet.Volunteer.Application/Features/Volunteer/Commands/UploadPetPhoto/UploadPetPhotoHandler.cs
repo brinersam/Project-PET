@@ -1,11 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Application.Database;
-using ProjectPet.Application.Messaging;
-using ProjectPet.Application.Providers;
-using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Providers;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.UploadPetPhoto;
 

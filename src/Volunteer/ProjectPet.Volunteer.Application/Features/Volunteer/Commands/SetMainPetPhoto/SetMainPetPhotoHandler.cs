@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Domain.Shared;
+using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.SetMainPetPhoto;

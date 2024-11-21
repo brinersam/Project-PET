@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjectPet.Core.HelperModels;
-using ProjectPet.SharedKernel.Errors;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.Framework;
 

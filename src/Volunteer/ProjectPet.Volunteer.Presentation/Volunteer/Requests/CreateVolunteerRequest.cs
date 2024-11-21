@@ -1,4 +1,4 @@
-﻿using ProjectPet.Application.Dto;
+﻿using ProjectPet.SharedKernel.Dto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Core.Abstractions;
 

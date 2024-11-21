@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ProjectPet.Domain\ProjectPet.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Volunteer\ProjectPet.Volunteer.Domain\ProjectPet.VolunteerModule.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

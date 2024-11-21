@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.SharedKernel;
-using ProjectPet.SharedKernel.Errors;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.Core.Validator;
 

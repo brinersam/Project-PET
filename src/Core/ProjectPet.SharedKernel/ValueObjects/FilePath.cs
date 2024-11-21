@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.SharedKernel.Errors;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.SharedKernel.ValueObjects;
 

@@ -1,5 +1,6 @@
-using ProjectPet.Application;
-using ProjectPet.Infrastructure;
+using ProjectPet.FileManagement.Presentation;
+using ProjectPet.SpeciesModule.Presentation;
+using ProjectPet.VolunteerModule.Presentation;
 using ProjectPet.Web;
 using ProjectPet.Web.MIddlewares;
 using Serilog;
@@ -14,8 +15,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endregion
 #region App modules 
-builder.AddInfrastructure();
-builder.AddApplication();
+builder.AddVolunteerModule();
+builder.AddSpeciesModule();
+builder.AddFileManagementModule();
 #endregion
 
 builder.Services.AddValidation();

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using ProjectPet.Application.Database;
-using ProjectPet.Infrastructure.DbContexts;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.SpeciesModule.Infrastructure.Database;
 using System.Data;
 
 namespace ProjectPet.SpeciesModule.Infrastructure;

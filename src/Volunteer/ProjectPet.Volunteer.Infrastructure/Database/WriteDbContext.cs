@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Domain.Models;
-using ProjectPet.VolunteerModule.Infrastructure;
+using ProjectPet.SpeciesModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Database;
 
@@ -12,7 +11,6 @@ public class WriteDbContext(IConfiguration configuration) : DbContext
         ?? throw new ArgumentNullException(Constants.DATABASE);
 
     public DbSet<Species> Species => Set<Species>();
-    public DbSet<Volunteer> Volunteers => Set<Volunteer>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

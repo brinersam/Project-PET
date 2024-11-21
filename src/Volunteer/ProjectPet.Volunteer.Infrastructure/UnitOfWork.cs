@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using ProjectPet.Application.Database;
+using ProjectPet.Core.Abstractions;
 using ProjectPet.VolunteerModule.Infrastructure.Database;
 using System.Data;
 

@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
-using ProjectPet.SharedKernel.Errors;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.Core.Validator;
 

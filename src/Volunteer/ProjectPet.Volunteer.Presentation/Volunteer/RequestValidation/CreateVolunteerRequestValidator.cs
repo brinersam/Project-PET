@@ -2,7 +2,7 @@
 using ProjectPet.API.Validation;
 using ProjectPet.Core.Errors;
 using ProjectPet.Core.Validator;
-using ProjectPet.Domain.Models;
+using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Presentation.Volunteer.Requests;
 
 namespace ProjectPet.VolunteerModule.Presentation.Volunteer.RequestValidation;

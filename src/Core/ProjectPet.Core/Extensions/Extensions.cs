@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using ProjectPet.Core.HelperModels;
-using ProjectPet.SharedKernel.Errors;
+using ProjectPet.SharedKernel.ErrorClasses;
 using System.Linq.Expressions;
 
 namespace ProjectPet.Core.Extensions;

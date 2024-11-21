@@ -1,8 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.Core.Abstractions;
-using ProjectPet.Core.Entities.AbstractBase;
-using ProjectPet.Core.Errors;
 using ProjectPet.Core.Validator;
+using ProjectPet.SharedKernel;
+using ProjectPet.SharedKernel.Entities.AbstractBase;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Domain.Models;
 

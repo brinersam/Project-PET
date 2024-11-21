@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using ProjectPet.Application.Repositories;
-using ProjectPet.Domain.Models;
+using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.Domain.Shared;
 using ProjectPet.VolunteerModule.Infrastructure.Database;
 

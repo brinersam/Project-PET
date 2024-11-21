@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectPet.API.Extentions;
 using ProjectPet.API.Processors;
 using ProjectPet.API.Response;
-using ProjectPet.Application.Dto;
+using ProjectPet.SharedKernel.Dto;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreatePet;
 using ProjectPet.Application.UseCases.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.Application.UseCases.Volunteers.Commands.DeletePet;

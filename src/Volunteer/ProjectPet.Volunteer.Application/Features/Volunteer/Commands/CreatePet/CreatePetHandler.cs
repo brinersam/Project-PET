@@ -1,27 +1,24 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.Application.Extensions;
-using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Core.Abstractions;
+using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteer.Commands.CreatePet;
 
 public class CreatePetHandler
 {
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly ISpeciesRepository _speciesRepository;
     private readonly IReadDbContext _readDbContext;
     private readonly ILogger<CreatePetHandler> _logger;
 
     public CreatePetHandler(
         IVolunteerRepository volunteerRepository,
-        ISpeciesRepository speciesRepository,
         IReadDbContext readDbContext,
         ILogger<CreatePetHandler> logger)
     {
         _volunteerRepository = volunteerRepository;
-        _speciesRepository = speciesRepository;
         _readDbContext = readDbContext;
         _logger = logger;
     }
@@ -71,8 +68,7 @@ public class CreatePetHandler
                 command.HealthInfo.Weight,
                 command.HealthInfo.Height).Value;
 
-        if (Ext.IsDelegateFailed(out Pet pet, out var petError,
-            Pet.Create(
+        var petCreateRes = Pet.Create(
                 command.Name,
                 animalData,
                 command.Description,
@@ -84,9 +80,11 @@ public class CreatePetHandler
                 command.Status,
                 command.DateOfBirth,
                 [],
-                paymentInfos)
-        ))
-            return petError!;
+                paymentInfos);
+        if (petCreateRes.IsFailure)
+            return petCreateRes.Error;
+
+        var pet = petCreateRes.Value;
 
         volunteer.AddPet(pet);
         await _volunteerRepository.Save(volunteer, cancellationToken);

@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Domain.Models;
-using ProjectPet.Domain.Shared;
+using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.SpeciesModule.Domain.Models;
 
 namespace ProjectPet.SpeciesModule.Application.Interfaces;
 

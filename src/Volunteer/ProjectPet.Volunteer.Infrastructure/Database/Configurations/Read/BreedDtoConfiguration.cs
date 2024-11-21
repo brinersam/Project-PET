@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectPet.Application.Dto;
+using ProjectPet.SharedKernel.Dto;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Database.Configurations.Read;
 public class BreedDtoConfiguration : IEntityTypeConfiguration<BreedDto>

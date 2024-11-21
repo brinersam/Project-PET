@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Domain.Shared;
+using ProjectPet.Core.Validator;
+using ProjectPet.SharedKernel.ErrorClasses;
 using System.Text.RegularExpressions;
 
 namespace ProjectPet.VolunteerModule.Domain.Models;

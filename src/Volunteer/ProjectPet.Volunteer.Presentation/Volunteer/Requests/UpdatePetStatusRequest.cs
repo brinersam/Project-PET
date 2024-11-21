@@ -1,4 +1,4 @@
-﻿using ProjectPet.Domain.Models;
+﻿using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Presentation.Volunteer.Requests;
 
