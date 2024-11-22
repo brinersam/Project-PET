@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using ProjectPet.Core.Options;
 using Serilog;
 using Serilog.Events;
 
@@ -12,8 +13,8 @@ public static class RegisterServices
             ?? throw new ArgumentNullException("CStrings:Seq");
 
         Log.Logger = new LoggerConfiguration()
-        .WriteTo.Console()
-        .WriteTo.Debug()
+            .WriteTo.Console()
+            .WriteTo.Debug()
             .WriteTo.Seq(seqConnectionString)
             .Enrich.WithThreadId()
             .Enrich.WithEnvironmentName()
@@ -25,9 +26,18 @@ public static class RegisterServices
         builder.Services.AddSerilog();
         return builder;
     }
+
     public static IServiceCollection AddValidation(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<Program>();
         return services;
+    }
+
+    public static IHostApplicationBuilder ConfigureDbCstring(this IHostApplicationBuilder builder)
+    {
+        builder.Services.Configure<OptionsDb>(
+            builder.Configuration.GetSection(OptionsDb.SECTION));
+
+        return builder;
     }
 }

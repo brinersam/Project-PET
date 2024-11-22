@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using ProjectPet.Core.Options;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.VolunteerModule.Contracts.Dto;
 
@@ -8,9 +9,7 @@ namespace ProjectPet.VolunteerModule.Infrastructure.Database;
 
 public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
-    private readonly string DATABASE = configuration[Constants.DATABASE]
-        ?? throw new ArgumentNullException(Constants.DATABASE);
-
+    private readonly string DATABASE = configuration[configuration.GetSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
     public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
     public DbSet<PetDto> Pets => Set<PetDto>();
 

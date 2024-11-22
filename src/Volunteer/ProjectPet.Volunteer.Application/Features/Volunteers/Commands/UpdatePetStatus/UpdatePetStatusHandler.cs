@@ -2,6 +2,7 @@
 using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.SharedKernel.ErrorClasses;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdatePetStatus;
 
@@ -18,7 +19,9 @@ public class UpdatePetStatusHandler
         UpdatePetStatusCommand cmd,
         CancellationToken cancellationToken)
     {
-        var status = (PetStatus)cmd.Status; // todo add checks
+        var status = (PetStatus)cmd.Status;
+        if (Enum.IsDefined(typeof(PetStatus), status) == false)
+            return Error.Validation("invalid.value", $"Invalid status: \"{status}\"");
 
         if (status == PetStatus.NotSet || status == PetStatus.Home_Found)
             return Error.Validation("invalid.value", $"Pet status can not be set to {cmd.Status}!");

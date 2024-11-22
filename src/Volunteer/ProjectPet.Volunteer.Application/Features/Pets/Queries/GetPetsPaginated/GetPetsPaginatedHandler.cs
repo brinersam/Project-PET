@@ -1,30 +1,33 @@
 ﻿using CSharpFunctionalExtensions;
-using Microsoft.EntityFrameworkCore;
 using ProjectPet.Core.HelperModels;
 using ProjectPet.Core.Extensions;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.Linq.Expressions;
 using ProjectPet.VolunteerModule.Contracts.Dto;
 using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.SpeciesModule.Contracts;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
 
 public class GetPetsPaginatedHandler
 {
     private readonly IReadDbContext _readDbContext;
+    private readonly ISpeciesContract _speciesContract;
 
-    public IReadDbContext ReadDbContext => _readDbContext;
 
-    public GetPetsPaginatedHandler(IReadDbContext readDbContext)
+    public GetPetsPaginatedHandler(
+        IReadDbContext readDbContext,
+        ISpeciesContract speciesContract)
     {
         _readDbContext = readDbContext;
+        _speciesContract = speciesContract;
     }
 
     public async Task<Result<PagedList<PetDto>, Error>> HandleAsync(GetPetsPaginatedQuery query, CancellationToken cancellationToken)
     {
-        var dbQuery = ReadDbContext.Pets.AsQueryable();
+        var dbQuery = _readDbContext.Pets.AsQueryable();
 
-        dbQuery = await ApplyFiltersAsync(dbQuery, query, ReadDbContext, cancellationToken);
+        dbQuery = await ApplyFiltersAsync(dbQuery, _speciesContract, query, cancellationToken);
 
         dbQuery = ApplySorting(dbQuery, query);
 
@@ -65,15 +68,15 @@ public class GetPetsPaginatedHandler
 
     private async static Task<IQueryable<PetDto>> ApplyFiltersAsync(
         IQueryable<PetDto> dbQuery,
+        ISpeciesContract speciesContract,
         GetPetsPaginatedQuery query,
-        IReadDbContext _readDbContext,
         CancellationToken cancellationToken = default)
     {
         if (query.Filters is null)
             return dbQuery;
 
-        Guid? speciesNameId = await SpeciesNameToId(query.Filters.SpeciesName, _readDbContext, cancellationToken);
-        Guid? breedNameId = await BreedNameToId(query.Filters.BreedName, _readDbContext, cancellationToken);
+        Guid? speciesNameId = await SpeciesNameToId(query.Filters.SpeciesName, speciesContract, cancellationToken);
+        Guid? breedNameId = await BreedNameToId(query.Filters.BreedName, speciesContract, cancellationToken);
 
         query.Filters.Deconstruct(
             out Guid? VolunteerId,
@@ -99,31 +102,31 @@ public class GetPetsPaginatedHandler
 
     private static async Task<Guid?> BreedNameToId(
         string? name,
-        IReadDbContext _readDbContext,
+        ISpeciesContract speciesContract,
         CancellationToken cancellationToken)
     {
         if (name is null)
             return null;
 
-        return null;
-            //await _readDbContext.Breeds // todo interact
-            //.Where(x => x.Value.Contains(name))
-            //.Select(x => x.Id)
-            //.FirstOrDefaultAsync(cancellationToken);
+        var breedRes = await speciesContract.GetBreedByNameAsync(name, cancellationToken);
+        if (breedRes.IsFailure)
+            return Guid.Empty;
+
+        return breedRes.Value.Id;
     }
 
     private static async Task<Guid?> SpeciesNameToId(
         string? name,
-        IReadDbContext _readDbContext,
+        ISpeciesContract speciesContract,
         CancellationToken cancellationToken)
     {
         if (name is null)
             return null;
 
-        return null;
-            //await _readDbContext.Species // todo interact
-            //.Where(x => x.Name.Contains(name))
-            //.Select(x => x.Id)
-            //.FirstOrDefaultAsync(cancellationToken);
+        var speciesRes = await speciesContract.GetSpeciesByNameAsync(name, cancellationToken);
+        if (speciesRes.IsFailure)
+            return Guid.Empty;
+
+        return speciesRes.Value.Id;
     }
 }

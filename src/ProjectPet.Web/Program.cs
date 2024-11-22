@@ -1,5 +1,4 @@
 using ProjectPet.FileManagement.Infrastructure;
-using ProjectPet.FileManagement.Presentation;
 using ProjectPet.SpeciesModule.Infrastructure;
 using ProjectPet.SpeciesModule.Presentation;
 using ProjectPet.VolunteerModule.Infrastructure;
@@ -10,6 +9,8 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.ConfigureDbCstring();
+
 builder.AddSerilogLogger();
 
 #region ASP 
@@ -18,11 +19,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endregion
 #region App modules 
-builder.AddVolunteerHandlers();
-builder.AddVolunteerInfrastructure();
+builder.AddVolunteerModuleHandlers();
+builder.AddVolunteerModuleInfrastructure();
 
-builder.AddSpeciesHandlers();
-builder.AddSpeciesInfrastructure();
+builder.AddSpeciesModuleHandlers();
+builder.AddSpeciesModuleInfrastructure();
 
 builder.AddFileManagementInfrastructure();
 #endregion

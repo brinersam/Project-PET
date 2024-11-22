@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.SpeciesModule.Contracts;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.VolunteerModule.Domain.Models;
 
@@ -8,15 +9,18 @@ namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.Cr
 
 public class CreatePetHandler
 {
+    private readonly ISpeciesContract _speciesContract;
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IReadDbContext _readDbContext;
     private readonly ILogger<CreatePetHandler> _logger;
 
     public CreatePetHandler(
+        ISpeciesContract speciesContract,
         IVolunteerRepository volunteerRepository,
         IReadDbContext readDbContext,
         ILogger<CreatePetHandler> logger)
     {
+        _speciesContract = speciesContract;
         _volunteerRepository = volunteerRepository;
         _readDbContext = readDbContext;
         _logger = logger;
@@ -25,13 +29,15 @@ public class CreatePetHandler
         CreatePetCommand command,
         CancellationToken cancellationToken)
     {
-        var doesSpeciesExist = false; // todo _readDbContext.Species.Any(x => x.Id == command.AnimalData.SpeciesId);
-        //if (doesSpeciesExist == false)
-        //    return Error.Validation("record.not.found", $"Species with id \"{command.AnimalData.SpeciesId}\" was not found!");
+        var speciesRes = await _speciesContract.GetSpeciesByIdAsync(command.AnimalData.SpeciesId, cancellationToken);
+        if (speciesRes.IsFailure)
+            return Error.Validation("record.not.found", $"Species with id \"{command.AnimalData.SpeciesId}\" was not found!");
+        var species = speciesRes.Value;
 
-        object breed = null; // todo, object -> var _readDbContext.Breeds.FirstOrDefault(x => x.SpeciesId == command.AnimalData.SpeciesId && x.Value == command.AnimalData.BreedName);
-        if (breed is null)
+        var breedRes = await _speciesContract.GetBreedByNameAsync(command.AnimalData.BreedName, cancellationToken);
+        if (breedRes.IsFailure)
             return Error.Validation("record.not.found", $"Breed with name \"{command.AnimalData.BreedName}\" was not found!");
+        var breed = breedRes.Value;
 
         var volunteerRes = await _volunteerRepository.GetByIdAsync(command.Id, cancellationToken);
         if (volunteerRes.IsFailure)
@@ -40,14 +46,18 @@ public class CreatePetHandler
 
         var orderingPosition = Position.Create(volunteer.OwnedPets.Count + 1);
 
-        var animalData = AnimalData.Create(command.AnimalData.SpeciesId, Guid.NewGuid()).Value;// todo breed.Id).Value;
+        var animalData = AnimalData.Create(command.AnimalData.SpeciesId, breed.Id).Value;
 
         List<PaymentInfo> paymentInfos = command.PaymentInfos
             .Select(x =>
                 PaymentInfo.Create(x.Title, x.Instructions).Value)
             .ToList();
 
-        var status = (PetStatus)command.Status; // todo add checks
+        var status = (PetStatus)command.Status;
+        if (Enum.IsDefined(typeof(PetStatus), status) == false)
+        {
+            return Error.Validation("invalid.value", $"Invalid status: \"{status}\"");
+        }
 
         var phoneNumber = Phonenumber.Create(
                 command.PhoneNumber.Phonenumber,

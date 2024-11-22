@@ -25,7 +25,7 @@ public class VolunteerController : CustomControllerBase
     [HttpPost]
     public async Task<ActionResult<Guid>> Post(
         [FromServices] CreateVolunteerHandler handler,
-        [FromServices] IValidator<CreateVolunteerRequest> validator,
+        IValidator<CreateVolunteerRequest> validator,
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -47,7 +47,7 @@ public class VolunteerController : CustomControllerBase
         [FromRoute] Guid id,
         [FromServices] CreatePetHandler handler,
         [FromBody] CreatePetRequest request,
-        [FromServices] IValidator<CreatePetRequest> validator,
+        IValidator<CreatePetRequest> validator,
         CancellationToken cancellationToken = default)
     {
         var validatorRes = await validator.ValidateAsync(request, cancellationToken);
@@ -107,7 +107,7 @@ public class VolunteerController : CustomControllerBase
         [FromServices] UpdateVolunteerInfoHandler handler,
         [FromBody] UpdateVolunteerInfoRequest request,
         [FromRoute] Guid id,
-        [FromServices] IValidator<UpdateVolunteerInfoRequest> validator,
+        IValidator<UpdateVolunteerInfoRequest> validator,
         CancellationToken cancellationToken = default)
     {
         var validatorRes = await validator.ValidateAsync(request, cancellationToken);
@@ -128,7 +128,7 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchPayment(
         [FromServices] UpdateVolunteerPaymentHandler handler,
         [FromRoute] Guid id,
-        [FromServices] IValidator<UpdateVolunteerPaymentRequest> validator,
+        IValidator<UpdateVolunteerPaymentRequest> validator,
         [FromBody] UpdateVolunteerPaymentRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -151,7 +151,7 @@ public class VolunteerController : CustomControllerBase
     public async Task<ActionResult<Guid>> PatchSocial(
         [FromServices] UpdateVolunteerSocialsHandler handler,
         [FromRoute] Guid id,
-        [FromServices] IValidator<UpdateVolunteerSocialsRequest> validator,
+        IValidator<UpdateVolunteerSocialsRequest> validator,
         [FromBody] UpdateVolunteerSocialsRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -240,7 +240,7 @@ public class VolunteerController : CustomControllerBase
         [FromRoute] Guid petid,
         [FromServices] PatchPetHandler handler,
         [FromBody] PatchPetRequest request,
-        [FromServices] IValidator<PatchPetRequest> validator,
+        IValidator<PatchPetRequest> validator,
         CancellationToken cancellationToken = default)
     {
         var validatorRes = await validator.ValidateAsync(request, cancellationToken);

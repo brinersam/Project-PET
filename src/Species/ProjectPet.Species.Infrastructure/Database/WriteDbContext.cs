@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using ProjectPet.Core.Options;
 using ProjectPet.SpeciesModule.Domain.Models;
 
 namespace ProjectPet.SpeciesModule.Infrastructure.Database;
 
 public class WriteDbContext(IConfiguration configuration) : DbContext
 {
-    private readonly string DATABASE = configuration[Constants.DATABASE]
-        ?? throw new ArgumentNullException(Constants.DATABASE);
+    private readonly string DATABASE = configuration[configuration.GetSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
     public DbSet<Species> Species => Set<Species>();
     public DbSet<Breed> Breeds => Set<Breed>();
 

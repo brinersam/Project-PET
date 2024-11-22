@@ -2,18 +2,22 @@
 using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.SpeciesModule.Contracts;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.PatchPet;
 
 public class PatchPetHandler
 {
+    private readonly ISpeciesContract _speciesContract;
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IReadDbContext _readDbContext;
 
     public PatchPetHandler(
+        ISpeciesContract speciesContract,
         IVolunteerRepository volunteerRepository,
         IReadDbContext readDbContext)
     {
+        _speciesContract = speciesContract;
         _volunteerRepository = volunteerRepository;
         _readDbContext = readDbContext;
     }
@@ -28,15 +32,17 @@ public class PatchPetHandler
         AnimalData? animalData = null;
         if (command.AnimalData != null)
         {
-            var doesSpeciesExist = false; // todo _readDbContext.Species.Any(x => x.Id == command.AnimalData.SpeciesId);
-            if (doesSpeciesExist == false)
+            var speciesRes = await _speciesContract.GetSpeciesByIdAsync(command.AnimalData.SpeciesId, cancellationToken);
+            if (speciesRes.IsFailure)
                 return Error.Validation("record.not.found", $"Species with id \"{command.AnimalData.SpeciesId}\" was not found!");
+            var species = speciesRes.Value;
 
-            object breed = null; // object -> null todo _readDbContext.Breeds.FirstOrDefault(x => x.SpeciesId == command.AnimalData.SpeciesId && x.Value == command.AnimalData.BreedName);
-            if (breed is null)
+            var breedRes = await _speciesContract.GetBreedByNameAsync(command.AnimalData.BreedName, cancellationToken);
+            if (breedRes.IsFailure)
                 return Error.Validation("record.not.found", $"Breed with name \"{command.AnimalData.BreedName}\" was not found!");
+            var breed = breedRes.Value;
 
-            animalData = AnimalData.Create(command.AnimalData.SpeciesId, Guid.NewGuid()).Value; // todo  breed.Id).Value;
+            animalData = AnimalData.Create(command.AnimalData.SpeciesId, breed.Id).Value;
         }
 
         HealthInfo? healthInfo = null;

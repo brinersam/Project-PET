@@ -8,7 +8,7 @@ using ProjectPet.SpeciesModule.Infrastructure.Repositories;
 namespace ProjectPet.SpeciesModule.Infrastructure;
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder AddSpeciesInfrastructure(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddSpeciesModuleInfrastructure(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<IReadDbContext, ReadDbContext>();
 

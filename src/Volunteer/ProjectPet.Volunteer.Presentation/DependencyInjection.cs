@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectPet.VolunteerModule.Application;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetById;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
@@ -16,6 +18,7 @@ using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.Update
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteerById;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteers;
+using ProjectPet.VolunteerModule.Contracts;
 
 namespace ProjectPet.VolunteerModule.Presentation;
 public static class DependencyInjection
@@ -24,10 +27,26 @@ public static class DependencyInjection
     {
         return builder
             .AddPetHandlers()
-            .AddVolunteerHandlers();
-
+            .AddVolunteerHandlers()
+            .AddContracts()
+            .AddValidators();
     }
-    public static IHostApplicationBuilder AddVolunteerHandlers(this IHostApplicationBuilder builder)
+
+    private static IHostApplicationBuilder AddValidators(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
+
+        return builder;
+    }
+
+    private static IHostApplicationBuilder AddContracts(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<IVolunteerContract, VolunteerContractImplementations>();
+
+        return builder;
+    }
+
+    private static IHostApplicationBuilder AddVolunteerHandlers(this IHostApplicationBuilder builder)
     {
         // write
         builder.Services.AddScoped<CreateVolunteerHandler>();
@@ -43,7 +62,7 @@ public static class DependencyInjection
 
         return builder;
     }
-    public static IHostApplicationBuilder AddPetHandlers(this IHostApplicationBuilder builder)
+    private static IHostApplicationBuilder AddPetHandlers(this IHostApplicationBuilder builder)
     {
         // write
         builder.Services.AddScoped<CreatePetHandler>();
