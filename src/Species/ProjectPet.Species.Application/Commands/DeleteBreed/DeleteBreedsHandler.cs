@@ -38,7 +38,7 @@ public class DeleteBreedsHandler
 
         var speciesAggregate = getSpeciesRes.Value;
 
-        var petRes = await _volunteerContract.GetPetByBreedIdAsync(request.BreedId, cancellationToken); 
+        var petRes = await _volunteerContract.GetPetByBreedIdAsync(request.BreedId, cancellationToken);
 
         if (petRes.IsSuccess)
             return Error.Conflict("illegal.state", "Can not delete breed that is currently in use by at least one pet!");

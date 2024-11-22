@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectPet.SpeciesModule.Domain.Models;
 using ProjectPet.Core.Extensions;
+using ProjectPet.SpeciesModule.Domain.Models;
 
 namespace ProjectPet.SpeciesModule.Infrastructure.Database.Configurations.Write;
 

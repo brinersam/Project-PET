@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.Core.Validator;
 using ProjectPet.VolunteerModule.Contracts.Requests;
+using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Presentation.Volunteer.RequestValidation;
 

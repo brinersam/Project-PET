@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerPayment;
 

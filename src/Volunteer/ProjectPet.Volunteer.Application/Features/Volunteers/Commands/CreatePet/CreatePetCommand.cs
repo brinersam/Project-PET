@@ -1,7 +1,6 @@
-﻿using ProjectPet.VolunteerModule.Domain.Models;
-using ProjectPet.Core.Abstractions;
-using ProjectPet.VolunteerModule.Contracts.Requests;
+﻿using ProjectPet.Core.Abstractions;
 using ProjectPet.VolunteerModule.Contracts.Dto;
+using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
 

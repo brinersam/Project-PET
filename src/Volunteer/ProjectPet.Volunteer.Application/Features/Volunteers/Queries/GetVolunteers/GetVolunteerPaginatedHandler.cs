@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Core.HelperModels;
 using ProjectPet.Core.Extensions;
+using ProjectPet.Core.HelperModels;
 using ProjectPet.SharedKernel.ErrorClasses;
-using ProjectPet.VolunteerModule.Contracts.Dto;
 using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.VolunteerModule.Contracts.Dto;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteers;
 

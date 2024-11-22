@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Core.HelperModels;
 using ProjectPet.Core.Extensions;
+using ProjectPet.Core.HelperModels;
 using ProjectPet.SharedKernel.ErrorClasses;
-using System.Linq.Expressions;
-using ProjectPet.VolunteerModule.Contracts.Dto;
-using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.SpeciesModule.Contracts;
+using ProjectPet.VolunteerModule.Application.Interfaces;
+using ProjectPet.VolunteerModule.Contracts.Dto;
+using System.Linq.Expressions;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
 

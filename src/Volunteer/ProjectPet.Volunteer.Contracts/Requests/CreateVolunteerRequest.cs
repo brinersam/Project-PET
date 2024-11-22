@@ -1,5 +1,4 @@
-﻿using ProjectPet.Core.Abstractions;
-using ProjectPet.VolunteerModule.Contracts.Dto;
+﻿using ProjectPet.VolunteerModule.Contracts.Dto;
 
 namespace ProjectPet.VolunteerModule.Contracts.Requests;
 

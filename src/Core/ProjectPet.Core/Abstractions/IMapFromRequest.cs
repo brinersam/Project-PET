@@ -1,5 +1,5 @@
 ﻿namespace ProjectPet.Core.Abstractions;
-public interface IMapFromRequest<TCmd,TReq> 
+public interface IMapFromRequest<TCmd, TReq>
     where TCmd : class
     where TReq : class
 {
