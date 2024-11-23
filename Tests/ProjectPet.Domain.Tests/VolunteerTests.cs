@@ -1,5 +1,3 @@
-using ProjectPet.Domain.Models;
-
 namespace ProjectPet.Domain.Tests;
 
 public class VolunteerTests

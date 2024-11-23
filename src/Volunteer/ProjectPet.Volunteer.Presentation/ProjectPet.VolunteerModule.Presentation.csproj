@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\ProjectPet.Core\ProjectPet.Core.csproj" />
+		<ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
+		<ProjectReference Include="..\..\Core\ProjectPet.SharedKernel\ProjectPet.SharedKernel.csproj" />
+		<ProjectReference Include="..\ProjectPet.Volunteer.Application\ProjectPet.VolunteerModule.Application.csproj" />
+	</ItemGroup>
+
+</Project>

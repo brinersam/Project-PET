@@ -1,14 +1,11 @@
 version: '3.4'
 
 services:
-  projectpet.api:
-    image: ${DOCKER_REGISTRY-}projectpetapi
+  projectpet.web:
+    image: ${DOCKER_REGISTRY-}projectpetweb
     build:
       context: .
-      dockerfile: src/ProjectPet.API/Dockerfile
-    ports:
-    - "8080:8080"
-    - "8081:8081"
+      dockerfile: src/ProjectPet.Web/Dockerfile
 
   projectpet.database:
     image: postgres
