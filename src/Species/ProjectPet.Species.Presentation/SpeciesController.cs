@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Framework;
 using ProjectPet.SpeciesModule.Application.Commands.CreateBreed;
 using ProjectPet.SpeciesModule.Application.Commands.CreateSpecies;
@@ -11,6 +12,7 @@ using ProjectPet.SpeciesModule.Domain.Requests;
 
 namespace ProjectPet.SpeciesModule.Presentation;
 
+[Authorize]
 public class SpeciesController : CustomControllerBase
 {
     private readonly ISpeciesRepository _speciesRepository;

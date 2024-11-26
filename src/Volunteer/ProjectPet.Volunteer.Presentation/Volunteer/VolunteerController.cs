@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Core.Providers;
 using ProjectPet.Framework;
@@ -20,6 +21,7 @@ using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Presentation.Volunteer;
 
+[Authorize]
 public class VolunteerController : CustomControllerBase
 {
     [HttpPost]
