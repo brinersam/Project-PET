@@ -8,7 +8,7 @@ namespace ProjectPet.VolunteerModule.Infrastructure.Database;
 
 public class WriteDbContext(IConfiguration configuration) : DbContext
 {
-    private readonly string DATABASE = configuration[configuration.GetSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
+    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
     public DbSet<Volunteer> Volunteers => Set<Volunteer>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

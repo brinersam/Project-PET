@@ -7,7 +7,7 @@ using ProjectPet.SpeciesModule.Application.Commands.DeleteSpecies;
 using ProjectPet.SpeciesModule.Application.Interfaces;
 using ProjectPet.SpeciesModule.Application.Queries.GetAllBreedsById;
 using ProjectPet.SpeciesModule.Application.Queries.GetAllSpecies;
-using ProjectPet.SpeciesModule.Presentation.Requests;
+using ProjectPet.SpeciesModule.Domain.Requests;
 
 namespace ProjectPet.SpeciesModule.Presentation;
 
@@ -56,7 +56,7 @@ public class SpeciesController : CustomControllerBase
         [FromBody] CreateBreedsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var cmd = request.ToCommand(id);
+        var cmd = CreateBreedsCommand.FromRequest(request, id);
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)

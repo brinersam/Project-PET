@@ -1,5 +1,13 @@
-﻿namespace ProjectPet.SpeciesModule.Application.Commands.CreateBreed;
+﻿using ProjectPet.Core.Abstractions;
+using ProjectPet.SpeciesModule.Domain.Requests;
 
-public record CreateBreedsCommand(
-    Guid SpeciesId,
-    string BreedName);
+namespace ProjectPet.SpeciesModule.Application.Commands.CreateBreed;
+
+public record CreateBreedsCommand( Guid SpeciesId, string BreedName)
+    : IMapFromRequest<CreateBreedsCommand, CreateBreedsRequest, Guid>
+{
+    public static CreateBreedsCommand FromRequest(CreateBreedsRequest request, Guid speciesId)
+            => new CreateBreedsCommand(speciesId, request.BreedName);
+}
+
+

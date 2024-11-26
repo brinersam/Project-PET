@@ -21,4 +21,20 @@ public static class ResponseExtensions
 
         return new ObjectResult(envelope) { StatusCode = statusCode };
     }
+
+    public static ActionResult ToResponse(this Error[] errors)
+    {
+        var statusCode = errors[0].Type switch
+        {
+            ErrorType.Validation => StatusCodes.Status400BadRequest,
+            ErrorType.NotFound => StatusCodes.Status404NotFound,
+            ErrorType.Conflict => StatusCodes.Status409Conflict,
+            ErrorType.Failure => StatusCodes.Status500InternalServerError,
+            _ => StatusCodes.Status500InternalServerError
+        };
+
+        var envelope = Envelope.Error(errors);
+
+        return new ObjectResult(envelope) { StatusCode = statusCode };
+    }
 }
