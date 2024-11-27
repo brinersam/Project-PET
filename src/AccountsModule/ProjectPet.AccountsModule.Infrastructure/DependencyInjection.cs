@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,12 +26,13 @@ public static class DependencyInjection
                 builder.Configuration.GetRequiredSection(OptionsJwt.SECTION));
 
         builder.Services
-            .AddIdentity<User, Role>(IdentityParamsFactory)
+            .AddIdentity<User, Role>(ConfigureIdentityOptions)
             .AddEntityFrameworkStores<AuthDbContext>();
 
         builder.Services
-            .AddAuthentication(AuthenticationParamsFactory)
-            .AddJwtBearer(x => TokenValidationParamsFactory(x, builder));
+            .AddAuthorization(ConfigureAuthorizationOptions)
+            .AddAuthentication(ConfigureAuthenticationOptions)
+            .AddJwtBearer(x => ConfigureTokenValidationOptions(x, builder));
 
         builder.Services.AddAuthorization();
 
@@ -50,35 +52,42 @@ public static class DependencyInjection
                 Name = "Authorization",
                 Description = "Please insert JWT token into field (no bearer prefix)",
             });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-           {
-             new OpenApiSecurityScheme
-             {
-               Reference = new OpenApiReference{
-                 Type = ReferenceType.SecurityScheme,
-                 Id = "Bearer"
-               }
-              },
-              new string[]{}
-            }
-          });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement 
+            {
+               {
+                 new OpenApiSecurityScheme
+                 {
+                   Reference = new OpenApiReference
+                   {
+                     Type = ReferenceType.SecurityScheme,
+                     Id = "Bearer"
+                   }
+                 },
+                  Array.Empty<string>()
+                }
+            });
         });
 
         return builder;
     }
 
-    private static void IdentityParamsFactory(IdentityOptions options)
+    private static void ConfigureIdentityOptions(IdentityOptions options)
     {
         options.User.RequireUniqueEmail = true;
     }
 
-    private static void AuthenticationParamsFactory(AuthenticationOptions options)
+    private static void ConfigureAuthenticationOptions(AuthenticationOptions options)
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
     }
 
-    private static void TokenValidationParamsFactory(JwtBearerOptions options, IHostApplicationBuilder builder)
+    private static void ConfigureAuthorizationOptions(AuthorizationOptions options)
+    {
+    }
+
+    private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
     {
         var optionsJwt = builder.Configuration.GetRequiredSection(OptionsJwt.SECTION).Get<OptionsJwt>();
 
