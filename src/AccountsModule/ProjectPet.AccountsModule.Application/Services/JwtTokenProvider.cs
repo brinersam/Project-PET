@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ProjectPet.AccountsModule.Application.Models;
+using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Core.Options;
+using ProjectPet.Framework.Authorization;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -21,6 +22,8 @@ public class JwtTokenProvider : ITokenProvider
     {
         Claim[] claims =
         {
+            new Claim("Role", user.RoleId.ToString()),
+            //PermissionClaim.New(),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? throw new ArgumentException($"Null email got through to {nameof(JwtTokenProvider)}"))
         };

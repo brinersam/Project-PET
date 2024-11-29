@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ProjectPet.AccountsModule.Application.Models;
+using ProjectPet.AccountsModule.Domain;
+using ProjectPet.AccountsModule.Infrastructure.Database.Configurations.Write;
 using ProjectPet.Core.Options;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Database;
@@ -24,8 +25,9 @@ public class AuthDbContext(IConfiguration configuration) : IdentityDbContext<Use
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>()
-            .ToTable("users");
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
 
         modelBuilder.Entity<Role>()
             .ToTable("roles");

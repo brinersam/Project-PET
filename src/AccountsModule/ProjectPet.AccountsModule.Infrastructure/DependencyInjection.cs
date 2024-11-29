@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,10 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ProjectPet.AccountsModule.Application.Models;
+using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Application.Services;
+using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database;
+using ProjectPet.AccountsModule.Infrastructure.Repositories;
 using ProjectPet.Core.Options;
+using ProjectPet.Framework.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
@@ -18,23 +23,8 @@ public static class DependencyInjection
 {
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddScoped<AuthDbContext>();
-
-        builder.Services.AddTransient<ITokenProvider, JwtTokenProvider>();
-
-        builder.Services.Configure<OptionsJwt>(
-                builder.Configuration.GetRequiredSection(OptionsJwt.SECTION));
-
-        builder.Services
-            .AddIdentity<User, Role>(ConfigureIdentityOptions)
-            .AddEntityFrameworkStores<AuthDbContext>();
-
-        builder.Services
-            .AddAuthorization(ConfigureAuthorizationOptions)
-            .AddAuthentication(ConfigureAuthenticationOptions)
-            .AddJwtBearer(x => ConfigureTokenValidationOptions(x, builder));
-
-        builder.Services.AddAuthorization();
+        builder.AddAuth();
+        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
         return builder;
     }
@@ -52,7 +42,7 @@ public static class DependencyInjection
                 Name = "Authorization",
                 Description = "Please insert JWT token into field (no bearer prefix)",
             });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement 
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                {
                  new OpenApiSecurityScheme
@@ -71,6 +61,32 @@ public static class DependencyInjection
         return builder;
     }
 
+    private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<AuthDbContext>();
+        builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
+        builder.Services.AddTransient<ITokenProvider, JwtTokenProvider>();
+
+        builder.Services.Configure<OptionsJwt>(
+                builder.Configuration.GetRequiredSection(OptionsJwt.SECTION));
+
+        builder.Services
+            .AddIdentity<User, Role>(ConfigureIdentityOptions)
+            .AddEntityFrameworkStores<AuthDbContext>();
+
+        builder.Services
+            .AddAuthorization(ConfigureAuthorizationOptions)
+            .AddAuthentication(ConfigureAuthenticationOptions)
+            .AddJwtBearer(x => ConfigureTokenValidationOptions(x, builder));
+
+        builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
+
+        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+
+        return builder;
+    }
+
     private static void ConfigureIdentityOptions(IdentityOptions options)
     {
         options.User.RequireUniqueEmail = true;
@@ -84,8 +100,7 @@ public static class DependencyInjection
     }
 
     private static void ConfigureAuthorizationOptions(AuthorizationOptions options)
-    {
-    }
+    {}
 
     private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
     {
@@ -103,6 +118,8 @@ public static class DependencyInjection
             ValidateIssuerSigningKey = true,
 
             ValidateLifetime = true,
+
+            ClockSkew = TimeSpan.Zero,
         };
     }
 
