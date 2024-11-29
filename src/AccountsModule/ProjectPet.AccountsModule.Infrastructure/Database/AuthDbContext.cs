@@ -44,6 +44,8 @@ public class AuthDbContext(IConfiguration configuration) : IdentityDbContext<Use
 
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user-roles");
+
+        modelBuilder.HasDefaultSchema("auth");
     }
 
     private static ILoggerFactory CreateLoggerFactory()
