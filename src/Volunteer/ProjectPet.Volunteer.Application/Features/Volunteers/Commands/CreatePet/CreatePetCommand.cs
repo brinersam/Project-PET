@@ -1,4 +1,5 @@
 ﻿using ProjectPet.Core.Abstractions;
+using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.VolunteerModule.Contracts.Dto;
 using ProjectPet.VolunteerModule.Contracts.Requests;
 

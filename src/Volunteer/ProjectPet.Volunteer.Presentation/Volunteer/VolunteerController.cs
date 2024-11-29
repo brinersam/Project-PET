@@ -12,8 +12,6 @@ using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.PatchP
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.SetMainPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerInfo;
-using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerPayment;
-using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerSocials;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteerById;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteers;
@@ -117,51 +115,6 @@ public class VolunteerController : CustomControllerBase
             return Envelope.ToResponse(validatorRes.Errors);
 
         var cmd = UpdateVolunteerInfoCommand.FromRequest(request, id);
-
-        var result = await handler.HandleAsync(cmd, cancellationToken);
-
-        if (result.IsFailure)
-            return result.Error.ToResponse();
-
-        return Ok(result.Value);
-    }
-
-    [HttpPut("{id:guid}/payment")]
-    public async Task<ActionResult<Guid>> PatchPayment(
-        [FromServices] UpdateVolunteerPaymentHandler handler,
-        [FromRoute] Guid id,
-        IValidator<UpdateVolunteerPaymentRequest> validator,
-        [FromBody] UpdateVolunteerPaymentRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
-        if (validatorRes.IsValid == false)
-            return Envelope.ToResponse(validatorRes.Errors);
-
-        var cmd = UpdateVolunteerPaymentCommand.FromRequest(request, id);
-
-        var result = await handler.HandleAsync(cmd, cancellationToken);
-
-        if (result.IsFailure)
-            return result.Error.ToResponse();
-
-        return Ok(result.Value);
-    }
-
-
-    [HttpPut("{id:guid}/social")]
-    public async Task<ActionResult<Guid>> PatchSocial(
-        [FromServices] UpdateVolunteerSocialsHandler handler,
-        [FromRoute] Guid id,
-        IValidator<UpdateVolunteerSocialsRequest> validator,
-        [FromBody] UpdateVolunteerSocialsRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
-        if (validatorRes.IsValid == false)
-            return Envelope.ToResponse(validatorRes.Errors);
-
-        var cmd = UpdateVolunteerSocialsCommand.FromRequest(request, id);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 

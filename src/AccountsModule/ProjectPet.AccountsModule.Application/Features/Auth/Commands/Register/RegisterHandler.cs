@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
-using ProjectPet.AccountsModule.Application.Models;
+using ProjectPet.AccountsModule.Domain;
 using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;

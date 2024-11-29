@@ -1,4 +1,5 @@
-﻿using ProjectPet.VolunteerModule.Contracts.Dto;
+﻿using ProjectPet.SharedKernel.SharedDto;
+using ProjectPet.VolunteerModule.Contracts.Dto;
 
 namespace ProjectPet.VolunteerModule.Contracts.Requests;
 public record CreatePetRequest(

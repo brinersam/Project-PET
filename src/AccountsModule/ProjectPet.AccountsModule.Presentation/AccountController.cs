@@ -1,20 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Login;
-using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountPayment;
+using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountSocials;
 using ProjectPet.AccountsModule.Contracts.Requests;
 using ProjectPet.Framework;
+using ProjectPet.SharedKernel.ErrorClasses;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ProjectPet.AccountsModule.Presentation;
-
+[Authorize]
 public class AccountController : CustomControllerBase
 {
-    [HttpPost("register")]
-    public async Task<IActionResult> Register(
-        [FromBody] RegisterRequest request,
-        [FromServices] RegisterHandler handler,
+    [HttpPut("payment")]
+    public async Task<IActionResult> PatchPayment(
+        [FromServices] UpdateAccountPaymentHandler handler,
+        IValidator<UpdateAccountPaymentRequest> validator,
+        [FromBody] UpdateAccountPaymentRequest request,
         CancellationToken cancellationToken = default)
     {
-        var cmd = RegisterCommand.FromRequest(request);
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
+        string? userId = HttpContext.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
+        if (String.IsNullOrWhiteSpace(userId))
+            return Error.Failure("claim.not.found", "Unknown user!").ToResponse();
+
+        var cmd = UpdateAccountPaymentCommand.FromRequest(request, new Guid(userId));
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -24,19 +37,29 @@ public class AccountController : CustomControllerBase
         return Ok();
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(
-        [FromBody] LoginRequest request,
-        [FromServices] LoginHandler handler,
+
+    [HttpPut("social")]
+    public async Task<ActionResult<Guid>> PatchSocial(
+        [FromServices] UpdateAccountSocialsHandler handler,
+        IValidator<UpdateAccountSocialsRequest> validator,
+        [FromBody] UpdateAccountSocialsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var cmd = LoginCommand.FromRequest(request);
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
+        string? userId = HttpContext.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
+        if (String.IsNullOrWhiteSpace(userId))
+            return Error.Failure("claim.not.found", "Unknown user!").ToResponse();
+
+        var cmd = UpdateAccountSocialsCommand.FromRequest(request, new Guid(userId));
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(result.Value);
+        return Ok();
     }
 }

@@ -96,9 +96,8 @@ public class VolunteerTests
             $"{idx}gmail@email.com",
             $"{idx}:description",
             1,
-            Phonenumber.Create("123-456-78-98", $"{idx}").Value,
-            [],
-            []).Value;
+            Phonenumber.Create("123-456-78-98", $"{idx}").Value)
+            .Value;
     }
 
     private Pet CreatePet(Volunteer volunteer, int idx = 1)
