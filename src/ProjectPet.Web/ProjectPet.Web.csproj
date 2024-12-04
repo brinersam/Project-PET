@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -32,6 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\AccountsModule\ProjectPet.AccountsModule.Infrastructure\ProjectPet.AccountsModule.Infrastructure.csproj" />
+	  <ProjectReference Include="..\AccountsModule\ProjectPet.AccountsModule.Presentation\ProjectPet.AccountsModule.Presentation.csproj" />
 	  <ProjectReference Include="..\Core\ProjectPet.Core\ProjectPet.Core.csproj" />
 	  <ProjectReference Include="..\FileManagement\ProjectPet.FileManagement.Infrastructure\ProjectPet.FileManagement.Infrastructure.csproj" />
 	  <ProjectReference Include="..\FileManagement\ProjectPet.FileManagement.Presentation\ProjectPet.FileManagement.Presentation.csproj" />

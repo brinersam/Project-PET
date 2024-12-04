@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Framework;
 using ProjectPet.SpeciesModule.Application.Commands.CreateBreed;
 using ProjectPet.SpeciesModule.Application.Commands.CreateSpecies;
@@ -7,10 +8,11 @@ using ProjectPet.SpeciesModule.Application.Commands.DeleteSpecies;
 using ProjectPet.SpeciesModule.Application.Interfaces;
 using ProjectPet.SpeciesModule.Application.Queries.GetAllBreedsById;
 using ProjectPet.SpeciesModule.Application.Queries.GetAllSpecies;
-using ProjectPet.SpeciesModule.Presentation.Requests;
+using ProjectPet.SpeciesModule.Domain.Requests;
 
 namespace ProjectPet.SpeciesModule.Presentation;
 
+[Authorize]
 public class SpeciesController : CustomControllerBase
 {
     private readonly ISpeciesRepository _speciesRepository;
@@ -56,7 +58,7 @@ public class SpeciesController : CustomControllerBase
         [FromBody] CreateBreedsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var cmd = request.ToCommand(id);
+        var cmd = CreateBreedsCommand.FromRequest(request, id);
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)

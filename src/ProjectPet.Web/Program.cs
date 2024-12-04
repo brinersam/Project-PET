@@ -1,3 +1,5 @@
+using ProjectPet.AccountsModule.Infrastructure;
+using ProjectPet.AccountsModule.Presentation;
 using ProjectPet.FileManagement.Infrastructure;
 using ProjectPet.SpeciesModule.Infrastructure;
 using ProjectPet.SpeciesModule.Presentation;
@@ -16,7 +18,7 @@ builder.AddSerilogLogger();
 #region ASP 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.AddAuthenticatedSwaggerGen();
 #endregion
 #region App modules 
 builder.AddVolunteerModuleHandlers();
@@ -26,6 +28,10 @@ builder.AddSpeciesModuleHandlers();
 builder.AddSpeciesModuleInfrastructure();
 
 builder.AddFileManagementInfrastructure();
+
+builder.AddAuthModuleHandlers();
+builder.AddAuthModuleInfrastructure();
+
 #endregion
 
 builder.Services.AddValidation();
@@ -44,6 +50,7 @@ app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
