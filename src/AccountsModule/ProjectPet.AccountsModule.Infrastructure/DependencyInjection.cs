@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +13,9 @@ using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.AccountsModule.Infrastructure.Repositories;
+using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
@@ -24,6 +24,7 @@ public static class DependencyInjection
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
         builder.AddAuth();
+        builder.Services.AddSingleton<DatabaseAccountsSeeder>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
         return builder;

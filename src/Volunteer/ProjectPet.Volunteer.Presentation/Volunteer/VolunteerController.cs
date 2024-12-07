@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Core.Providers;
 using ProjectPet.Framework;
+using ProjectPet.Framework.Authorization;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePet;
@@ -19,7 +19,7 @@ using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Presentation.Volunteer;
 
-[Authorize]
+[Permission(PermissionCodes.VolunteerCreate)]
 public class VolunteerController : CustomControllerBase
 {
     [HttpPost]

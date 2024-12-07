@@ -11,5 +11,7 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 
         builder.HasIndex(p => p.Code)
             .IsUnique(true);
+
+        builder.Property(p => p.Description).IsRequired(false);
     }
 }

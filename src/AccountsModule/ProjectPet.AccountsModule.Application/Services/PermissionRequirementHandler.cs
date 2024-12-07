@@ -1,10 +1,10 @@
-﻿using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using ProjectPet.AccountsModule.Application.Interfaces;
-using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
+using System.ComponentModel;
 
 namespace ProjectPet.AccountsModule.Application.Services;
 
@@ -21,25 +21,17 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
         _logger = logger;
     }
 
-    protected override Task HandleRequirementAsync(
+    protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
         PermissionAttribute requirement)
     {
-        var claim = context.User.Claims.FirstOrDefault(c => c.Type == "Role");
-        if (claim == null)
-            return Task.CompletedTask;
+        string? userId = context.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
+        if (String.IsNullOrWhiteSpace(userId))
+            throw new Exception($"{typeof(PermissionRequirementHandler)}: User has no id!");
 
-        Result<Permission, Error> permRes = _authRepository.GetPermissionsForRole(new Guid(claim.Value));
-        if (permRes.IsFailure)
-        {
-            _logger.LogWarning($"{nameof(PermissionRequirementHandler)} module tried to get a non existing role by id: {claim.Value} !");
-            return Task.CompletedTask;
-        }
-        var perm = permRes.Value;
+        bool isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync(new Guid(userId), requirement.Code);
 
-        if (perm.Code.Contains(requirement.Code))
+        if (isRoleAuthorized)
             context.Succeed(requirement);
-
-        return Task.CompletedTask;
     }
 }

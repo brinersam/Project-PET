@@ -21,8 +21,4 @@
 	  <ProjectReference Include="..\ProjectPet.AccountsModule.Application\ProjectPet.AccountsModule.Application.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Json\Seeding\" />
-	</ItemGroup>
-
 </Project>
