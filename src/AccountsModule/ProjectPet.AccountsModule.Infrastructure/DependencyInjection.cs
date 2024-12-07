@@ -1,15 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ProjectPet.AccountsModule.Application.Models;
+using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Application.Services;
+using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database;
+using ProjectPet.AccountsModule.Infrastructure.Repositories;
+using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Options;
+using ProjectPet.Framework.Authorization;
 using System.Text;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
@@ -17,22 +23,9 @@ public static class DependencyInjection
 {
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddScoped<AuthDbContext>();
-
-        builder.Services.AddTransient<ITokenProvider, JwtTokenProvider>();
-
-        builder.Services.Configure<OptionsJwt>(
-                builder.Configuration.GetRequiredSection(OptionsJwt.SECTION));
-
-        builder.Services
-            .AddIdentity<User, Role>(IdentityParamsFactory)
-            .AddEntityFrameworkStores<AuthDbContext>();
-
-        builder.Services
-            .AddAuthentication(AuthenticationParamsFactory)
-            .AddJwtBearer(x => TokenValidationParamsFactory(x, builder));
-
-        builder.Services.AddAuthorization();
+        builder.AddAuth();
+        builder.Services.AddSingleton<DatabaseAccountsSeeder>();
+        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
         return builder;
     }
@@ -50,35 +43,67 @@ public static class DependencyInjection
                 Name = "Authorization",
                 Description = "Please insert JWT token into field (no bearer prefix)",
             });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-           {
-             new OpenApiSecurityScheme
-             {
-               Reference = new OpenApiReference{
-                 Type = ReferenceType.SecurityScheme,
-                 Id = "Bearer"
-               }
-              },
-              new string[]{}
-            }
-          });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+               {
+                 new OpenApiSecurityScheme
+                 {
+                   Reference = new OpenApiReference
+                   {
+                     Type = ReferenceType.SecurityScheme,
+                     Id = "Bearer"
+                   }
+                 },
+                  Array.Empty<string>()
+                }
+            });
         });
 
         return builder;
     }
 
-    private static void IdentityParamsFactory(IdentityOptions options)
+    private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<AuthDbContext>();
+        builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
+        builder.Services.AddTransient<ITokenProvider, JwtTokenProvider>();
+
+        builder.Services.Configure<OptionsJwt>(
+                builder.Configuration.GetRequiredSection(OptionsJwt.SECTION));
+
+        builder.Services
+            .AddIdentity<User, Role>(ConfigureIdentityOptions)
+            .AddEntityFrameworkStores<AuthDbContext>();
+
+        builder.Services
+            .AddAuthorization(ConfigureAuthorizationOptions)
+            .AddAuthentication(ConfigureAuthenticationOptions)
+            .AddJwtBearer(x => ConfigureTokenValidationOptions(x, builder));
+
+        builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
+
+        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+
+        return builder;
+    }
+
+    private static void ConfigureIdentityOptions(IdentityOptions options)
     {
         options.User.RequireUniqueEmail = true;
     }
 
-    private static void AuthenticationParamsFactory(AuthenticationOptions options)
+    private static void ConfigureAuthenticationOptions(AuthenticationOptions options)
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
     }
 
-    private static void TokenValidationParamsFactory(JwtBearerOptions options, IHostApplicationBuilder builder)
+    private static void ConfigureAuthorizationOptions(AuthorizationOptions options)
+    {}
+
+    private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
     {
         var optionsJwt = builder.Configuration.GetRequiredSection(OptionsJwt.SECTION).Get<OptionsJwt>();
 
@@ -94,6 +119,8 @@ public static class DependencyInjection
             ValidateIssuerSigningKey = true,
 
             ValidateLifetime = true,
+
+            ClockSkew = TimeSpan.Zero,
         };
     }
 

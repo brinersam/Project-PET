@@ -1,9 +1,8 @@
-echo off
-echo;
 echo ======= Dropping database... =======
 echo;
 call DropDatabase.bat
 cd "%~dp0"
+echo off
 echo;
 echo ======= Database dropped! =======
 echo;

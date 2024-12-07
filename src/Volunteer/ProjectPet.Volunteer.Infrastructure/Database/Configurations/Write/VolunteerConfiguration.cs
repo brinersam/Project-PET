@@ -54,19 +54,6 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             });
         });
 
-        builder.OwnsOne(e => e.SocialNetworks, d =>
-        {
-            d.ToJson();
-            d.OwnsMany(a => a.Data, i =>
-            {
-                i.Property(network => network.Name)
-                    .ConfigureString();
-
-                i.Property(network => network.Link)
-                    .ConfigureString(CConstants.STRING_LEN_MEDIUM);
-            });
-        });
-
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");

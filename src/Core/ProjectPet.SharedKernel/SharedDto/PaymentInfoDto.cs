@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.VolunteerModule.Contracts.Dto;
+﻿namespace ProjectPet.SharedKernel.SharedDto;
 
 public record PaymentInfoDto(
     string Title,

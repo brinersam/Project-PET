@@ -30,11 +30,5 @@ public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteer
             .NotEmpty()
             .WithError(Errors.General.ValueIsEmptyOrNull)
             .MaxLengthWithError(Constants.STRING_LEN_MEDIUM);
-
-        RuleForEach(c => c.PaymentInfoDtos)
-            .ValidateValueObj(x => PaymentInfo.Create(x.Title, x.Instructions));
-
-        RuleForEach(c => c.SocialNetworkDtos)
-            .ValidateValueObj(x => SocialNetwork.Create(x.Name, x.Link));
     }
 }

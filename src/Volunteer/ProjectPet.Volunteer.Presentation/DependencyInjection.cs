@@ -13,8 +13,6 @@ using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.PatchP
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.SetMainPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerInfo;
-using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerPayment;
-using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerSocials;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteerById;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteers;
@@ -51,8 +49,6 @@ public static class DependencyInjection
         // write
         builder.Services.AddScoped<CreateVolunteerHandler>();
         builder.Services.AddScoped<UpdateVolunteerInfoHandler>();
-        builder.Services.AddScoped<UpdateVolunteerPaymentHandler>();
-        builder.Services.AddScoped<UpdateVolunteerSocialsHandler>();
         builder.Services.AddScoped<DeleteVolunteerHandler>();
 
         // read

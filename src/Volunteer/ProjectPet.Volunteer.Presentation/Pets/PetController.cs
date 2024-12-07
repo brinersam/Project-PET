@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Framework;
+using ProjectPet.Framework.Authorization;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetById;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
 using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Presentation.Pets;
 
+[Permission(PermissionCodes.PetsRead)]
 public class PetController : CustomControllerBase
 {
     [HttpGet("{petid:guid}")]

@@ -1,4 +1,4 @@
-﻿using ProjectPet.AccountsModule.Application.Models;
+﻿using ProjectPet.AccountsModule.Domain;
 
 namespace ProjectPet.AccountsModule.Application.Services;
 public interface ITokenProvider

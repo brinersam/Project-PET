@@ -24,6 +24,8 @@ public class WriteDbContext(IConfiguration configuration) : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(WriteDbContext).Assembly,
             x => x.FullName!.Contains("Configurations.Write"));
+
+        modelBuilder.HasDefaultSchema("volunteer");
     }
 
     private static ILoggerFactory CreateLoggerFactory()

@@ -16,7 +16,6 @@ public class Volunteer : EntityBase, ISoftDeletable
     private List<Pet> _ownedPets = null!;
     public IReadOnlyList<Pet> OwnedPets => _ownedPets;
     public PaymentMethodsList? PaymentMethods { get; private set; }
-    public SocialNetworkList? SocialNetworks { get; private set; }
 #pragma warning disable IDE0052 // Remove unread private members
     private bool _isDeleted = false;
 #pragma warning restore IDE0052 // Remove unread private members
@@ -29,9 +28,7 @@ public class Volunteer : EntityBase, ISoftDeletable
         string email,
         string description,
         int yOExperience,
-        Phonenumber phoneNumber,
-        IEnumerable<PaymentInfo> paymentMethods,
-        IEnumerable<SocialNetwork> socialNetworks) : base(id)
+        Phonenumber phoneNumber) : base(id)
     {
         FullName = fullName;
         Email = email;
@@ -39,8 +36,6 @@ public class Volunteer : EntityBase, ISoftDeletable
         YOExperience = yOExperience;
         Phonenumber = phoneNumber;
         _ownedPets = [];
-        PaymentMethods = new() { Data = paymentMethods.ToList() };
-        SocialNetworks = new() { Data = socialNetworks.ToList() };
     }
 
     public static Result<Volunteer, Error> Create
@@ -50,9 +45,7 @@ public class Volunteer : EntityBase, ISoftDeletable
         string email,
         string description,
         int yOExperience,
-        Phonenumber phoneNumber,
-        IEnumerable<PaymentInfo> paymentMethods,
-        IEnumerable<SocialNetwork> socialNetworks)
+        Phonenumber phoneNumber)
     {
         var resultID = Validator
             .ValidatorNull<Guid>()
@@ -82,9 +75,7 @@ public class Volunteer : EntityBase, ISoftDeletable
                 email,
                 description,
                 yOExperience,
-                phoneNumber,
-                paymentMethods,
-                socialNetworks
+                phoneNumber
             );
     }
 
@@ -123,16 +114,6 @@ public class Volunteer : EntityBase, ISoftDeletable
         _isDeleted = false;
         foreach (var pet in _ownedPets)
             pet.Restore();
-    }
-
-    public void UpdatePaymentMethods(IEnumerable<PaymentInfo> infos)
-    {
-        PaymentMethods = new() { Data = infos.ToList() };
-    }
-
-    public void UpdateSocialNetworks(IEnumerable<SocialNetwork> infos)
-    {
-        SocialNetworks = new() { Data = infos.ToList() };
     }
 
     public void AddPet(Pet pet)
@@ -263,9 +244,4 @@ public class Volunteer : EntityBase, ISoftDeletable
 
         return Result.Success<Error>();
     }
-}
-
-public record SocialNetworkList
-{
-    public List<SocialNetwork> Data { get; set; } = null!;
 }

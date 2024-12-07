@@ -1,0 +1,17 @@
+{
+  "Admin": [
+    "admin.masterkey"
+  ],
+  "Volunteer": [
+    "owned.pets.create",
+    "owned.pets.update",
+    "owned.pets.delete",
+    "self.volunteer.read",
+    "self.volunteer.update",
+    "self.volunteer.delete",
+    "pets.read"
+  ],
+  "Member": [
+    "pets.read"
+  ]
+}
