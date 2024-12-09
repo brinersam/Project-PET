@@ -42,11 +42,7 @@ public class UserFactoryService
         (
             username,
             email,
-            memberData: roleData,
-            volunteerData:new VolunteerAccount ( 
-                [new PaymentInfo { Title = "pillowmail", Instructions = "put a penny under the pillow" }],
-                1,
-                []) // todo remove
+            memberData: roleData
         );
 
         return await CreateUserAndAddRoleAsync(password, user, MemberAccount.ROLENAME);
