@@ -15,7 +15,7 @@ public class User : IdentityUser<Guid>
     public AdminAccount AdminData { get; private set; }
     public MemberAccount MemberData { get; private set; }
 
-    public User(){} //efcore
+    public User() { } //efcore
 
     public User(
         string username,
@@ -35,6 +35,9 @@ public class User : IdentityUser<Guid>
 
     public void UpdatePaymentMethods(IEnumerable<PaymentInfo> infos)
     {
+        if (VolunteerData is null)
+            VolunteerData = new VolunteerAccount(infos.ToList(), 0, []);
+
         VolunteerData = new VolunteerAccount(infos.ToList(), VolunteerData.Experience, VolunteerData.Certifications);
     }
 

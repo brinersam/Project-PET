@@ -24,7 +24,7 @@ public class RegisterHandler
     {
         var userWithEmail = await _userManager.FindByEmailAsync(cmd.Email);
         if (userWithEmail != null)
-            return new Error[] {Error.Validation("user.alrady.exists", $"Can't register an account with email {cmd.Email}")};
+            return new Error[] { Error.Validation("user.alrady.exists", $"Can't register an account with email {cmd.Email}") };
 
         var createUserResult = await _userFactory.CreateMemberUserAsync(cmd.Username, cmd.Password, cmd.Email, new MemberAccount());
         if (createUserResult.IsFailure)

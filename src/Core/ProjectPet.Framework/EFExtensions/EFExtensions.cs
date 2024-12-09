@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Text.Json;
 
 namespace ProjectPet.Framework.EFExtensions;
 public static class EFExtensions

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
-using ProjectPet.AccountsModule.Domain.UserData;
 using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.AccountsModule.Application.Services;
@@ -15,7 +14,7 @@ public class UserFactoryService
         _userManager = userManager;
     }
 
-    public async Task<Result<User,Error[]>> CreateAdminUserAsync(
+    public async Task<Result<User, Error[]>> CreateAdminUserAsync(
         string username,
         string password,
         string email,

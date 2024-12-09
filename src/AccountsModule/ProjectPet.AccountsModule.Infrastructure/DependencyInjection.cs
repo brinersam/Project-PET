@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -106,7 +105,7 @@ public static class DependencyInjection
 
     private static void ConfigureAuthorizationOptions(AuthorizationOptions options)
     {
-        options.AddPolicy("IsAuthorized", policy => 
+        options.AddPolicy("IsAuthorized", policy =>
             policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser());
     }
 

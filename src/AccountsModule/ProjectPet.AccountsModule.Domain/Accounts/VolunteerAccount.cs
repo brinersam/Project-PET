@@ -18,8 +18,9 @@ public class VolunteerAccount : ValueObject
     public string[] Certifications { get; init; } //todo vo
 
     public VolunteerAccount(IEnumerable<PaymentInfo> _paymentInfos, int experience, string[] certifications) :
-        this(_paymentInfos.ToList(), experience, certifications) { }
-    
+        this(_paymentInfos.ToList(), experience, certifications)
+    { }
+
     [JsonConstructor]
     public VolunteerAccount(List<PaymentInfo> _paymentInfos, int experience, string[] certifications)
     {
