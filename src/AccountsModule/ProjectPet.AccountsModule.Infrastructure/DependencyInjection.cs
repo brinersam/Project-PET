@@ -12,6 +12,7 @@ using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database;
+using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Repositories;
 using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Options;
@@ -24,8 +25,11 @@ public static class DependencyInjection
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
         builder.AddAuth();
-        builder.Services.AddSingleton<DatabaseAccountsSeeder>();
+        builder.Services.AddScoped<DatabaseAccountsSeeder>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+        builder.Services.AddScoped<UserFactoryService>();
+
+        builder.Services.Configure<AdminCredsOptions>(builder.Configuration.GetSection(AdminCredsOptions.SECTION));
 
         return builder;
     }
@@ -101,7 +105,10 @@ public static class DependencyInjection
     }
 
     private static void ConfigureAuthorizationOptions(AuthorizationOptions options)
-    {}
+    {
+        options.AddPolicy("IsAuthorized", policy => 
+            policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser());
+    }
 
     private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
     {

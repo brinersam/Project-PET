@@ -1,4 +1,6 @@
 ﻿namespace ProjectPet.AccountsModule.Domain.Accounts;
 
-public record AdminAccount(Guid UserId);
-
+public record AdminAccount(string FullName)
+{
+    public const string ROLENAME = "Admin";
+};

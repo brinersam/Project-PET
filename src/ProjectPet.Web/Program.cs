@@ -10,6 +10,8 @@ using ProjectPet.Web.Extentions;
 using ProjectPet.Web.MIddlewares;
 using Serilog;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.ConfigureDbCstring();
