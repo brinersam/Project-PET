@@ -7,9 +7,9 @@
     "volunteer.update",
     "volunteer.delete",
 
-    "self.volunteer.update",
-    "self.volunteer.read",
-    "self.volunteer.delete",
+    "self.volunteer.edit",
+
+    "self.member.edit",
 
     "owned.pets.create",
     "owned.pets.read",

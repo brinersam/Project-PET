@@ -6,12 +6,11 @@
     "owned.pets.create",
     "owned.pets.update",
     "owned.pets.delete",
-    "self.volunteer.read",
-    "self.volunteer.update",
-    "self.volunteer.delete",
+    "self.volunteer.edit",
     "pets.read"
   ],
   "Member": [
+    "self.member.edit",
     "pets.read"
   ]
 }
