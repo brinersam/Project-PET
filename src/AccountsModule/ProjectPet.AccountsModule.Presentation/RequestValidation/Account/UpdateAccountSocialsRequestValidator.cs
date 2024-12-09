@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using ProjectPet.AccountsModule.Contracts.Requests;
-using ProjectPet.Core.Validator;
 
 namespace ProjectPet.AccountsModule.Presentation.RequestValidation.Account;
 

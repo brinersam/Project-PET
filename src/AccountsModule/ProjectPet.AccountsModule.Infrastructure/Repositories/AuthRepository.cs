@@ -28,11 +28,11 @@ public class AuthRepository : IAuthRepository
 
         var permissionExists = await _authDbContext.RolePermissions.AnyAsync
             (
-                rp => 
-                    roleIds.Contains(rp.RoleId) && 
-                    Equals(rp.Permission.Code,permissionCode) 
+                rp =>
+                    roleIds.Contains(rp.RoleId) &&
+                    Equals(rp.Permission.Code, permissionCode)
             );
-            
+
         return permissionExists;
     }
 }

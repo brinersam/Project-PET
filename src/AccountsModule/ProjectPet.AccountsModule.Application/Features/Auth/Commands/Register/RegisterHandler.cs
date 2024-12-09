@@ -1,17 +1,22 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
+using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
 
 public class RegisterHandler
 {
+    private readonly UserFactoryService _userFactory;
     private readonly UserManager<User> _userManager;
 
-    public RegisterHandler(UserManager<User> userManager)
+    public RegisterHandler(
+        UserFactoryService userFactory,
+        UserManager<User> userManager)
     {
+        _userFactory = userFactory;
         _userManager = userManager;
     }
 
@@ -19,21 +24,11 @@ public class RegisterHandler
     {
         var userWithEmail = await _userManager.FindByEmailAsync(cmd.Email);
         if (userWithEmail != null)
-            return new Error[] {Error.Validation("user.alrady.exists", $"Can't register an account with email {cmd.Email}")};
+            return new Error[] { Error.Validation("user.alrady.exists", $"Can't register an account with email {cmd.Email}") };
 
-        var user = new User() 
-        {
-            UserName = cmd.Username,
-            Email = cmd.Email,
-        };
-
-        var createRes = await _userManager.CreateAsync(user, cmd.Password);
-        if (createRes.Succeeded == false)
-            return createRes.Errors.Select(x => Error.Failure(x.Code, x.Description)).ToArray();
-
-        var addRoleRes = await _userManager.AddToRoleAsync(user, "Member");
-        if (addRoleRes.Succeeded == false)
-            return addRoleRes.Errors.Select(x => Error.Failure(x.Code, x.Description)).ToArray();
+        var createUserResult = await _userFactory.CreateMemberUserAsync(cmd.Username, cmd.Password, cmd.Email, new MemberAccount());
+        if (createUserResult.IsFailure)
+            return createUserResult.Error;
 
         return Result.Success<Error[]>();
     }
