@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Framework;
+using ProjectPet.Framework.Authorization;
 using ProjectPet.SpeciesModule.Application.Commands.CreateBreed;
 using ProjectPet.SpeciesModule.Application.Commands.CreateSpecies;
 using ProjectPet.SpeciesModule.Application.Commands.DeleteBreed;
@@ -12,7 +12,7 @@ using ProjectPet.SpeciesModule.Domain.Requests;
 
 namespace ProjectPet.SpeciesModule.Presentation;
 
-[Authorize]
+[Permission(PermissionCodes.SpeciesRead)]
 public class SpeciesController : CustomControllerBase
 {
     private readonly ISpeciesRepository _speciesRepository;
@@ -84,6 +84,7 @@ public class SpeciesController : CustomControllerBase
         return Ok();
     }
 
+    [Permission(PermissionCodes.SpeciesRead)]
     [HttpGet()]
     public async Task<IActionResult> GetAllSpecies(
         [FromServices] GetAllSpeciesHandler handler,

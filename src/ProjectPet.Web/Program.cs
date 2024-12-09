@@ -6,6 +6,7 @@ using ProjectPet.SpeciesModule.Presentation;
 using ProjectPet.VolunteerModule.Infrastructure;
 using ProjectPet.VolunteerModule.Presentation;
 using ProjectPet.Web;
+using ProjectPet.Web.Extentions;
 using ProjectPet.Web.MIddlewares;
 using Serilog;
 
@@ -38,6 +39,8 @@ builder.Services.AddValidation();
 
 var app = builder.Build();
 
+await app.SeedDatabaseAsync();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -56,3 +59,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

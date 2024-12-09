@@ -27,18 +27,13 @@ public class CreateVolunteerHandler
             cmd.VolunteerDto.Phonenumber.Phonenumber,
             cmd.VolunteerDto.Phonenumber.PhonenumberAreaCode).Value;
 
-        var paymentInfos = cmd.PaymentInfoDtos ?? [];
-        var socialNetworks = cmd.SocialNetworkDtos ?? [];
-
         var volunteerRes = Volunteer.Create(
             Guid.NewGuid(),
             cmd.VolunteerDto.FullName,
             cmd.VolunteerDto.Email,
             cmd.VolunteerDto.Description,
             cmd.VolunteerDto.YOExperience,
-            phoneNumberRes,
-            paymentInfos.Select(x => PaymentInfo.Create(x.Title, x.Instructions).Value).ToList(),
-            socialNetworks.Select(x => SocialNetwork.Create(x.Link, x.Name).Value).ToList());
+            phoneNumberRes);
 
         if (volunteerRes.IsFailure)
             return volunteerRes.Error;
