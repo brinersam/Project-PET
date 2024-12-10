@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework.EFExtensions;
@@ -10,11 +11,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.ToTable("users");
 
-        builder.Property(u => u.PaymentInfos)
-            .JsonVOCollectionConverter()
-            .HasColumnType("jsonb")
-            .HasColumnName("payment_infos")
-            .IsRequired(false);
+        builder.HasMany(u => u.Roles)
+            .WithMany()
+            .UsingEntity<IdentityUserRole<Guid>>();
 
         builder.Property(u => u.SocialNetworks)
             .JsonVOCollectionConverter()
@@ -22,7 +21,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnType("jsonb")
             .IsRequired(false);
 
-        builder.Property(u => u.VolunteerData)
+        builder.Property(x => x.VolunteerData)
             .JsonVOConverter()
             .HasColumnType("jsonb")
             .HasColumnName("account_volunteer")
@@ -41,3 +40,4 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired(false);
     }
 }
+

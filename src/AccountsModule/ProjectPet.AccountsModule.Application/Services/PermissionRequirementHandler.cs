@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.Framework.Authorization;
-using ProjectPet.SharedKernel.ErrorClasses;
-using System.ComponentModel;
 
 namespace ProjectPet.AccountsModule.Application.Services;
 
@@ -27,7 +24,7 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
     {
         string? userId = context.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
         if (String.IsNullOrWhiteSpace(userId))
-            throw new Exception($"{typeof(PermissionRequirementHandler)}: User has no id!");
+            throw new Exception($"{typeof(PermissionRequirementHandler)}: User is not authorized!");
 
         bool isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync(new Guid(userId), requirement.Code);
 

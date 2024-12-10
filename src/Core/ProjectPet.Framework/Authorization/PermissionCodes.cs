@@ -10,9 +10,8 @@ public static class PermissionCodes
     public const string VolunteerRead = "volunteer.read";
     public const string VolunteerUpdate = "volunteer.update";
     public const string VolunteerDelete = "volunteer.delete";
-    public const string SelfVolunteerUpdate = "self.volunteer.update";
-    public const string SelfVolunteerRead = "self.volunteer.read";
-    public const string SelfVolunteerDelete = "self.volunteer.delete";
+    public const string SelfVolunteerEdit = "self.volunteer.edit";
+    public const string SelfMemberEdit = "self.member.edit";
     public const string OwnedPetsCreate = "owned.pets.create";
     public const string OwnedPetsRead = "owned.pets.read";
     public const string OwnedPetsUpdate = "owned.pets.update";

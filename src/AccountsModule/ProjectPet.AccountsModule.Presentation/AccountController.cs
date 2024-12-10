@@ -5,13 +5,14 @@ using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAcco
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountSocials;
 using ProjectPet.AccountsModule.Contracts.Requests;
 using ProjectPet.Framework;
+using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace ProjectPet.AccountsModule.Presentation;
-[Authorize]
 public class AccountController : CustomControllerBase
 {
+    [Authorize]
+    [Permission(PermissionCodes.SelfVolunteerEdit)]
     [HttpPut("payment")]
     public async Task<IActionResult> PatchPayment(
         [FromServices] UpdateAccountPaymentHandler handler,
@@ -37,7 +38,7 @@ public class AccountController : CustomControllerBase
         return Ok();
     }
 
-
+    [Permission(PermissionCodes.SelfMemberEdit)]
     [HttpPut("social")]
     public async Task<ActionResult<Guid>> PatchSocial(
         [FromServices] UpdateAccountSocialsHandler handler,

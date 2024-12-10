@@ -1,24 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ProjectPet.AccountsModule.Domain;
+using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.AccountsModule.Infrastructure.Database;
+using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Seeding.SeedDtos;
 using System.Text.Json;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Seeding;
 public class DatabaseAccountsSeeder
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly AuthDbContext _dbContext;
+    private readonly UserManager<User> _userManager;
     private readonly ILogger<DatabaseAccountsSeeder> _logger;
-
+    private readonly AdminCredsOptions _adminCreds;
     private bool _verboseLogging;
 
     public DatabaseAccountsSeeder(
-        IServiceScopeFactory serviceFactory,
+        AuthDbContext dbContext,
+        UserManager<User> userManager,
+        IOptions<AdminCredsOptions> adminCreds,
         ILogger<DatabaseAccountsSeeder> logger)
     {
-        _serviceScopeFactory = serviceFactory;
+        _dbContext = dbContext;
+        _userManager = userManager;
+        _adminCreds = adminCreds.Value;
         _logger = logger;
     }
 
@@ -27,25 +35,24 @@ public class DatabaseAccountsSeeder
         CancellationToken cancellationToken = default)
     {
         _verboseLogging = verboseLogging;
-        using var scope = _serviceScopeFactory.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
-
         _logger.LogInformation("Seeding database...");
 
-        await SeedRolesAsync(dbContext, cancellationToken);
-        await SeedPermissionsAsync(dbContext, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await SeedRolesAsync(cancellationToken);
+        await SeedPermissionsAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await AddPermissionRoleRelationsAsync(dbContext, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await AddPermissionRoleRelationsAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        await AddAdminUserAsync(cancellationToken);
 
         _logger.LogInformation("Database seeded!...");
     }
 
-    private async Task SeedRolesAsync(AuthDbContext dbContext, CancellationToken cancellationToken = default)
+    private async Task SeedRolesAsync(CancellationToken cancellationToken = default)
     {
         var path = "Json/Seeding/permissions.json";
-        var existingPermissionCodes = dbContext.Permissions.Select(x => x.Code).ToHashSet();
+        var existingPermissionCodes = _dbContext.Permissions.Select(x => x.Code).ToHashSet();
         var seededPermsJson = await File.ReadAllTextAsync(path, cancellationToken);
         var seededPermCodesSet = JsonSerializer.Deserialize<StringHashset>(seededPermsJson, JsonSerializerOptions.Default);
 
@@ -64,14 +71,14 @@ public class DatabaseAccountsSeeder
         foreach (var permCode in permsToSeed)
         {
             if (_verboseLogging) _logger.LogInformation($"Adding permission {permCode}...");
-            await dbContext.Permissions.AddAsync(new Permission() { Code = permCode }, cancellationToken);
+            await _dbContext.Permissions.AddAsync(new Permission() { Code = permCode }, cancellationToken);
         }
     }
 
-    private async Task SeedPermissionsAsync(AuthDbContext dbContext, CancellationToken cancellationToken = default)
+    private async Task SeedPermissionsAsync(CancellationToken cancellationToken = default)
     {
         var path = "Json/Seeding/roles.json";
-        var existingRoles = dbContext.Roles.Select(x => x.NormalizedName).ToHashSet();
+        var existingRoles = _dbContext.Roles.Select(x => x.NormalizedName).ToHashSet();
         var seededRolesJson = await File.ReadAllTextAsync(path, cancellationToken);
         var seededRoleNamesSet = JsonSerializer.Deserialize<StringHashset>(seededRolesJson, JsonSerializerOptions.Default);
 
@@ -90,7 +97,7 @@ public class DatabaseAccountsSeeder
         foreach (var roleName in rolesToSeed)
         {
             if (_verboseLogging) _logger.LogInformation($"Adding role {roleName}...");
-            await dbContext.Roles.AddAsync(
+            await _dbContext.Roles.AddAsync(
                 new Role()
                 {
                     Name = roleName,
@@ -99,7 +106,7 @@ public class DatabaseAccountsSeeder
                 cancellationToken);
         }
     }
-    private async Task AddPermissionRoleRelationsAsync(AuthDbContext dbContext, CancellationToken cancellationToken = default)
+    private async Task AddPermissionRoleRelationsAsync(CancellationToken cancellationToken = default)
     {
         var path = "Json/Seeding/rolepermissions.json";
 
@@ -112,33 +119,49 @@ public class DatabaseAccountsSeeder
             return;
         }
 
-        await AddRoleRelationsAsync(dbContext, "Admin", seededRolePermissions.Admin, cancellationToken);
-        await AddRoleRelationsAsync(dbContext, "Member", seededRolePermissions.Member, cancellationToken);
-        await AddRoleRelationsAsync(dbContext, "Volunteer", seededRolePermissions.Volunteer, cancellationToken);
+        await AddRoleRelationsAsync("Admin", seededRolePermissions.Admin, cancellationToken);
+        await AddRoleRelationsAsync("Member", seededRolePermissions.Member, cancellationToken);
+        await AddRoleRelationsAsync("Volunteer", seededRolePermissions.Volunteer, cancellationToken);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+    private async Task AddAdminUserAsync(CancellationToken cancellationToken = default)
+    {
+        var adminExists = await _userManager.FindByEmailAsync(_adminCreds.EMAIL) is not null;
+        if (adminExists)
+            return;
+
+        var createAdminResult = await User.CreateAdminAsync(
+            _userManager,
+            _adminCreds.USERNAME,
+            _adminCreds.PASSWORD,
+            _adminCreds.EMAIL,
+            new AdminAccount("Admin"));
+
+        if (createAdminResult.IsFailure)
+            throw new Exception(createAdminResult.Error[0].Message);
+
+        _logger.LogInformation($"Successfully added admin role from .env settings!");
     }
 
-
     private async Task AddRoleRelationsAsync(
-        AuthDbContext dbContext,
         string roleName,
         HashSet<string> permissionsCodesToSeed,
         CancellationToken cancellationToken = default)
     {
-        var role = await dbContext.Roles.FirstOrDefaultAsync(x => String.Equals(x.Name, roleName), cancellationToken);
+        var role = await _dbContext.Roles.FirstOrDefaultAsync(x => String.Equals(x.Name, roleName), cancellationToken);
         if (role is null)
         {
             _logger.LogWarning($"Could not retrieve role {roleName} for seeding relations!");
             return;
         }
 
-        var existingRolePermissionCodes = dbContext.RolePermissions
+        var existingRolePermissionCodes = _dbContext.RolePermissions
             .Where(rp => rp.RoleId == role.Id && permissionsCodesToSeed.Contains(rp.Permission.Code))
             .Select(rp => rp.Permission.Code)
             .ToHashSet();
 
-        var permissionsToRelate = await dbContext.Permissions
+        var permissionsToRelate = await _dbContext.Permissions
             .Where(p => existingRolePermissionCodes.Contains(p.Code) == false && permissionsCodesToSeed.Contains(p.Code))
             .ToListAsync(cancellationToken);
 
@@ -149,7 +172,7 @@ public class DatabaseAccountsSeeder
         foreach (var perm in permissionsToRelate)
         {
             var rp = new RolePermission() { PermissionId = perm.Id, RoleId = role.Id };
-            await dbContext.RolePermissions.AddAsync(rp, cancellationToken);
+            await _dbContext.RolePermissions.AddAsync(rp, cancellationToken);
             permsToSeed--;
             if (_verboseLogging) _logger.LogInformation($"Added permission for role: {role.Name} --> {perm.Code}");
         }
