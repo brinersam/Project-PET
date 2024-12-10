@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
-using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.SharedKernel.ErrorClasses;
@@ -9,14 +8,11 @@ namespace ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
 
 public class RegisterHandler
 {
-    private readonly UserFactoryService _userFactory;
     private readonly UserManager<User> _userManager;
 
     public RegisterHandler(
-        UserFactoryService userFactory,
         UserManager<User> userManager)
     {
-        _userFactory = userFactory;
         _userManager = userManager;
     }
 
@@ -26,7 +22,7 @@ public class RegisterHandler
         if (userWithEmail != null)
             return new Error[] { Error.Validation("user.alrady.exists", $"Can't register an account with email {cmd.Email}") };
 
-        var createUserResult = await _userFactory.CreateMemberUserAsync(cmd.Username, cmd.Password, cmd.Email, new MemberAccount());
+        var createUserResult = await User.CreateMemberAsync(_userManager, cmd.Username, cmd.Password, cmd.Email, new MemberAccount());
         if (createUserResult.IsFailure)
             return createUserResult.Error;
 

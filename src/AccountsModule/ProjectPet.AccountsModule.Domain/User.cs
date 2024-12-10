@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Identity;
 using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.AccountsModule.Domain.UserData;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.AccountsModule.Domain;
 
@@ -45,4 +47,58 @@ public class User : IdentityUser<Guid>
     {
         _socialNetworks = networks.ToList();
     }
+
+    #region Roled Users Factory Methods
+    public static async Task<Result<User, Error[]>> CreateAdminAsync(
+        UserManager<User> userManager,
+        string username,
+        string password,
+        string email,
+        AdminAccount roleData)
+    {
+        User user = new User
+        (
+            username,
+            email,
+            adminData: roleData
+        );
+
+        return await CreateUserAndAddRoleAsync(userManager, password, user, AdminAccount.ROLENAME);
+    }
+
+
+    public static async Task<Result<User, Error[]>> CreateMemberAsync(
+        UserManager<User> userManager,
+        string username,
+        string password,
+        string email,
+        MemberAccount roleData)
+    {
+        User user = new User
+        (
+            username,
+            email,
+            memberData: roleData
+        );
+
+        return await CreateUserAndAddRoleAsync(userManager, password, user, MemberAccount.ROLENAME);
+    }
+
+    private static async Task<Result<User, Error[]>> CreateUserAndAddRoleAsync(
+        UserManager<User> userManager,
+        string password,
+        User user,
+        string roleName)
+    {
+        var createRes = await userManager.CreateAsync(user, password);
+        if (createRes.Succeeded == false)
+            return createRes.Errors.Select(x => Error.Failure(x.Code, x.Description)).ToArray();
+
+        var addRoleRes = await userManager.AddToRoleAsync(user, roleName);
+        if (addRoleRes.Succeeded == false)
+            return addRoleRes.Errors.Select(x => Error.Failure(x.Code, x.Description)).ToArray();
+
+        return user;
+    }
+    #endregion
 }

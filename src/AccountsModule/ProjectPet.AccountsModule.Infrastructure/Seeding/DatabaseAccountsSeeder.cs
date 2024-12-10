@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.AccountsModule.Infrastructure.Database;
@@ -16,20 +15,17 @@ public class DatabaseAccountsSeeder
     private readonly AuthDbContext _dbContext;
     private readonly UserManager<User> _userManager;
     private readonly ILogger<DatabaseAccountsSeeder> _logger;
-    private readonly UserFactoryService _userFactoryService;
     private readonly AdminCredsOptions _adminCreds;
     private bool _verboseLogging;
 
     public DatabaseAccountsSeeder(
         AuthDbContext dbContext,
         UserManager<User> userManager,
-        UserFactoryService userFactoryService,
         IOptions<AdminCredsOptions> adminCreds,
         ILogger<DatabaseAccountsSeeder> logger)
     {
         _dbContext = dbContext;
         _userManager = userManager;
-        _userFactoryService = userFactoryService;
         _adminCreds = adminCreds.Value;
         _logger = logger;
     }
@@ -135,7 +131,8 @@ public class DatabaseAccountsSeeder
         if (adminExists)
             return;
 
-        var createAdminResult = await _userFactoryService.CreateAdminUserAsync(
+        var createAdminResult = await User.CreateAdminAsync(
+            _userManager,
             _adminCreds.USERNAME,
             _adminCreds.PASSWORD,
             _adminCreds.EMAIL,
