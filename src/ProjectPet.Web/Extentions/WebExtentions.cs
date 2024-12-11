@@ -8,6 +8,10 @@ public static class WebExtentions
         this WebApplication app,
         CancellationToken cancellationToken = default)
     {
-        await app.Services.GetRequiredService<DatabaseAccountsSeeder>().SeedAsync(true, cancellationToken);
+        await app.Services
+            .CreateScope()
+            .ServiceProvider
+            .GetRequiredService<DatabaseAccountsSeeder>()
+            .SeedAsync(true, cancellationToken);
     }
 }

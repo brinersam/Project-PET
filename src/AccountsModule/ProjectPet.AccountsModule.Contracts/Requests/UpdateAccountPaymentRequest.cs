@@ -1,5 +1,4 @@
-﻿using ProjectPet.AccountsModule.Contracts.Dto;
-using ProjectPet.SharedKernel.SharedDto;
+﻿using ProjectPet.SharedKernel.SharedDto;
 
 namespace ProjectPet.AccountsModule.Contracts.Requests;
 
