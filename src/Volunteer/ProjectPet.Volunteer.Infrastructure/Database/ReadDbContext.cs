@@ -9,7 +9,7 @@ namespace ProjectPet.VolunteerModule.Infrastructure.Database;
 
 public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
-    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
+    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CStringKey];
     public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
     public DbSet<PetDto> Pets => Set<PetDto>();
 

@@ -8,7 +8,7 @@ namespace ProjectPet.SpeciesModule.Infrastructure.Database;
 
 public class WriteDbContext(IConfiguration configuration) : DbContext
 {
-    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
+    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CStringKey];
     public DbSet<Species> Species => Set<Species>();
     public DbSet<Breed> Breeds => Set<Breed>();
 
