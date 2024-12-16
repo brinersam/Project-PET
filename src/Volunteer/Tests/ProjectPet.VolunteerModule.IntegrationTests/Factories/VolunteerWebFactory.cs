@@ -15,6 +15,7 @@ public class VolunteerWebFactory : IntegrationTestWebFactoryBase
     {
         base.ConfigureServices(services);
         services.Replace(ServiceDescriptor.Scoped(typeof(IFileProvider), _ => _fileProviderMock));
+        services.RemoveAll<IDatabaseSeeder>();
     }
 
     protected override string[] IncludedDBSchemas()

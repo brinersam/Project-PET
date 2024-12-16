@@ -71,7 +71,6 @@ abstract public class IntegrationTestWebFactoryBase : WebApplicationFactory<Prog
 
     protected virtual void ConfigureServices(IServiceCollection services)
     {
-        services.RemoveAll<IDatabaseSeeder>();
     }
 
     new public async Task DisposeAsync()
