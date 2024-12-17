@@ -14,6 +14,7 @@ using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Repositories;
 using ProjectPet.AccountsModule.Infrastructure.Seeding;
+using ProjectPet.Core.Abstractions;
 using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
 using System.Text;
@@ -24,7 +25,7 @@ public static class DependencyInjection
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
         builder.AddAuth();
-        builder.Services.AddScoped<DatabaseAccountsSeeder>();
+        builder.Services.AddScoped<IDatabaseSeeder, DatabaseAccountsSeeder>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
         builder.Services.Configure<AdminCredsOptions>(builder.Configuration.GetSection(AdminCredsOptions.SECTION));

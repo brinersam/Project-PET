@@ -7,10 +7,11 @@ using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Seeding.SeedDtos;
+using ProjectPet.Core.Abstractions;
 using System.Text.Json;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Seeding;
-public class DatabaseAccountsSeeder
+public class DatabaseAccountsSeeder : IDatabaseSeeder
 {
     private readonly AuthDbContext _dbContext;
     private readonly UserManager<User> _userManager;
@@ -35,7 +36,7 @@ public class DatabaseAccountsSeeder
         CancellationToken cancellationToken = default)
     {
         _verboseLogging = verboseLogging;
-        _logger.LogInformation("Seeding database...");
+        _logger.LogInformation("Seeding accounts database...");
 
         await SeedRolesAsync(cancellationToken);
         await SeedPermissionsAsync(cancellationToken);
@@ -46,7 +47,7 @@ public class DatabaseAccountsSeeder
 
         await AddAdminUserAsync(cancellationToken);
 
-        _logger.LogInformation("Database seeded!...");
+        _logger.LogInformation("Database accounts seeded!...");
     }
 
     private async Task SeedRolesAsync(CancellationToken cancellationToken = default)

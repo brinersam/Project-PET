@@ -1,4 +1,5 @@
 ﻿using ProjectPet.AccountsModule.Infrastructure.Seeding;
+using ProjectPet.Core.Abstractions;
 
 namespace ProjectPet.Web.Extentions;
 
@@ -8,10 +9,12 @@ public static class WebExtentions
         this WebApplication app,
         CancellationToken cancellationToken = default)
     {
-        await app.Services
+        var seeders = app.Services
             .CreateScope()
             .ServiceProvider
-            .GetRequiredService<DatabaseAccountsSeeder>()
-            .SeedAsync(true, cancellationToken);
+            .GetServices<IDatabaseSeeder>();
+
+        foreach (var seeder in seeders)
+            await seeder.SeedAsync(true, cancellationToken);
     }
 }

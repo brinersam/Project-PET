@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database.Configurations.Write;
 using ProjectPet.Core.Options;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Database;
 
-public class AuthDbContext(IConfiguration configuration) : IdentityDbContext<User, Role, Guid>
+public class AuthDbContext(IConfiguration configuration, IOptions<OptionsDb> options) : IdentityDbContext<User, Role, Guid>
 {
-    private readonly string DATABASE = configuration[configuration.GetSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
+    private readonly string DATABASE = configuration[options.Value.CStringKey]!;
 
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
@@ -50,7 +51,7 @@ public class AuthDbContext(IConfiguration configuration) : IdentityDbContext<Use
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user-roles");
 
-        modelBuilder.HasDefaultSchema("auth");
+        modelBuilder.HasDefaultSchema("auth"); 
     }
 
     private static ILoggerFactory CreateLoggerFactory()

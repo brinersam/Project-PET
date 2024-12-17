@@ -9,7 +9,7 @@ namespace ProjectPet.SpeciesModule.Infrastructure.Database;
 
 public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
-    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CString];
+    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CStringKey];
     public DbSet<SpeciesDto> Species => Set<SpeciesDto>();
     public DbSet<BreedDto> Breeds => Set<BreedDto>();
 
