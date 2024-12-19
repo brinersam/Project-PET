@@ -67,13 +67,16 @@ public static class DependencyInjection
 
     private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddTransient<TokenValidationParametersFactory>();
         builder.Services.AddScoped<AuthDbContext>();
         builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
-        builder.Services.AddTransient<ITokenProvider, JwtTokenProvider>();
+        builder.Services.AddTransient<ITokenProvider, TokenManager>();
+        builder.Services.AddTransient<ITokenClaims, TokenManager>();
+        builder.Services.AddTransient<ITokenRefresher, TokenManager>();
 
-        builder.Services.Configure<OptionsJwt>(
-                builder.Configuration.GetRequiredSection(OptionsJwt.SECTION));
+        builder.Services.Configure<OptionsTokens>(
+                builder.Configuration.GetRequiredSection(OptionsTokens.SECTION));
 
         builder.Services
             .AddIdentity<User, Role>(ConfigureIdentityOptions)
@@ -111,25 +114,9 @@ public static class DependencyInjection
 
     private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
     {
-        var optionsJwt = builder.Configuration.GetRequiredSection(OptionsJwt.SECTION).Get<OptionsJwt>();
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidIssuer = optionsJwt.Issuer,
-            ValidateIssuer = true,
-
-            ValidAudience = optionsJwt.Audience,
-            ValidateAudience = false,
-
-            IssuerSigningKey = SigningKeyFactory(optionsJwt.Key),
-            ValidateIssuerSigningKey = true,
-
-            ValidateLifetime = true,
-
-            ClockSkew = TimeSpan.Zero,
-        };
+        var optionsJwt = builder.Configuration.GetRequiredSection(OptionsTokens.SECTION).Get<OptionsTokens>();
+        if (optionsJwt == null) 
+            throw new ArgumentNullException(nameof(optionsJwt));
+        options.TokenValidationParameters = TokenValidationParametersFactory.Create(optionsJwt);
     }
-
-    private static SecurityKey SigningKeyFactory(string key)
-    => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 }

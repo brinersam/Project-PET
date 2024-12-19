@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using ProjectPet.AccountsModule.Application.Services;
+using ProjectPet.AccountsModule.Application.Interfaces;
+using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.SharedKernel.ErrorClasses;
 
@@ -23,7 +24,7 @@ public class LoginHandler
         _tokenProvider = tokenProvider;
     }
 
-    public async Task<Result<string, Error>> HandleAsync(LoginCommand cmd, CancellationToken cancellationToken = default)
+    public async Task<Result<AuthTokensDto, Error>> HandleAsync(LoginCommand cmd, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByEmailAsync(cmd.Email);
         if (user == null)
@@ -34,9 +35,10 @@ public class LoginHandler
             return Error.Validation("invalid.credentials", $"Invalid credentials");
 
         var token = _tokenProvider.GenerateJwtAccessToken(user);
+        var refreshTokenTask = await _tokenProvider.GenerateRefreshTokenAsync(user, token.jti, cancellationToken);
 
         _logger.LogInformation($"User {user.Id} successfully logged in!");
 
-        return token;
+        return await _tokenProvider.GenerateTokenPairAsync(user, cancellationToken);
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectPet.AccountsModule.Domain;
-using ProjectPet.AccountsModule.Infrastructure.Database.Configurations;
 using ProjectPet.Core.Options;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Database;
@@ -16,6 +15,7 @@ public class AuthDbContext(IConfiguration configuration, IOptions<OptionsDb> opt
 
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

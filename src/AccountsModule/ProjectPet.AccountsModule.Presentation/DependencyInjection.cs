@@ -27,7 +27,6 @@ public static class DependencyInjection
     private static IHostApplicationBuilder AddValidators(this IHostApplicationBuilder builder)
     {
         builder.Services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
-
         return builder;
     }
 }
