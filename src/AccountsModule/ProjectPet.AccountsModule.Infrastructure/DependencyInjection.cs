@@ -72,7 +72,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
         builder.Services.AddTransient<ITokenProvider, TokenManager>();
-        builder.Services.AddTransient<ITokenClaims, TokenManager>();
+        builder.Services.AddTransient<ITokenClaimsAccessor, TokenManager>();
         builder.Services.AddTransient<ITokenRefresher, TokenManager>();
 
         builder.Services.Configure<OptionsTokens>(

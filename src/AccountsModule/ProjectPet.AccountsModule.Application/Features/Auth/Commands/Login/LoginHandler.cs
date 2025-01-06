@@ -34,11 +34,8 @@ public class LoginHandler
         if (isPasswordValid == false)
             return Error.Validation("invalid.credentials", $"Invalid credentials");
 
-        var token = _tokenProvider.GenerateJwtAccessToken(user);
-        var refreshTokenTask = await _tokenProvider.GenerateRefreshTokenAsync(user, token.jti, cancellationToken);
-
         _logger.LogInformation($"User {user.Id} successfully logged in!");
 
-        return await _tokenProvider.GenerateTokenPairAsync(user, cancellationToken);
+        return await _tokenProvider.GenerateSessionAsync(user, cancellationToken);
     }
 }

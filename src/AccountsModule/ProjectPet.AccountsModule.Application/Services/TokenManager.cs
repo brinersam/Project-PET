@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Text;
 
 namespace ProjectPet.AccountsModule.Application.Services;
-public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaims
+public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccessor
 {
     private readonly OptionsTokens _options;
     private readonly IAuthRepository _authRepository;
@@ -54,12 +54,12 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaims
         return new(stringToken, jti);
     }
 
-    public async Task<Guid> GenerateRefreshTokenAsync(User user, Guid Jti, CancellationToken cancellationToken = default)
+    public async Task<Guid> GenerateRefreshTokenAsync(User user, Guid jti, CancellationToken cancellationToken = default)
     {
         var session = new RefreshSession
         {
             RefreshToken = Guid.NewGuid(),
-            Jti = Jti,
+            Jti = jti,
             CreatedAt = DateTime.UtcNow,
             ExpiresIn = DateTime.UtcNow.AddMinutes(_options.RefreshExpiresMin),
             User = user,
@@ -113,13 +113,13 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaims
 
         await _authRepository.DeleteSessionAsync(session, cancellationToken);
 
-        return await GenerateTokenPairAsync(session.User, cancellationToken);
+        return await GenerateSessionAsync(session.User, cancellationToken);
     }
 
-    public async Task<Result<AuthTokensDto, Error>> GenerateTokenPairAsync(User user, CancellationToken cancellationToken)
+    public async Task<Result<AuthTokensDto, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken)
     {
-        var newAToken = GenerateJwtAccessToken(user);
-        var newRToken = await GenerateRefreshTokenAsync(user, newAToken.jti, cancellationToken);
-        return new AuthTokensDto(newRToken, newAToken.accessToken);
+        var newAccessToken = GenerateJwtAccessToken(user);
+        var newRefreshToken = await GenerateRefreshTokenAsync(user, newAccessToken.jti, cancellationToken);
+        return new AuthTokensDto(newRefreshToken, newAccessToken.accessToken);
     }
 }

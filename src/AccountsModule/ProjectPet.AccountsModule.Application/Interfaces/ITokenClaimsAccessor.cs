@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace ProjectPet.AccountsModule.Application.Interfaces;
 
-public interface ITokenClaims
+public interface ITokenClaimsAccessor
 {
     Task<Result<IReadOnlyList<Claim>, Error>> GetTokenClaims(string accessToken, CancellationToken cancellationToken = default);
 }
