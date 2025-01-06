@@ -10,8 +10,7 @@ public class RegisterHandler
 {
     private readonly UserManager<User> _userManager;
 
-    public RegisterHandler(
-        UserManager<User> userManager)
+    public RegisterHandler(UserManager<User> userManager)
     {
         _userManager = userManager;
     }

@@ -13,6 +13,8 @@ public class User : IdentityUser<Guid>
     private List<SocialNetwork> _socialNetworks;
     public IReadOnlyList<Role> Roles => _roles;
     private List<Role> _roles;
+    public IReadOnlyList<RefreshSession> ActiveSessions => _activeSessions;
+    private List<RefreshSession> _activeSessions;
     public VolunteerAccount VolunteerData { get; private set; }
     public AdminAccount AdminData { get; private set; }
     public MemberAccount MemberData { get; private set; }

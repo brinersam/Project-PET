@@ -18,9 +18,27 @@ public class AuthRepository : IAuthRepository
         _userManager = userManager;
     }
 
-    public async Task<bool> DoesUserHavePermissionCodeAsync(Guid userID, string permissionCode)
+    public async Task<RefreshSession?> GetRefreshSessionAsync(Guid refreshToken, CancellationToken cancellationToken = default)
+        => await _authDbContext.RefreshSessions
+        .Include(x => x.User)
+        .FirstOrDefaultAsync(x => x.RefreshToken.Equals(refreshToken), cancellationToken);
+
+    public async Task DeleteSessionAsync(RefreshSession session, CancellationToken cancellationToken = default)
     {
-        var user = await _authDbContext.Users.FirstOrDefaultAsync(u => u.Id == userID);
+        _authDbContext.RefreshSessions.Remove(session);
+        await _authDbContext.SaveChangesAsync(cancellationToken);
+    }
+        
+
+    public async Task AddRefreshSessionAsync(RefreshSession session, CancellationToken cancellationToken = default)
+    {
+        _authDbContext.RefreshSessions.Add(session);
+        await _authDbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> DoesUserHavePermissionCodeAsync(Guid userID, string permissionCode, CancellationToken cancellationToken = default)
+    {
+        var user = await _authDbContext.Users.FirstOrDefaultAsync(u => u.Id == userID, cancellationToken);
 
         var roles = await _userManager.GetRolesAsync(user);
 
@@ -30,9 +48,11 @@ public class AuthRepository : IAuthRepository
             (
                 rp =>
                     roleIds.Contains(rp.RoleId) &&
-                    Equals(rp.Permission.Code, permissionCode)
+                    Equals(rp.Permission.Code, permissionCode),
+                cancellationToken
             );
 
         return permissionExists;
     }
+
 }

@@ -4,9 +4,10 @@ using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.VolunteerModule.Contracts.Dto;
 using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Infrastructure.Database;
+using ProjectPet.VolunteerModule.IntegrationTests.Factories;
 using System.Text;
 
-namespace ProjectPet.VolunteerModule.IntegrationTests.Factories;
+namespace ProjectPet.VolunteerModule.IntegrationTests.VolunteerTests.Base;
 public class VolunteerTestBase : IClassFixture<VolunteerWebFactory>, IAsyncLifetime
 {
     protected readonly Fixture _fixture;
@@ -50,7 +51,7 @@ public class VolunteerTestBase : IClassFixture<VolunteerWebFactory>, IAsyncLifet
         return volunteer;
     }
 
-    protected async Task<(Volunteer volunteer,Pet pet)> SeedVolunteerWithPetAsync()
+    protected async Task<(Volunteer volunteer, Pet pet)> SeedVolunteerWithPetAsync()
     {
         var volunteer = await SeedVolunteerAsync();
 
@@ -61,7 +62,7 @@ public class VolunteerTestBase : IClassFixture<VolunteerWebFactory>, IAsyncLifet
         _writeDbContext.Volunteers.Attach(volunteer);
         await _writeDbContext.SaveChangesAsync();
 
-        return (volunteer,pet);
+        return (volunteer, pet);
     }
 
     private Volunteer CreateVolunteer(int idx = 1)

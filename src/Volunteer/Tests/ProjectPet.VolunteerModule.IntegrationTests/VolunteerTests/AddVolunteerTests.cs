@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.VolunteerModule.IntegrationTests.Factories;
+using ProjectPet.VolunteerModule.IntegrationTests.VolunteerTests.Base;
 
 namespace ProjectPet.VolunteerModule.IntegrationTests.VolunteerTests;
 
@@ -16,7 +17,7 @@ public class AddVolunteerTests : VolunteerTestBase
     }
 
     [Fact]
-    public async Task Add_Volunteer_ToDB()
+    public async Task Add_Volunteer_ToDB_Success()
     {
         // Arrange
         var cmd = _fixture.Create<CreateVolunteerCommand>();

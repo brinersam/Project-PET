@@ -3,6 +3,7 @@ using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.Upload
 using ProjectPet.VolunteerModule.IntegrationTests.Factories;
 using AutoFixture;
 using FluentAssertions;
+using ProjectPet.VolunteerModule.IntegrationTests.VolunteerTests.Base;
 
 namespace ProjectPet.VolunteerModule.IntegrationTests.VolunteerTests;
 public class UploadPetPhotoTests : VolunteerTestBase

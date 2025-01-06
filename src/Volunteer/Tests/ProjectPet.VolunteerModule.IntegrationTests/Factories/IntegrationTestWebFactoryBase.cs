@@ -10,7 +10,7 @@ using ProjectPet.VolunteerModule.Infrastructure.Database;
 using Respawn;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
-namespace ProjectPet.VolunteerModule.IntegrationTests;
+namespace ProjectPet.VolunteerModule.IntegrationTests.Factories;
 abstract public class IntegrationTestWebFactoryBase : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private const string DB_CONNECTION_STRING_KEY = "CStrings:Postgresql";
@@ -69,9 +69,7 @@ abstract public class IntegrationTestWebFactoryBase : WebApplicationFactory<Prog
         });
     }
 
-    protected virtual void ConfigureServices(IServiceCollection services)
-    {
-    }
+    protected virtual void ConfigureServices(IServiceCollection services) {}
 
     new public async Task DisposeAsync()
     {
