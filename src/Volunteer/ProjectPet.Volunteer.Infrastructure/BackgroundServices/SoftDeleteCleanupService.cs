@@ -43,9 +43,8 @@ public class SoftDeleteCleanupService : BackgroundService
             _logger.LogInformation("{serviceName} is working...", nameof(SoftDeleteCleanupService));
 
             var transaction = await unitOfWork.BeginTransactionAsync(stoppingToken);
-            int cleanedUpEntities = 0;
-            RemoveExpiredSoftDeletedEntitiesFromSet<Volunteer>(ref cleanedUpEntities, dbContext);
-            RemoveExpiredSoftDeletedEntitiesFromSet<Pet>(ref cleanedUpEntities, dbContext);
+            int cleanedUpEntities = await RemoveExpiredSoftDeletedEntitiesFromSetAsync<Volunteer>(dbContext);
+            cleanedUpEntities += await RemoveExpiredSoftDeletedEntitiesFromSetAsync<Pet>(dbContext);
             await unitOfWork.SaveChangesAsync(stoppingToken);
             transaction.Commit();
 
@@ -58,15 +57,16 @@ public class SoftDeleteCleanupService : BackgroundService
         await Task.CompletedTask;
     }
 
-    private void RemoveExpiredSoftDeletedEntitiesFromSet<T>(ref int cleanedUpEntities, DbContext context) where T: SoftDeletableEntity
+    private async Task<int> RemoveExpiredSoftDeletedEntitiesFromSetAsync<T>(DbContext context) where T: SoftDeletableEntity
     {
-        var set = context.Set<T>();
+        int cleanedUpEntities = 0;
+        var set = await context
+            .Set<T>()
+            .Where(x => x.IsDeleted == true)
+            .ToListAsync();
 
         foreach (T entity in set)
         {
-            if (entity.IsDeleted == false)
-                continue;
-
             var lifetimeDays = (DateTime.UtcNow - entity.DeletionDate).Days;
             if (lifetimeDays < _options.SoftDeletedMaxLifeTimeDays)
                 continue;
@@ -74,5 +74,7 @@ public class SoftDeleteCleanupService : BackgroundService
             cleanedUpEntities++;
             set.Remove(entity);
         }
+
+        return cleanedUpEntities;
     }
 }
