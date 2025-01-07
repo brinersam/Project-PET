@@ -64,6 +64,9 @@ public class SoftDeleteCleanupService : BackgroundService
 
         foreach (T entity in set)
         {
+            if (entity.IsDeleted == false)
+                continue;
+
             var lifetimeDays = (DateTime.UtcNow - entity.DeletionDate).Days;
             if (lifetimeDays < _options.SoftDeletedMaxLifeTimeDays)
                 continue;
