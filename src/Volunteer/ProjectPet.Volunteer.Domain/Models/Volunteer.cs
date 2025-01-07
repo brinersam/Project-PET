@@ -6,7 +6,7 @@ using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Domain.Models;
 
-public class Volunteer : EntityBase, ISoftDeletable
+public class Volunteer : SoftDeletableEntity
 {
     public string FullName { get; private set; } = null!;
     public string Email { get; private set; } = null!;
@@ -16,9 +16,6 @@ public class Volunteer : EntityBase, ISoftDeletable
     private List<Pet> _ownedPets = null!;
     public IReadOnlyList<Pet> OwnedPets => _ownedPets;
     public PaymentMethodsList? PaymentMethods { get; private set; }
-#pragma warning disable IDE0052 // Remove unread private members
-    private bool _isDeleted = false;
-#pragma warning restore IDE0052 // Remove unread private members
 
     public Volunteer(Guid id) : base(id) { }
 
@@ -102,18 +99,20 @@ public class Volunteer : EntityBase, ISoftDeletable
         Phonenumber = PhoneNumber ?? Phonenumber;
     }
 
-    public void Delete()
+    public override void SoftDelete()
     {
-        _isDeleted = true;
         foreach (var pet in _ownedPets)
-            pet.Delete();
+            pet.SoftDelete();
+
+        base.SoftDelete();
     }
 
-    public void Restore()
+    public override void SoftRestore()
     {
-        _isDeleted = false;
         foreach (var pet in _ownedPets)
-            pet.Restore();
+            pet.SoftRestore();
+
+        base.SoftRestore();
     }
 
     public void AddPet(Pet pet)
@@ -138,7 +137,7 @@ public class Volunteer : EntityBase, ISoftDeletable
         if (petRes.IsFailure)
             return petRes.Error;
 
-        petRes.Value.Delete();
+        petRes.Value.SoftDelete();
 
         return Result.Success<Error>();
     }

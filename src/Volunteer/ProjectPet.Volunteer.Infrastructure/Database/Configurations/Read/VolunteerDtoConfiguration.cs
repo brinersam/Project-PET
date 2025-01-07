@@ -10,5 +10,11 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
         builder.ToTable("volunteers");
 
         builder.HasKey(x => x.Id);
+
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted"); ;
+
+        builder.HasQueryFilter(m => EF.Property<bool>(m, "_isDeleted") == false);
     }
 }

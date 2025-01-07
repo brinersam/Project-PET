@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.SpeciesModule.Contracts.Dto;
 using ProjectPet.VolunteerModule.Contracts.Dto;
+using System.Reflection.Emit;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Database.Configurations.Read;
 public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
@@ -24,5 +25,11 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
         builder.HasOne<BreedDto>()
             .WithMany()
             .HasForeignKey(x => x.BreedID);
+
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted"); ;
+
+        builder.HasQueryFilter(m => EF.Property<bool>(m, "_isDeleted") == false);
     }
 }

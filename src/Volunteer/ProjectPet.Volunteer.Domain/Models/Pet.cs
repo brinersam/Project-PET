@@ -6,11 +6,8 @@ using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Domain.Models;
 
-public class Pet : EntityBase, ISoftDeletable
+public class Pet : SoftDeletableEntity
 {
-#pragma warning disable IDE0052 // Remove unread private members
-    private bool _isDeleted = false;
-#pragma warning restore IDE0052 // Remove unread private members
     public Guid VolunteerId { get; private set; }
     public Position OrderingPosition { get; private set; } = null!;
     public string Name { get; private set; } = null!;
@@ -127,16 +124,6 @@ public class Pet : EntityBase, ISoftDeletable
         resultPhotos.Insert(0, mainPhoto);
 
         Photos.Data.AddRange(resultPhotos);
-    }
-
-    public void Delete()
-    {
-        _isDeleted = true;
-    }
-
-    public void Restore()
-    {
-        _isDeleted = false;
     }
 
     public void SetPetStatus(PetStatus status)
