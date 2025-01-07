@@ -89,12 +89,13 @@ public class VolunteerController : CustomControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Guid>> Delete(
         [FromServices] DeleteVolunteerHandler handler,
+        [FromBody] DeleteVolunteerRequest request,
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var request = new DeleteVolunteerCommand(id);
+        var cmd = DeleteVolunteerCommand.FromRequest(request);
 
-        var result = await handler.HandleAsync(request, cancellationToken);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
