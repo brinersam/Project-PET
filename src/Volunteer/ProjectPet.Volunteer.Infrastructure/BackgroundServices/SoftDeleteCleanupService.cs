@@ -28,16 +28,16 @@ public class SoftDeleteCleanupService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await using var scope = _serviceScopeFactory.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
-        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-
         int cleanupFrequencyHours = 1000 * 60 * _options.SoftDeletedCleanupFrequencyHours;
 
         _logger.LogInformation("{serviceName} was started!", nameof(SoftDeleteCleanupService));
 
         while (stoppingToken.IsCancellationRequested == false)
         {
+            await using var scope = _serviceScopeFactory.CreateAsyncScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
             await Task.Delay(cleanupFrequencyHours, stoppingToken);
 
             _logger.LogInformation("{serviceName} is working...", nameof(SoftDeleteCleanupService));
