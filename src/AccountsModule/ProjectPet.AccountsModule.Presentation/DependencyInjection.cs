@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountPayment;
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountSocials;
+using ProjectPet.AccountsModule.Application.Features.Account.Queries;
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Login;
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
 
@@ -22,6 +23,8 @@ public static class DependencyInjection
         builder.Services.AddScoped<LoginHandler>();
         builder.Services.AddScoped<UpdateAccountPaymentHandler>();
         builder.Services.AddScoped<UpdateAccountSocialsHandler>();
+        builder.Services.AddScoped<GetUserInfoHandler>();
+        
         return builder;
     }
     private static IHostApplicationBuilder AddValidators(this IHostApplicationBuilder builder)
