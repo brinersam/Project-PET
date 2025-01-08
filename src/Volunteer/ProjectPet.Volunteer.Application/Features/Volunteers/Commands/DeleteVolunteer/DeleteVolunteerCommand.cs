@@ -7,5 +7,5 @@ public record DeleteVolunteerCommand(Guid Id, bool SoftDelete = true)
     : IMapFromRequest<DeleteVolunteerCommand, DeleteVolunteerRequest>
 {
     public static DeleteVolunteerCommand FromRequest(DeleteVolunteerRequest request)
-        => new DeleteVolunteerCommand(request.Id, request.SoftDelete );
+        => new DeleteVolunteerCommand(request.Id, request.SoftDelete);
 }

@@ -1,6 +1,6 @@
 ﻿namespace ProjectPet.AccountsModule.Domain;
 public class RefreshSession
-{ 
+{
     public Guid Id { get; init; }
     public Guid RefreshToken { get; init; }
     public Guid Jti { get; init; }

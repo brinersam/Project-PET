@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.SharedKernel.ErrorClasses;

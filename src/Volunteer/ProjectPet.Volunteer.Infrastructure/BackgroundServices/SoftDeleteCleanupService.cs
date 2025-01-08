@@ -57,7 +57,7 @@ public class SoftDeleteCleanupService : BackgroundService
         await Task.CompletedTask;
     }
 
-    private async Task<int> RemoveExpiredSoftDeletedEntitiesFromSetAsync<T>(DbContext context) where T: SoftDeletableEntity
+    private async Task<int> RemoveExpiredSoftDeletedEntitiesFromSetAsync<T>(DbContext context) where T : SoftDeletableEntity
     {
         int cleanedUpEntities = 0;
         var set = await context

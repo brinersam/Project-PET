@@ -1,5 +1,4 @@
-﻿using ProjectPet.AccountsModule.Infrastructure.Seeding;
-using ProjectPet.Core.Abstractions;
+﻿using ProjectPet.Core.Abstractions;
 
 namespace ProjectPet.Web.Extentions;
 

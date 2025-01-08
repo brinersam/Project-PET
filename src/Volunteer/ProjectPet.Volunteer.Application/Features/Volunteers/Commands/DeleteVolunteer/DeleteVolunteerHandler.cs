@@ -32,7 +32,7 @@ public class DeleteVolunteerHandler
         else
             result = await _volunteerRepository.Delete(volunteerRes.Value, cancellationToken);
 
-        _logger.LogInformation("Volunteer with id {id} was {soft}deleted successfully!", request.Id, request.SoftDelete? "soft " : "");
+        _logger.LogInformation("Volunteer with id {id} was {soft}deleted successfully!", request.Id, request.SoftDelete ? "soft " : "");
 
         return result.Value;
     }

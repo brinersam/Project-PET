@@ -3,7 +3,7 @@ using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.SharedKernel.ErrorClasses;
 
-namespace ProjectPet.AccountsModule.Presentation;
+namespace ProjectPet.AccountsModule.Application.Features.Auth.Commands.RefreshTokens;
 
 public class RefreshTokensHandler
 {
@@ -14,7 +14,7 @@ public class RefreshTokensHandler
         _tokenRefresher = tokenRefresher;
     }
 
-    public async Task<Result<AuthTokensDto,Error>> HandleAsync(RefreshTokensCommand cmd, CancellationToken cancellationToken = default)
+    public async Task<Result<AuthTokensDto, Error>> HandleAsync(RefreshTokensCommand cmd, CancellationToken cancellationToken = default)
     {
         var result = await _tokenRefresher
             .RefreshTokens(cmd.Tokens.AccessToken, cmd.Tokens.RefreshToken, cancellationToken);

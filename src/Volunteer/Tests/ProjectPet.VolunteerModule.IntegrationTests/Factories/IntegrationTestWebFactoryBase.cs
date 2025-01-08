@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
-using ProjectPet.Core.Abstractions;
 using ProjectPet.VolunteerModule.Infrastructure.Database;
 using Respawn;
 using System.Data.Common;
@@ -69,7 +67,7 @@ abstract public class IntegrationTestWebFactoryBase : WebApplicationFactory<Prog
         });
     }
 
-    protected virtual void ConfigureServices(IServiceCollection services) {}
+    protected virtual void ConfigureServices(IServiceCollection services) { }
 
     new public async Task DisposeAsync()
     {

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountPayment;
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountSocials;
+using ProjectPet.AccountsModule.Application.Features.Account.Queries;
 using ProjectPet.AccountsModule.Contracts.Requests;
+using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
@@ -62,5 +64,20 @@ public class AccountController : CustomControllerBase
             return result.Error.ToResponse();
 
         return Ok();
+    }
+
+    //[Permission(PermissionCodes.AdminMasterkey)]
+    [HttpGet("{userId:guid}")]
+    public async Task<ActionResult<Guid>> GetUserInfo(
+        [FromServices] GetUserInfoHandler handler,
+        [FromRoute] Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await handler.HandleAsync(userId, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
     }
 }

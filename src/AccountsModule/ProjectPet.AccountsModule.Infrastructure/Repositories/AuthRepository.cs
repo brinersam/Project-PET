@@ -28,7 +28,7 @@ public class AuthRepository : IAuthRepository
         _authDbContext.RefreshSessions.Remove(session);
         await _authDbContext.SaveChangesAsync(cancellationToken);
     }
-        
+
 
     public async Task AddRefreshSessionAsync(RefreshSession session, CancellationToken cancellationToken = default)
     {
