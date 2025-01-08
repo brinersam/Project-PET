@@ -53,9 +53,5 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .ConfigureString(CConstants.STRING_LEN_MEDIUM);
             });
         });
-
-        builder.Property<bool>("_isDeleted")
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("is_deleted");
     }
 }

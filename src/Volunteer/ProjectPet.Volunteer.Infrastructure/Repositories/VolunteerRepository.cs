@@ -55,7 +55,7 @@ public class VolunteerRepository : IVolunteerRepository
     public async Task<Result<Guid, Error>> SoftDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         _dbContext.Volunteers.Attach(volunteer);
-        volunteer.Delete();
+        volunteer.SoftDelete();
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id;
