@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Application.Services;
@@ -17,7 +16,6 @@ using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Abstractions;
 using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
-using System.Text;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
 public static class DependencyInjection
@@ -116,7 +114,7 @@ public static class DependencyInjection
     private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
     {
         var optionsJwt = builder.Configuration.GetRequiredSection(OptionsTokens.SECTION).Get<OptionsTokens>();
-        if (optionsJwt == null) 
+        if (optionsJwt == null)
             throw new ArgumentNullException(nameof(optionsJwt));
         options.TokenValidationParameters = TokenValidationParametersFactory.Create(optionsJwt);
     }

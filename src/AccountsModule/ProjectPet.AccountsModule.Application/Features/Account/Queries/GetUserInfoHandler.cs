@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using ProjectPet.AccountsModule.Application.Features.Auth.Commands.RefreshTokens;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;

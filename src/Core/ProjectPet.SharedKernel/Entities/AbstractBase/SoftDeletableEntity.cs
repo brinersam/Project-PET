@@ -5,7 +5,7 @@ public abstract class SoftDeletableEntity : EntityBase, ISoftDeletable
     public DateTime DeletionDate { get; private set; }
 
     protected SoftDeletableEntity(Guid id) : base(id)
-    {}
+    { }
 
     public virtual void SoftDelete()
     {

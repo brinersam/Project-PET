@@ -1,13 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountPayment;
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountSocials;
 using ProjectPet.AccountsModule.Application.Features.Account.Queries;
 using ProjectPet.AccountsModule.Contracts.Requests;
 using ProjectPet.AccountsModule.Domain;
-using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;

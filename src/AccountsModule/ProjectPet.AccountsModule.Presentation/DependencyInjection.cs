@@ -24,7 +24,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<UpdateAccountPaymentHandler>();
         builder.Services.AddScoped<UpdateAccountSocialsHandler>();
         builder.Services.AddScoped<GetUserInfoHandler>();
-        
+
         return builder;
     }
     private static IHostApplicationBuilder AddValidators(this IHostApplicationBuilder builder)

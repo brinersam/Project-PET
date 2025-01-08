@@ -34,7 +34,7 @@ public class ReadDbContext(IConfiguration configuration, IOptions<OptionsDb> opt
             typeof(ReadDbContext).Assembly,
             x => x.FullName!.Contains("Configurations.Read"));
 
-        modelBuilder.HasDefaultSchema("auth"); 
+        modelBuilder.HasDefaultSchema("auth");
     }
 
     private static ILoggerFactory CreateLoggerFactory()

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Login;
+using ProjectPet.AccountsModule.Application.Features.Auth.Commands.RefreshTokens;
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
 using ProjectPet.AccountsModule.Contracts.Requests;
 using ProjectPet.Framework;
@@ -55,7 +56,7 @@ public class AuthController : CustomControllerBase
 
     //    return Ok(result.Value);
     //}
-    
+
     [HttpPost("refresh-tokens")]
     public async Task<IActionResult> RefreshTokens(
     [FromBody] RefreshTokensRequest request,

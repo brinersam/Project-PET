@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectPet.AccountsModule.Domain;
-using ProjectPet.AccountsModule.Infrastructure.Database.Configurations;
+using ProjectPet.AccountsModule.Infrastructure.Database.Configurations.Write;
 using ProjectPet.Core.Options;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Database;
@@ -58,7 +58,7 @@ public class AuthDbContext(IConfiguration configuration, IOptions<OptionsDb> opt
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user-roles");
 
-        modelBuilder.HasDefaultSchema("auth"); 
+        modelBuilder.HasDefaultSchema("auth");
     }
 
     private static ILoggerFactory CreateLoggerFactory()
