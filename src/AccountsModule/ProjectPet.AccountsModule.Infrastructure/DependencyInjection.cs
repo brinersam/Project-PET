@@ -69,6 +69,7 @@ public static class DependencyInjection
     {
         builder.Services.AddTransient<TokenValidationParametersFactory>();
         builder.Services.AddScoped<AuthDbContext>();
+        builder.Services.AddScoped<IReadDbContext, ReadDbContext>();
         builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
         builder.Services.AddTransient<ITokenProvider, TokenManager>();

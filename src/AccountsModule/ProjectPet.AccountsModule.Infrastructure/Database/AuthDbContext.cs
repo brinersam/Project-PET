@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectPet.AccountsModule.Domain;
+using ProjectPet.AccountsModule.Infrastructure.Database.Configurations;
 using ProjectPet.Core.Options;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Database;
@@ -29,7 +30,15 @@ public class AuthDbContext(IConfiguration configuration, IOptions<OptionsDb> opt
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
+        //modelBuilder.ApplyConfigurationsFromAssembly(
+        //    typeof(AuthDbContext).Assembly,
+        //    x => x.FullName!.Contains("Configurations.Write"));
+        // wont work lol
+
+        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+        modelBuilder.ApplyConfiguration(new RefreshSessionConfiguration());
+        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
 
         modelBuilder.Entity<Role>()
             .ToTable("roles");
