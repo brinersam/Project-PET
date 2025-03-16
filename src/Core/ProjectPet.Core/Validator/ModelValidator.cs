@@ -17,10 +17,10 @@ public class ModelValidator<T>
         return new ModelValidator<T>();
     }
 
-    public Result<T, Error> Check(T item, string valName)
+    public Result<T, Error> Check(T value, string propName)
     {
-        _itemName = valName;
-        _item = item;
+        _itemName = propName;
+        _item = value;
         Result<T, Error> result = _item;
 
         foreach (var fun in ChecksQueue())

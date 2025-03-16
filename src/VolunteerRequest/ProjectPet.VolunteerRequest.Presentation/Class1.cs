@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.VolunteerRequest.Presentation;
+﻿namespace ProjectPet.VolunteerRequests.Presentation;
 
 public class Class1
 {

@@ -5,14 +5,14 @@ using ProjectPet.SharedKernel.Entities.AbstractBase;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
 
-namespace ProjectPet.VolunteerRequest.Domain.Models;
+namespace ProjectPet.VolunteerRequests.Domain.Models;
 public class VolunteerRequest : EntityBase
 {
     public Guid AdminId { get; private set; }
     public Guid UserId { get; private set; }
     public Guid DiscussionId { get; private set; }
     public VolunteerAccountDto VolunteerData { get; private set; }
-    public VolunteerRequestStatus RequestStatus { get; private set; }
+    public VolunteerRequestStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public string RejectionComment { get; private set; }
 
@@ -35,12 +35,12 @@ public class VolunteerRequest : EntityBase
         UserId = userId;
         DiscussionId = discussionId;
         VolunteerData = volunteerData;
-        RequestStatus = requestStatus;
+        Status = requestStatus;
         CreatedAt = createdAt;
         RejectionComment = rejectionComment;
     }
 
-    public static Result<VolunteerRequest,Error> Create(
+    public static Result<VolunteerRequest, Error> Create(
         Guid userId,
         Guid discussionId,
         VolunteerAccountDto volunteerData)
@@ -58,50 +58,78 @@ public class VolunteerRequest : EntityBase
 
     public UnitResult<Error> BeginReview(Guid adminId)
     {
-        if (RequestStatus != VolunteerRequestStatus.submitted &&
-            RequestStatus != VolunteerRequestStatus.revisionRequired)
-        {
-            return Errors.General.ValueIsInvalid(RequestStatus, nameof(VolunteerRequestStatus));
-        }
+        if (TrySetTransition(VolunteerRequestStatus.onReview, out Error error) == false)
+            return error;
 
         AdminId = adminId;
-        RequestStatus = VolunteerRequestStatus.onReview;
         return Result.Success<Error>();
     }
 
     public UnitResult<Error> RequestRevision(string rejectionComment)
     {
-        if (RequestStatus != VolunteerRequestStatus.onReview)
-            return Errors.General.ValueIsInvalid(RequestStatus, nameof(VolunteerRequestStatus));
-
         var validatorStr = Validator.ValidatorString(Constants.STRING_LEN_MEDIUM);
         var result = validatorStr.Check(rejectionComment, nameof(rejectionComment));
         if (result.IsFailure)
             return result.Error;
 
+        if (TrySetTransition(VolunteerRequestStatus.revisionRequired, out Error error) == false)
+            return error;
         RejectionComment = rejectionComment;
-        RequestStatus = VolunteerRequestStatus.revisionRequired;
+
         return Result.Success<Error>();
     }
 
     public UnitResult<Error> RejectRequest(string rejectionComment = "")
     {
-        if (RequestStatus != VolunteerRequestStatus.onReview)
-            return Errors.General.ValueIsInvalid(RequestStatus, nameof(VolunteerRequestStatus));
-
+        if (TrySetTransition(VolunteerRequestStatus.rejected, out Error error) == false)
+            return error;
         RejectionComment = rejectionComment;
-        RequestStatus = VolunteerRequestStatus.rejected;
+
         return Result.Success<Error>();
     }
 
     public UnitResult<Error> ApproveRequest()
     {
-        if (RequestStatus != VolunteerRequestStatus.onReview)
-            return Errors.General.ValueIsInvalid(RequestStatus, nameof(VolunteerRequestStatus));
+        if (TrySetTransition(VolunteerRequestStatus.approved, out Error error) == false)
+            return error;
 
-        RequestStatus = VolunteerRequestStatus.approved;
         return Result.Success<Error>();
     }
+
+    private bool TrySetTransition(VolunteerRequestStatus goal, out Error Error)
+    {
+        if (IsValidTransition(goal))
+        {
+            Error = null!;
+            Status = goal;
+            return true;
+        }
+
+        Error = InvalidTransition(goal);
+        return false;
+    }
+
+    private bool IsValidTransition(VolunteerRequestStatus goal)
+        => Status switch
+        {
+            VolunteerRequestStatus.revisionRequired or // from here
+            VolunteerRequestStatus.submitted when // or here
+            goal == VolunteerRequestStatus.onReview => true, // we can go here
+
+            VolunteerRequestStatus.onReview when
+            goal == VolunteerRequestStatus.revisionRequired => true,
+
+            VolunteerRequestStatus.onReview when
+            goal == VolunteerRequestStatus.rejected => true,
+
+            VolunteerRequestStatus.onReview when
+            goal == VolunteerRequestStatus.approved => true,
+
+            _ => false
+        };
+
+    private Error InvalidTransition(VolunteerRequestStatus goal)
+        => Error.Failure("invalid.state.switch", $"Unable to switch from {Status.ToString()} to {goal.ToString()}");
 }
 
 public enum VolunteerRequestStatus

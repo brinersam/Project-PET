@@ -71,17 +71,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.AccountsModule.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.VolunteerModule.IntegrationTests", "src\Volunteer\Tests\ProjectPet.VolunteerModule.IntegrationTests\ProjectPet.VolunteerModule.IntegrationTests.csproj", "{81220431-5893-40AD-B611-7A593785F9F5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VolunteerRequest", "VolunteerRequest", "{D00FB956-7F1F-4FD8-9E75-A3D27397275E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VolunteerRequests", "VolunteerRequests", "{D00FB956-7F1F-4FD8-9E75-A3D27397275E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.VolunteerRequest.Contracts", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Contracts\ProjectPet.VolunteerRequest.Contracts.csproj", "{CF9CDCB4-4524-49DD-881E-AB13176553D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.VolunteerRequests.Contracts", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Contracts\ProjectPet.VolunteerRequests.Contracts.csproj", "{CF9CDCB4-4524-49DD-881E-AB13176553D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.VolunteerRequest.Infrastructure", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Infrastructure\ProjectPet.VolunteerRequest.Infrastructure.csproj", "{F819B506-A18C-4B6F-BB52-80997B8DC082}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.VolunteerRequests.Infrastructure", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Infrastructure\ProjectPet.VolunteerRequests.Infrastructure.csproj", "{F819B506-A18C-4B6F-BB52-80997B8DC082}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.VolunteerRequest.Presentation", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Presentation\ProjectPet.VolunteerRequest.Presentation.csproj", "{5A25A8FB-B0B1-40B8-BD8E-5AEAC123CC0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.VolunteerRequests.Presentation", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Presentation\ProjectPet.VolunteerRequests.Presentation.csproj", "{5A25A8FB-B0B1-40B8-BD8E-5AEAC123CC0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.VolunteerRequest.Domain", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Domain\ProjectPet.VolunteerRequest.Domain.csproj", "{6898B901-DA8D-4247-B4A3-B3278D37E08E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.VolunteerRequests.Domain", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Domain\ProjectPet.VolunteerRequests.Domain.csproj", "{6898B901-DA8D-4247-B4A3-B3278D37E08E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPet.VolunteerRequest.Application", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Application\ProjectPet.VolunteerRequest.Application.csproj", "{93976DF8-3EC3-442E-A268-F18EAD8DB101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.VolunteerRequests.Application", "src\VolunteerRequest\ProjectPet.VolunteerRequest.Application\ProjectPet.VolunteerRequests.Application.csproj", "{93976DF8-3EC3-442E-A268-F18EAD8DB101}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F764ABCE-BB2C-40C6-A707-DB9284FF295B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectPet.VolunteerRequests.UnitTests", "src\VolunteerRequest\Tests\ProjectPet.VolunteerRequest.UnitTests\ProjectPet.VolunteerRequests.UnitTests.csproj", "{E27D9317-7672-4567-A471-C9819B728C94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -217,6 +221,10 @@ Global
 		{93976DF8-3EC3-442E-A268-F18EAD8DB101}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93976DF8-3EC3-442E-A268-F18EAD8DB101}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93976DF8-3EC3-442E-A268-F18EAD8DB101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E27D9317-7672-4567-A471-C9819B728C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E27D9317-7672-4567-A471-C9819B728C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E27D9317-7672-4567-A471-C9819B728C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E27D9317-7672-4567-A471-C9819B728C94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -260,6 +268,8 @@ Global
 		{5A25A8FB-B0B1-40B8-BD8E-5AEAC123CC0C} = {D00FB956-7F1F-4FD8-9E75-A3D27397275E}
 		{6898B901-DA8D-4247-B4A3-B3278D37E08E} = {D00FB956-7F1F-4FD8-9E75-A3D27397275E}
 		{93976DF8-3EC3-442E-A268-F18EAD8DB101} = {D00FB956-7F1F-4FD8-9E75-A3D27397275E}
+		{F764ABCE-BB2C-40C6-A707-DB9284FF295B} = {D00FB956-7F1F-4FD8-9E75-A3D27397275E}
+		{E27D9317-7672-4567-A471-C9819B728C94} = {F764ABCE-BB2C-40C6-A707-DB9284FF295B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D2389C2A-A36A-40D0-BF7F-FB04E2ED085D}

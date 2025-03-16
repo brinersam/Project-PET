@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.VolunteerRequest.Contracts;
+﻿namespace ProjectPet.VolunteerRequests.Contracts;
 
 public class Class1
 {

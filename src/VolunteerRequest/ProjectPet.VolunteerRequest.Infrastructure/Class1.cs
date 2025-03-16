@@ -1,4 +1,4 @@
-﻿namespace ProjectPet.VolunteerRequest.Infrastructure;
+﻿namespace ProjectPet.VolunteerRequests.Infrastructure;
 
 public class Class1
 {

@@ -12,7 +12,7 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
-    <ProjectReference Include="..\ProjectPet.VolunteerRequest.Application\ProjectPet.VolunteerRequest.Application.csproj" />
+    <ProjectReference Include="..\ProjectPet.VolunteerRequest.Application\ProjectPet.VolunteerRequests.Application.csproj" />
   </ItemGroup>
 
 </Project>
