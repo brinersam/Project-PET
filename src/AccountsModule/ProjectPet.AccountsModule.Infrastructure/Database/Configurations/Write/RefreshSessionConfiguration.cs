@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.AccountsModule.Domain;
 
-namespace ProjectPet.AccountsModule.Infrastructure.Database.Configurations;
+namespace ProjectPet.AccountsModule.Infrastructure.Database.Configurations.Write;
 public class RefreshSessionConfiguration : IEntityTypeConfiguration<RefreshSession>
 {
     public void Configure(EntityTypeBuilder<RefreshSession> builder)
@@ -11,7 +11,7 @@ public class RefreshSessionConfiguration : IEntityTypeConfiguration<RefreshSessi
 
         builder.HasKey(rs => rs.Id);
 
-        builder.HasOne<User>(rs => rs.User)
+        builder.HasOne(rs => rs.User)
             .WithMany()
             .HasForeignKey(rs => rs.UserId);
     }

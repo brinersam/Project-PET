@@ -1,3 +1,3 @@
-﻿namespace ProjectPet.AccountsModule.Application.Services;
+﻿namespace ProjectPet.AccountsModule.Domain;
 
 public record AccessTokenWJti(string accessToken, Guid jti);
