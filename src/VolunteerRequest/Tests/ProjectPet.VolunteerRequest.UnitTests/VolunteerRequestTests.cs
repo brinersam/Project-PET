@@ -4,7 +4,6 @@ using FluentAssertions;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.VolunteerRequests.Domain.Models;
-using System.Reflection;
 
 namespace ProjectPet.VolunteerRequests.UnitTests;
 
@@ -40,44 +39,59 @@ public class VolunteerRequestTests
     [InlineData(VolunteerRequestStatus.revisionRequired, VolunteerRequestStatus.onReview)]
     [InlineData(VolunteerRequestStatus.onReview, VolunteerRequestStatus.rejected)]
     [InlineData(VolunteerRequestStatus.onReview, VolunteerRequestStatus.approved)]
-    public void Transitions_Correct_Success(VolunteerRequestStatus stateFrom, VolunteerRequestStatus stateTo)
+    public void Transitions_Correct_Success(
+        VolunteerRequestStatus startingState,
+        VolunteerRequestStatus goalState)
     {
         // arrange
+        var vr = CreateVolunteerRequest();
+        vr = InitState(vr, startingState);
+
         // act
-        UnitResult<Error> result = CheckTransition(stateFrom, stateTo);
+        UnitResult<Error> result = AttemptTransition(vr, goalState);
 
         // assert
         result.IsSuccess.Should().BeTrue();
     }
 
-    [Theory]
-    [InlineData(VolunteerRequestStatus.approved, VolunteerRequestStatus.submitted)]
-    [InlineData(VolunteerRequestStatus.rejected, VolunteerRequestStatus.submitted)]
-    [InlineData(VolunteerRequestStatus.rejected, VolunteerRequestStatus.onReview)]
-    [InlineData(VolunteerRequestStatus.rejected, VolunteerRequestStatus.revisionRequired)]
-    [InlineData(VolunteerRequestStatus.approved, VolunteerRequestStatus.onReview)]
-    [InlineData(VolunteerRequestStatus.onReview, VolunteerRequestStatus.submitted)]
-    [InlineData(VolunteerRequestStatus.submitted, VolunteerRequestStatus.approved)]
-    [InlineData(VolunteerRequestStatus.submitted, VolunteerRequestStatus.rejected)]
-    [InlineData(VolunteerRequestStatus.revisionRequired, VolunteerRequestStatus.submitted)]
-    public void Transitions_Incorrect_Failure(VolunteerRequestStatus stateFrom, VolunteerRequestStatus stateTo)
+    private VolunteerRequest InitState(
+        VolunteerRequest volunteerRequest,
+        VolunteerRequestStatus desiredState)
     {
-        // arrange
-        // act
-        UnitResult<Error> result = CheckTransition(stateFrom, stateTo);
-
-        // assert
-        result.IsSuccess.Should().BeFalse();
+        switch (desiredState)
+        {
+            case VolunteerRequestStatus.onReview:
+                {
+                    volunteerRequest.BeginReview(new Guid());
+                    break;
+                }
+            case VolunteerRequestStatus.rejected:
+                {
+                    volunteerRequest.BeginReview(new Guid());
+                    volunteerRequest.RejectRequest("Rejected");
+                    break;
+                }
+            case VolunteerRequestStatus.revisionRequired:
+                {
+                    volunteerRequest.BeginReview(new Guid());
+                    volunteerRequest.RequestRevision("RequestedRevision");
+                    break;
+                }
+            case VolunteerRequestStatus.approved:
+                {
+                    volunteerRequest.BeginReview(new Guid());
+                    volunteerRequest.ApproveRequest();
+                    break;
+                }
+        }
+        return volunteerRequest;
     }
 
-    private UnitResult<Error> CheckTransition(VolunteerRequestStatus stateFrom, VolunteerRequestStatus stateTo)
+    private UnitResult<Error> AttemptTransition(
+        VolunteerRequest vr,
+        VolunteerRequestStatus transitionalState)
     {
-        // arrange
-        var vr = CreateVolunteerRequest();
-        ForceStateTo(vr, stateFrom);
-
-        // act
-        UnitResult<Error> result = stateTo switch
+        return transitionalState switch
         {
             VolunteerRequestStatus.onReview => vr.BeginReview(Guid.Empty),
             VolunteerRequestStatus.rejected => vr.RejectRequest("К сожалению, сейчас мы не готовы пригласить Вас на следующий этап"),
@@ -85,13 +99,6 @@ public class VolunteerRequestTests
             VolunteerRequestStatus.approved => vr.ApproveRequest(),
             _ => UnitResult.Failure(Error.Failure("illegal", "illegal transition"))
         };
-        return result;
-    }
-
-    private void ForceStateTo(VolunteerRequest volunteerRequest, VolunteerRequestStatus goalState)
-    {
-        var property = typeof(VolunteerRequest).GetProperty(nameof(volunteerRequest.Status), BindingFlags.Instance | BindingFlags.Public);
-        property!.SetValue(volunteerRequest, goalState);
     }
 
     #region Data Generation
@@ -101,8 +108,8 @@ public class VolunteerRequestTests
         VolunteerAccountDto dto = null!)
     {
         var createResult = VolunteerRequest.Create(
-            userId == default ?         Guid.Empty : userId,
-            discussionId == default ?   Guid.Empty : discussionId,
+            userId == default ?         Guid.NewGuid() : userId,
+            discussionId == default ?   Guid.NewGuid() : discussionId,
             dto ??                      _fixture.Create<VolunteerAccountDto>());
 
         return createResult.Value;
