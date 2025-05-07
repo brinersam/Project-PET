@@ -28,7 +28,7 @@ public class Message : EntityBase
     }
 
     public static Result<Message, Error> Create(Guid userId,
-                                                 string text)
+                                                string text)
     {
         var stringValidator = Validator.ValidatorString(Constants.STRING_LEN_MEDIUM);
         var valresStr = stringValidator.Check(text, nameof(text));
