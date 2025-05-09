@@ -13,7 +13,7 @@ public class GenerateCommentsCustomization : ICustomization
 
     private static void GenerateComments(IFixture fixture, Discussion discussion)
     {
-        foreach (Guid userId in discussion.Users)
+        foreach (Guid userId in discussion.UserIds)
             discussion.AddComment(userId, fixture.Create<string>());
     }
 }

@@ -52,7 +52,7 @@ public class DiscussionTests
                                                  string text)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
 
         // Act
         var sut = discussion.AddComment(userId, text);
@@ -68,7 +68,7 @@ public class DiscussionTests
                                                          string text)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
 
         // Act
         var sut = discussion.AddComment(userId, text);
@@ -99,7 +99,7 @@ public class DiscussionTests
     public void DeleteComment_Author_Success(Discussion discussion)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
         var comment = discussion.Messages.FirstOrDefault(x => x.UserId == userId);
         var commentId = comment!.Id;
 
@@ -116,7 +116,7 @@ public class DiscussionTests
     public void DeleteComment_Author_ClosedDiscussion_Failure(Discussion discussion)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
         var comment = discussion.Messages.FirstOrDefault(x => x.UserId == userId);
         var commentId = comment!.Id;
 
@@ -133,7 +133,7 @@ public class DiscussionTests
     public void DeleteComment_NotAuthor_Failure(Discussion discussion)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
         var comment = discussion.Messages.FirstOrDefault(x => x.UserId != userId);
         var commentId = comment!.Id;
         var InitialMsgAmount = discussion.Messages.Count();
@@ -151,7 +151,7 @@ public class DiscussionTests
     public void DeleteComment_CommentDoesNotExist_Success(Discussion discussion)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
         var commentId = Guid.NewGuid();
         var initialMsgAmount = discussion.Messages.Count();
 
@@ -168,7 +168,7 @@ public class DiscussionTests
     public void EditComment_Author_Success(Discussion discussion, string text)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
         var comment = discussion.Messages.FirstOrDefault(x => x.UserId == userId);
         var commentId = comment!.Id;
 
@@ -190,7 +190,7 @@ public class DiscussionTests
     public void EditComment_Author_ClosedDiscussion_Failure(Discussion discussion, string text)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
         var comment = discussion.Messages.FirstOrDefault(x => x.UserId == userId);
         var commentId = comment!.Id;
 
@@ -212,7 +212,7 @@ public class DiscussionTests
     public void EditComment_NotAuthor_Failure(Discussion discussion, string text)
     {
         // Arrange
-        var userId = discussion.Users.FirstOrDefault();
+        var userId = discussion.UserIds.FirstOrDefault();
         var comment = discussion.Messages.FirstOrDefault(x => x.UserId != userId);
         var commentId = comment!.Id;
 
