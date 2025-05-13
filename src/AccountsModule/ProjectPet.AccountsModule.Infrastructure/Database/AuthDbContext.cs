@@ -17,6 +17,7 @@ public class AuthDbContext(IConfiguration configuration, IOptions<OptionsDb> opt
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
+    public DbSet<PermissionModifier> PermissionModifiers => Set<PermissionModifier>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -39,6 +40,7 @@ public class AuthDbContext(IConfiguration configuration, IOptions<OptionsDb> opt
         modelBuilder.ApplyConfiguration(new RefreshSessionConfiguration());
         modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new PermissionModifierConfiguration());
 
         modelBuilder.Entity<Role>()
             .ToTable("roles");
