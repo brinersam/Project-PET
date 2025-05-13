@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using ProjectPet.Core.Options;
 using ProjectPet.VolunteerRequests.Domain.Models;
 
-namespace ProjectPet.VolunteerModule.Infrastructure.Database;
+namespace ProjectPet.VolunteerRequests.Infrastructure.Database;
 
 public class WriteDbContext(IConfiguration configuration) : DbContext
 {

@@ -28,7 +28,7 @@ public class GetByAdminIdPaginatedFilteredHandler
         statusFilter ??= VolunteerRequestStatusDto.onReview;
 
         dbQuery = dbQuery.NullableWhere(statusFilter, x => x.Status == statusFilter);
-        
+
         return await dbQuery.ToPagedListAsync(query, cancellationToken);
     }
 }

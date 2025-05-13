@@ -25,6 +25,7 @@ public static class DependencyInjection
         builder.AddAuth();
         builder.Services.AddScoped<IDatabaseSeeder, DatabaseAccountsSeeder>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+        builder.Services.AddScoped<IPermissionModifierRepository, PermissionModifierRepository>();
 
         builder.Services.Configure<AdminCredsOptions>(builder.Configuration.GetSection(AdminCredsOptions.SECTION));
 

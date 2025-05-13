@@ -22,7 +22,7 @@ public class CreateValidator : AbstractValidator<CreateVolunteerRequestRequest>
                     .WithError(Errors.General.ValueIsEmptyOrNull)
                     .MaxLengthWithError(Constants.STRING_LEN_SMALL);
             });
-            
+
         RuleForEach(req => req.AccountDto.Certifications)
             .NotEmpty()
             .WithError(Errors.General.ValueIsEmptyOrNull)

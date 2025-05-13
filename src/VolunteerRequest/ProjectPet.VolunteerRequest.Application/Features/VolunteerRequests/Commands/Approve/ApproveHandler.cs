@@ -58,7 +58,7 @@ public class ApproveHandler
         var saveRes = await _requestRepository.Save(requestRes.Value, cancellationToken);
         if (saveRes.IsFailure)
             return saveRes.Error;
-        
+
         transaction.Commit();
 
         _logger.LogInformation(

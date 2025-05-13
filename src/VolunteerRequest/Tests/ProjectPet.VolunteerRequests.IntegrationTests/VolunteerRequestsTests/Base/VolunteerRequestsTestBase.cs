@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
@@ -92,7 +91,7 @@ public class VolunteerRequestsTestBase : IClassFixture<VolunteerRequestsWebFacto
         adminId ??= _fixture.Create<Guid>();
         userId ??= _fixture.Create<Guid>();
 
-        var volunteerRequest = await SeedVolunteerRequestAsync((Guid)userId, x => 
+        var volunteerRequest = await SeedVolunteerRequestAsync((Guid)userId, x =>
         {
             x.BeginReview((Guid)adminId);
             x.RequestRevision("revision-required");

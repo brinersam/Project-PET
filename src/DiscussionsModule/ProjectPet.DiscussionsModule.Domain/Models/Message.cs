@@ -13,7 +13,7 @@ public class Message : EntityBase
     public bool IsEdited { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Message() : base(Guid.Empty) {}
+    public Message() : base(Guid.Empty) { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     private Message(Guid userId,

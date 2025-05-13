@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using ProjectPet.SharedKernel.ErrorClasses;
-using ProjectPet.VolunteerModule.Infrastructure.Database;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
 using ProjectPet.VolunteerRequests.Domain.Models;
+using ProjectPet.VolunteerRequests.Infrastructure.Database;
 
 namespace ProjectPet.VolunteerRequests.Infrastructure.Repositories;
 public class VolunteerRequestRepository : IVolunteerRequestRepository

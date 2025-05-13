@@ -14,7 +14,7 @@ public class DiscussionTests
                                                     List<Guid> users)
     {
         // Act
-        var sut = Discussion.Create(relatedEntity,users);
+        var sut = Discussion.Create(relatedEntity, users);
 
         // Assert
         sut.IsSuccess.Should().BeTrue();

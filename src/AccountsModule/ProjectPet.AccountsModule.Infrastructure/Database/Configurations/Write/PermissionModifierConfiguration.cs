@@ -7,7 +7,7 @@ internal class PermissionModifierConfiguration : IEntityTypeConfiguration<Permis
 {
     public void Configure(EntityTypeBuilder<PermissionModifier> builder)
     {
-        builder.ToTable("permission-modifiers");
+        builder.ToTable("permission_modifiers");
 
         builder.HasKey(x => x.Id);
 

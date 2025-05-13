@@ -1,5 +1,5 @@
-﻿using AutoFixture.Xunit2;
-using AutoFixture;
+﻿using AutoFixture;
+using AutoFixture.Xunit2;
 using ProjectPet.DiscussionsModule.UnitTests.Domain.Fixtures.Discussions.Customizations;
 
 namespace ProjectPet.DiscussionsModule.UnitTests.Domain.Fixtures.Discussions;

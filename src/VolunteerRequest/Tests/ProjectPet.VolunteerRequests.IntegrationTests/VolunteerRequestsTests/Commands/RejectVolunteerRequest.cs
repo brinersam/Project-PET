@@ -1,8 +1,6 @@
-﻿using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Reject;
 using ProjectPet.VolunteerRequests.Contracts.Dto;

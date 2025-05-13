@@ -18,7 +18,7 @@ public class Discussion : EntityBase
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Discussion() : base(Guid.Empty) {}
+    public Discussion() : base(Guid.Empty) { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     private Discussion(Guid relatedEntityId,

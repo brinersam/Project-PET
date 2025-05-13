@@ -43,8 +43,6 @@ public class AccountsModuleContractImplementation : IAccountsModuleContract
         if (getUserRes.IsFailure)
             return getUserRes.Error;
 
-        var transaction = await _unitOfWork.BeginTransactionAsync(ctoken);
-
         var data = new VolunteerAccount(
             accountDto.PaymentInfos.Select(x => new PaymentInfo(x.Title, x.Instructions)),
             accountDto.Experience,

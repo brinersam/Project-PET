@@ -25,7 +25,7 @@ public class GetUnassigned : VolunteerRequestsTestBase
         var volunteer2Admin2 = await SeedVolunteerRequestAndSetToReview(admin2Id, default);
         var volunteer3AdminNONE = await SeedVolunteerRequestAsync();
 
-        var query = new GetUnassignedPaginatedQuery() {Page = 0, RecordAmount = 99 };
+        var query = new GetUnassignedPaginatedQuery() { Page = 0, RecordAmount = 99 };
 
         // Act
         var result = await _sut.HandleAsync(query, default);

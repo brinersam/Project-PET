@@ -206,7 +206,7 @@ public class VolunteerRequestsController : CustomControllerBase
         return Ok(result.Value);
     }
 
-    private Result<Guid,Error> GetCurrentUserId()
+    private Result<Guid, Error> GetCurrentUserId()
     {
         string? userId = HttpContext.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
         if (String.IsNullOrWhiteSpace(userId))

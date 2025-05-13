@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 
 public abstract class ToggleMockBase<TInterface, TImplementation>
     where TInterface : class

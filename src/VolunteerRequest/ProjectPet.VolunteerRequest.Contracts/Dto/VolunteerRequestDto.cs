@@ -3,6 +3,7 @@
 namespace ProjectPet.VolunteerRequests.Contracts.Dto;
 public class VolunteerRequestDto
 {
+    public Guid Id { get; init; }
     public Guid AdminId { get; init; }
     public Guid UserId { get; init; }
     public Guid DiscussionId { get; init; }

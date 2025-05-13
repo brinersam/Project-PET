@@ -3,7 +3,7 @@ namespace ProjectPet.SharedKernel.SharedDto;
 
 public class VolunteerAccountDto
 {
-    public List<PaymentInfoDto> PaymentInfos;
+    public List<PaymentInfoDto> PaymentInfos { get; init; }
     public int Experience { get; init; }
     public string[] Certifications { get; init; }
 }

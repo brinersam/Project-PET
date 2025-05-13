@@ -11,7 +11,7 @@ public class BaseMessageCustomization : ICustomization
                 fixture.Create<string>()).Value;
 
         fixture.Freeze<Message>();
-                                  
+
         fixture.Customize<Message>(opts => opts
             .FromFactory(() => message));
     }

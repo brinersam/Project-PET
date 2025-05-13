@@ -1,10 +1,8 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using ProjectPet.AccountsModule.Domain;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Queries.GetByUserIdPaginatedFiltered;
 using ProjectPet.VolunteerRequests.Contracts.Dto;
-using ProjectPet.VolunteerRequests.Domain.Models;
 using ProjectPet.VolunteerRequests.IntegrationTests.Factories;
 using ProjectPet.VolunteerRequests.IntegrationTests.VolunteerRequestsTests.Base;
 

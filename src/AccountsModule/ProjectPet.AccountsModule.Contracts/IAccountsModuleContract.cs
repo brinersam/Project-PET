@@ -11,7 +11,7 @@ public interface IAccountsModuleContract
         PermissionModifierDto modifierDto,
         CancellationToken ctoken = default);
 
-    Task<UnitResult<Error>> AddVolunteerDataToUserAsync(Guid userId,
+    Task<UnitResult<Error>> MakeUserVolunteerAsync(Guid userId,
         VolunteerAccountDto accountDto,
         CancellationToken ctoken = default);
 }

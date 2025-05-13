@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ProjectPet.VolunteerRequests.IntegrationTests.Factories;
-using ProjectPet.VolunteerRequests.IntegrationTests.VolunteerRequestsTests.Base;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Queries.GetByAdminIdPaginatedFiltered;
 using ProjectPet.VolunteerRequests.Contracts.Dto;
+using ProjectPet.VolunteerRequests.IntegrationTests.Factories;
+using ProjectPet.VolunteerRequests.IntegrationTests.VolunteerRequestsTests.Base;
 
 namespace ProjectPet.VolunteerRequests.IntegrationTests.VolunteerRequestsTests.Queries;
 public class GetByAdminId : VolunteerRequestsTestBase
