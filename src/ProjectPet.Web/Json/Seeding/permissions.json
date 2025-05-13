@@ -24,6 +24,12 @@
     "species.create",
     "species.read",
     "species.update",
-    "species.delete"
+    "species.delete",
+
+    "volunteerrequest.create",
+    "volunteerrequest.read",
+    "volunteerrequest.update",
+    "volunteerrequest.admin"
+
   ]
 }
