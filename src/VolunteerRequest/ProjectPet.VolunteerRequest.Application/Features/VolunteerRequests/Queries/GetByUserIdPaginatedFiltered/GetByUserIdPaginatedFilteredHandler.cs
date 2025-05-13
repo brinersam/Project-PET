@@ -5,30 +5,27 @@ using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
 using ProjectPet.VolunteerRequests.Contracts.Dto;
 
-namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Queries.GetByAdminIdPaginatedFiltered;
-public class GetByAdminIdPaginatedFilteredHandler
+namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Queries.GetByUserIdPaginatedFiltered;
+public class GetByUserIdPaginatedFilteredHandler
 {
     private readonly IReadDbContext _readDbContext;
 
-    public GetByAdminIdPaginatedFilteredHandler(
+    public GetByUserIdPaginatedFilteredHandler(
         IReadDbContext readDbContext)
     {
         _readDbContext = readDbContext;
     }
 
     public async Task<Result<PagedList<VolunteerRequestDto>, Error>> HandleAsync(
-        GetByAdminIdPaginatedFilteredQuery query,
+        GetByUserIdPaginatedFilteredQuery query,
         CancellationToken cancellationToken)
     {
         var dbQuery = _readDbContext.VolunteerRequests
-            .Where(x => Equals(x.AdminId, query.AdminId))
+            .Where(x => Equals(x.UserId, query.UserId))
             .AsQueryable();
 
-        var statusFilter = query.Filters.Status;
-        statusFilter ??= VolunteerRequestStatusDto.onReview;
+        dbQuery = dbQuery.NullableWhere(query.Filters.Status, x => x.Status == query.Filters.Status);
 
-        dbQuery = dbQuery.NullableWhere(statusFilter, x => x.Status == statusFilter);
-        
         return await dbQuery.ToPagedListAsync(query, cancellationToken);
     }
 }
