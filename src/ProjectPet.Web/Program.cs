@@ -5,6 +5,8 @@ using ProjectPet.SpeciesModule.Infrastructure;
 using ProjectPet.SpeciesModule.Presentation;
 using ProjectPet.VolunteerModule.Infrastructure;
 using ProjectPet.VolunteerModule.Presentation;
+using ProjectPet.VolunteerRequests.Infrastructure;
+using ProjectPet.VolunteerRequests.Presentation;
 using ProjectPet.Web;
 using ProjectPet.Web.Extentions;
 using ProjectPet.Web.MIddlewares;
@@ -35,6 +37,8 @@ builder.AddFileManagementInfrastructure();
 builder.AddAuthModuleHandlers();
 builder.AddAuthModuleInfrastructure();
 
+builder.AddVolunteerRequestsModuleHandlers();
+builder.AddVolunteerRequestModuleInfrastructure();
 #endregion
 
 builder.Services.AddValidation();

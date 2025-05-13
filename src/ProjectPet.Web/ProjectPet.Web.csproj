@@ -40,6 +40,8 @@
 	  <ProjectReference Include="..\FileManagement\ProjectPet.FileManagement.Presentation\ProjectPet.FileManagement.Presentation.csproj" />
 	  <ProjectReference Include="..\Species\ProjectPet.Species.Infrastructure\ProjectPet.SpeciesModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Species\ProjectPet.Species.Presentation\ProjectPet.SpeciesModule.Presentation.csproj" />
+	  <ProjectReference Include="..\VolunteerRequest\ProjectPet.VolunteerRequest.Infrastructure\ProjectPet.VolunteerRequests.Infrastructure.csproj" />
+	  <ProjectReference Include="..\VolunteerRequest\ProjectPet.VolunteerRequest.Presentation\ProjectPet.VolunteerRequests.Presentation.csproj" />
 	  <ProjectReference Include="..\Volunteer\ProjectPet.Volunteer.Infrastructure\ProjectPet.VolunteerModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Volunteer\ProjectPet.Volunteer.Presentation\ProjectPet.VolunteerModule.Presentation.csproj" />
 	</ItemGroup>
