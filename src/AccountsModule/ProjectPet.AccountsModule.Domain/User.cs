@@ -51,6 +51,12 @@ public class User : IdentityUser<Guid>
         _socialNetworks = networks.ToList();
     }
 
+    public UnitResult<Error> SetVolunteerData(VolunteerAccount volunteerData)
+    {
+        VolunteerData = volunteerData;
+        return Result.Success<Error>();
+    }
+
     #region Roled Users Factory Methods
     public static async Task<Result<User, Error[]>> CreateAdminAsync(
         UserManager<User> userManager,
