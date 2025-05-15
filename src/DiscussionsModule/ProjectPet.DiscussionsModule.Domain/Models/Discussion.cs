@@ -7,12 +7,15 @@ namespace ProjectPet.DiscussionsModule.Domain.Models;
 public class Discussion : EntityBase
 {
     public Guid RelatedEntityId { get; private set; }
-    public List<Guid> _userIds { get; private set; }
-    public List<Message> _messages { get; private set; }
-    public bool IsClosed { get; private set; }
 
     public IReadOnlyList<Guid> UserIds => _userIds.AsReadOnly();
+    private readonly List<Guid> _userIds = [];
     public IReadOnlyList<Message> Messages => _messages.AsReadOnly();
+    private readonly List<Message> _messages = [];
+
+    public bool IsClosed { get; private set; }
+
+
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public Discussion() : base(Guid.Empty) {}
@@ -36,8 +39,8 @@ public class Discussion : EntityBase
         if (valresGuid.IsFailure)
             return valresGuid.Error;
 
-        if (userIds.Count() < 2)
-            return Error.Failure("user.count.invalid", "Need at least two participants to start a discussion!");
+        if (userIds.Count() != 2)
+            return Error.Failure("user.count.invalid", "Need exactly two participants to start a discussion!");
 
         return new Discussion(relatedEntityId,
                               userIds,
