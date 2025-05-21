@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Approve;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Create;
@@ -16,7 +17,15 @@ public static class DependencyInjection
     public static IHostApplicationBuilder AddVolunteerRequestsModuleHandlers(this IHostApplicationBuilder builder)
     {
         return builder
-            .AddVolunteerRequestsHandlers();
+            .AddVolunteerRequestsHandlers()
+            .AddValidators();
+    }
+
+    private static IHostApplicationBuilder AddValidators(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
+
+        return builder;
     }
 
     private static IHostApplicationBuilder AddVolunteerRequestsHandlers(this IHostApplicationBuilder builder)

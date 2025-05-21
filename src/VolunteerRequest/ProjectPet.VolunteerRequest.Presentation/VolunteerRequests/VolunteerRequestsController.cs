@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
@@ -21,9 +22,14 @@ public class VolunteerRequestsController : CustomControllerBase
     [HttpPost()]
     public async Task<IActionResult> CreateVolunteerRequest(
         [FromServices] CreateHandler handler,
+        IValidator<CreateVolunteerRequestRequest> validator,
         [FromBody] CreateVolunteerRequestRequest request,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var userIdRes = GetCurrentUserId();
         if (userIdRes.IsFailure)
             return userIdRes.Error.ToResponse();
@@ -42,9 +48,14 @@ public class VolunteerRequestsController : CustomControllerBase
     public async Task<IActionResult> UpdateVolunteerRequest(
         [FromServices] UpdateHandler handler,
         [FromBody] UpdateVolunteerRequestRequest request,
+        IValidator<UpdateVolunteerRequestRequest> validator,
         [FromRoute] Guid requestId,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var command = UpdateCommand.FromRequest(request, requestId);
         var result = await handler.HandleAsync(command, cancellationToken);
 
@@ -79,9 +90,14 @@ public class VolunteerRequestsController : CustomControllerBase
     public async Task<IActionResult> RequestRevisionVolunteerRequest(
         [FromServices] RequestRevisionHandler handler,
         [FromBody] RequestRevisionVolunteerRequestRequest request,
+        IValidator<RequestRevisionVolunteerRequestRequest> validator,
         [FromRoute] Guid requestId,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var command = RequestRevisionCommand.FromRequest(request, requestId);
         var result = await handler.HandleAsync(command, cancellationToken);
 
@@ -97,8 +113,13 @@ public class VolunteerRequestsController : CustomControllerBase
         [FromServices] RejectHandler handler,
         [FromBody] RejectVolunteerRequestRequest request,
         [FromRoute] Guid requestId,
+        IValidator<RejectVolunteerRequestRequest> validator,
         CancellationToken cancellationToken = default)
     {
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
+
         var command = RejectCommand.FromRequest(request, requestId, PermissionCodes.VolunteerRequestCreate);
         var result = await handler.HandleAsync(command, cancellationToken);
 
