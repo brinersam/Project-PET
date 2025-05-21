@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using ProjectPet.AccountsModule.Contracts;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.SharedKernel.ErrorClasses;
@@ -9,13 +10,16 @@ public class RejectHandler
 {
     private readonly IVolunteerRequestRepository _requestRepository;
     private readonly IAccountsModuleContract _accountsModule;
+    private readonly ILogger<RejectHandler> _logger;
 
     public RejectHandler(
         IVolunteerRequestRepository requestRepository,
-        IAccountsModuleContract accountsModule)
+        IAccountsModuleContract accountsModule,
+        ILogger<RejectHandler> logger)
     {
         _requestRepository = requestRepository;
         _accountsModule = accountsModule;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, Error>> HandleAsync(
@@ -48,6 +52,11 @@ public class RejectHandler
         var saveRes = await _requestRepository.Save(requestRes.Value, cancellationToken);
         if (saveRes.IsFailure)
             return saveRes.Error;
+
+        _logger.LogInformation(
+            "Volunteer request (id {O1}) was rejected by user (id {O2})",
+            requestRes.Value.Id,
+            requestRes.Value.UserId);
 
         return requestRes.Value.Id;
     }

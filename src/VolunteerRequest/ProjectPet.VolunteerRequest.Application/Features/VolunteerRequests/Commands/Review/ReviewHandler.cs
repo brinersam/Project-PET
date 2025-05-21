@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using ProjectPet.Core.Abstractions;
 using ProjectPet.DiscussionsModule.Contracts;
 using ProjectPet.SharedKernel.ErrorClasses;
@@ -10,15 +11,18 @@ public class ReviewHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDiscussionModuleContract _discussionModule;
     private readonly IVolunteerRequestRepository _requestRepository;
+    private readonly ILogger<ReviewHandler> _logger;
 
     public ReviewHandler(
         IUnitOfWork unitOfWork,
         IDiscussionModuleContract discussionModule,
-        IVolunteerRequestRepository requestRepository)
+        IVolunteerRequestRepository requestRepository,
+        ILogger<ReviewHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _discussionModule = discussionModule;
         _requestRepository = requestRepository;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, Error>> HandleAsync(
@@ -47,6 +51,12 @@ public class ReviewHandler
             return saveRes.Error;
 
         transaction.Commit();
+
+        _logger.LogInformation(
+            "Volunteer request (id {O1}) taken into review by user (id {O2})",
+            requestRes.Value.Id,
+            requestRes.Value.UserId);
+
         return saveRes.Value;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.ValueObjects;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
@@ -8,11 +9,14 @@ namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Co
 public class UpdateHandler
 {
     private readonly IVolunteerRequestRepository _requestRepository;
+    private readonly ILogger<UpdateHandler> _logger;
 
     public UpdateHandler(
-        IVolunteerRequestRepository requestRepository)
+        IVolunteerRequestRepository requestRepository,
+        ILogger<UpdateHandler> logger)
     {
         _requestRepository = requestRepository;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, Error>> HandleAsync(
@@ -35,6 +39,11 @@ public class UpdateHandler
         var saveRes = await _requestRepository.Save(requestRes.Value, cancellationToken);
         if (saveRes.IsFailure)
             return saveRes.Error;
+
+        _logger.LogInformation(
+            "Volunteer request (id {O1}) was updated by user (id {O2})",
+            requestRes.Value.Id,
+            requestRes.Value.UserId);
 
         return requestRes.Value.Id;
     }

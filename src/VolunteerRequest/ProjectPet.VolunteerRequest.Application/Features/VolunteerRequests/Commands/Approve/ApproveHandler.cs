@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using ProjectPet.AccountsModule.Contracts;
 using ProjectPet.Core.Abstractions;
 using ProjectPet.SharedKernel.ErrorClasses;
@@ -11,15 +12,18 @@ public class ApproveHandler
     private readonly IVolunteerRequestRepository _requestRepository;
     private readonly IAccountsModuleContract _accountsModule;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<ApproveHandler> _logger;
 
     public ApproveHandler(
         IVolunteerRequestRepository requestRepository,
         IAccountsModuleContract accountsModule,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<ApproveHandler> logger)
     {
         _requestRepository = requestRepository;
         _accountsModule = accountsModule;
         _unitOfWork = unitOfWork;
+        _logger = logger;
     }
 
     public async Task<UnitResult<Error>> HandleAsync(
@@ -56,6 +60,11 @@ public class ApproveHandler
             return saveRes.Error;
         
         transaction.Commit();
+
+        _logger.LogInformation(
+            "Volunteer request (id {O1}) was approved. Was assigned admin (id {O2})",
+            requestRes.Value.Id,
+            requestRes.Value.AdminId);
 
         return Result.Success<Error>();
     }

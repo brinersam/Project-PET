@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.ValueObjects;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
@@ -8,11 +9,14 @@ namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Co
 public class CreateHandler
 {
     private readonly IVolunteerRequestRepository _requestRepository;
+    private readonly ILogger<CreateHandler> _logger;
 
     public CreateHandler(
-        IVolunteerRequestRepository requestRepository)
+        IVolunteerRequestRepository requestRepository,
+        ILogger<CreateHandler> logger)
     {
         _requestRepository = requestRepository;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, Error>> HandleAsync(
@@ -35,6 +39,11 @@ public class CreateHandler
         var addResult = await _requestRepository.AddAsync(createResult.Value, cancellationToken);
         if (addResult.IsFailure)
             return addResult.Error;
+
+        _logger.LogInformation(
+            "Volunteer request (id {O1}) was created by user (id {O2})",
+            createResult.Value.Id,
+            createResult.Value.UserId);
 
         return createResult.Value.Id;
     }
