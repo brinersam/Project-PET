@@ -56,7 +56,6 @@ public class AccountsModuleContractImplementation : IAccountsModuleContract
         if (roleResult.Succeeded == false)
             return roleResult.Errors.Select(x => Error.Failure(x.Code, x.Description)).FirstOrDefault()!;
 
-        transaction.Commit();
         _logger.LogInformation("User (id {O1}) got role: {O2}", userId, VolunteerAccount.ROLENAME);
 
         return Result.Success<Error>();

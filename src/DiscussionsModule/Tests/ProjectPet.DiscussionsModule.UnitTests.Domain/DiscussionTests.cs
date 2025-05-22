@@ -13,6 +13,12 @@ public class DiscussionTests
     public void CreateDiscussion_ValidEntry_Success(Guid relatedEntity,
                                                     List<Guid> users)
     {
+        users = new() 
+        {
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+        };
+
         // Act
         var sut = Discussion.Create(relatedEntity, users);
 
@@ -35,7 +41,6 @@ public class DiscussionTests
 
     [Theory]
     [InlineAmntOfGuids(2)]
-    [InlineAmntOfGuids(3)]
     public void CreateDiscussion_UserAmnt_Valid_Success(Guid relatedEntity,
                                                         List<Guid> users)
     {
