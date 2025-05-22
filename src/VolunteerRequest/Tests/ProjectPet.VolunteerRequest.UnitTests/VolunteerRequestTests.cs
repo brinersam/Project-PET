@@ -3,6 +3,7 @@ using CSharpFunctionalExtensions;
 using FluentAssertions;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
+using ProjectPet.SharedKernel.ValueObjects;
 using ProjectPet.VolunteerRequests.Domain.Models;
 
 namespace ProjectPet.VolunteerRequests.UnitTests;
@@ -20,7 +21,7 @@ public class VolunteerRequestTests
     public void NewRequest_StateEqualsTo_Submitted()
     {
         // arrange
-        var accountDto = _fixture.Create<VolunteerAccountDto>();
+        var accountDto = _fixture.Create<VolunteerAccount>();
 
         // act
         var sut = VolunteerRequest.Create(
@@ -105,12 +106,12 @@ public class VolunteerRequestTests
     private VolunteerRequest CreateVolunteerRequest(
         Guid userId = default,
         Guid discussionId = default,
-        VolunteerAccountDto dto = null!)
+        VolunteerAccount volunteerAccount = null!)
     {
         var createResult = VolunteerRequest.Create(
             userId == default ?         Guid.NewGuid() : userId,
             discussionId == default ?   Guid.NewGuid() : discussionId,
-            dto ??                      _fixture.Create<VolunteerAccountDto>());
+            volunteerAccount ??                      _fixture.Create<VolunteerAccount>());
 
         return createResult.Value;
     }

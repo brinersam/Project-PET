@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Text.Json.Serialization;
 
-namespace ProjectPet.AccountsModule.Domain.UserData;
+namespace ProjectPet.SharedKernel.ValueObjects;
 public class PaymentInfo : ValueObject
 {
     public string Title { get; }

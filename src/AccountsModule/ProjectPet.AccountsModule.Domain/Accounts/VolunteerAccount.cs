@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.AccountsModule.Domain.UserData;
+using ProjectPet.SharedKernel.ValueObjects;
 using System.Text.Json.Serialization;
 
 namespace ProjectPet.AccountsModule.Domain.Accounts;

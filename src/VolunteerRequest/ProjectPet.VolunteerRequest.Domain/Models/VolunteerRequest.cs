@@ -3,7 +3,6 @@ using ProjectPet.Core.Validator;
 using ProjectPet.SharedKernel;
 using ProjectPet.SharedKernel.Entities.AbstractBase;
 using ProjectPet.SharedKernel.ErrorClasses;
-using ProjectPet.SharedKernel.SharedDto;
 
 namespace ProjectPet.VolunteerRequests.Domain.Models;
 public class VolunteerRequest : EntityBase
@@ -11,7 +10,7 @@ public class VolunteerRequest : EntityBase
     public Guid AdminId { get; private set; }
     public Guid UserId { get; private set; }
     public Guid DiscussionId { get; private set; }
-    public VolunteerAccountDto VolunteerData { get; private set; }
+    public VolunteerAccountData VolunteerData { get; private set; }
     public VolunteerRequestStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public string RejectionComment { get; private set; }
@@ -26,7 +25,7 @@ public class VolunteerRequest : EntityBase
         Guid adminId,
         Guid userId,
         Guid discussionId,
-        VolunteerAccountDto volunteerData,
+        VolunteerAccountData volunteerData,
         VolunteerRequestStatus requestStatus,
         DateTime createdAt,
         string rejectionComment) : base(id)
@@ -43,7 +42,7 @@ public class VolunteerRequest : EntityBase
     public static Result<VolunteerRequest, Error> Create(
         Guid userId,
         Guid discussionId,
-        VolunteerAccountDto volunteerData)
+        VolunteerAccountData volunteerData)
     {
         return new VolunteerRequest(
             Guid.Empty,
@@ -56,9 +55,18 @@ public class VolunteerRequest : EntityBase
             string.Empty);
     }
 
+    public UnitResult<Error> UpdateVolunteerData(VolunteerAccountData account)
+    {
+        if (TryTransitionTo(VolunteerRequestStatus.onReview, out Error error) == false)
+            return error;
+
+        VolunteerData = account;
+        return Result.Success<Error>();
+    }
+
     public UnitResult<Error> BeginReview(Guid adminId)
     {
-        if (TrySetTransition(VolunteerRequestStatus.onReview, out Error error) == false)
+        if (TryTransitionTo(VolunteerRequestStatus.onReview, out Error error) == false)
             return error;
 
         AdminId = adminId;
@@ -72,7 +80,7 @@ public class VolunteerRequest : EntityBase
         if (result.IsFailure)
             return result.Error;
 
-        if (TrySetTransition(VolunteerRequestStatus.revisionRequired, out Error error) == false)
+        if (TryTransitionTo(VolunteerRequestStatus.revisionRequired, out Error error) == false)
             return error;
         RejectionComment = rejectionComment;
 
@@ -81,7 +89,7 @@ public class VolunteerRequest : EntityBase
 
     public UnitResult<Error> RejectRequest(string rejectionComment = "")
     {
-        if (TrySetTransition(VolunteerRequestStatus.rejected, out Error error) == false)
+        if (TryTransitionTo(VolunteerRequestStatus.rejected, out Error error) == false)
             return error;
         RejectionComment = rejectionComment;
 
@@ -90,13 +98,13 @@ public class VolunteerRequest : EntityBase
 
     public UnitResult<Error> ApproveRequest()
     {
-        if (TrySetTransition(VolunteerRequestStatus.approved, out Error error) == false)
+        if (TryTransitionTo(VolunteerRequestStatus.approved, out Error error) == false)
             return error;
 
         return Result.Success<Error>();
     }
 
-    private bool TrySetTransition(VolunteerRequestStatus goal, out Error Error)
+    private bool TryTransitionTo(VolunteerRequestStatus goal, out Error Error)
     {
         if (IsValidTransition(goal))
         {
