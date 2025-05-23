@@ -32,6 +32,9 @@ public static class DependencyInjection
         builder.Services.AddScoped<DeleteMessageHandler>();
         builder.Services.AddScoped<EditMessageHandler>();
 
+        // queries
+        builder.Services.AddScoped<GetDiscussionHandler>();
+
         return builder;
     }
 }
