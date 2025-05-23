@@ -65,9 +65,11 @@ public class AuthRepository : IAuthRepository
             .Where(x => DateTime.UtcNow >= x.ExpiresAt)
             .FirstOrDefault(x => x.UserId == userID && Equals(x.Code, code));
 
-        if (modifier is null)
-            return false;
+        var modifierExists = modifier is not null;
 
-        return modifier.IsAllowed;
+        if (modifierExists)
+            isPermitted = modifier.IsAllowed;
+
+        return modifierExists;
     }
 }
