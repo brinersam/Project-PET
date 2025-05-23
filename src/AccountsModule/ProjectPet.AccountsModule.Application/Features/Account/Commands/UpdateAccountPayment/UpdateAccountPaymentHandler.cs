@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using ProjectPet.AccountsModule.Application.Interfaces;
-using ProjectPet.AccountsModule.Domain.UserData;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.SharedKernel.ValueObjects;
 
 namespace ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountPayment;
 

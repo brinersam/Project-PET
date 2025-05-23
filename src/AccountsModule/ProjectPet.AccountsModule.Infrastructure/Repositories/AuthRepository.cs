@@ -40,8 +40,10 @@ public class AuthRepository : IAuthRepository
     {
         var user = await _authDbContext.Users.FirstOrDefaultAsync(u => u.Id == userID, cancellationToken);
 
-        var roles = await _userManager.GetRolesAsync(user);
+        if (IsUserHasPermissionModifier(userID, permissionCode, out bool IsPermitted))
+            return IsPermitted;
 
+        var roles = await _userManager.GetRolesAsync(user!);
         var roleIds = _authDbContext.Roles.Where(r => roles.Contains(r.Name)).Select(x => x.Id).ToHashSet();
 
         var permissionExists = await _authDbContext.RolePermissions.AnyAsync
@@ -55,4 +57,19 @@ public class AuthRepository : IAuthRepository
         return permissionExists;
     }
 
+    private bool IsUserHasPermissionModifier(Guid userID, string code, out bool isPermitted)
+    {
+        isPermitted = false;
+
+        var modifier = _authDbContext.PermissionModifiers
+            .Where(x => DateTime.UtcNow >= x.ExpiresAt)
+            .FirstOrDefault(x => x.UserId == userID && Equals(x.Code, code));
+
+        var modifierExists = modifier is not null;
+
+        if (modifierExists)
+            isPermitted = modifier.IsAllowed;
+
+        return modifierExists;
+    }
 }

@@ -16,7 +16,13 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\ProjectPet.Core\ProjectPet.Core.csproj" />
+    <ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
     <ProjectReference Include="..\ProjectPet.VolunteerRequest.Application\ProjectPet.VolunteerRequests.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

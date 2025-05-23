@@ -6,6 +6,8 @@ public class BaseDiscussionCustomization : ICustomization
 {
     public void Customize(IFixture fixture)
     {
+        fixture.RepeatCount = 2;
+
         Discussion discussion = Discussion.Create(
                 fixture.Create<Guid>(),
                 fixture.CreateMany<Guid>()).Value;

@@ -14,10 +14,6 @@ public class ReadDbContext(IConfiguration configuration, IOptions<OptionsDb> opt
 
     public DbSet<UserDto> Users => Set<UserDto>();
 
-    //public DbSet<Permission> Permissions => Set<Permission>();
-    //public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
-    //public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(DATABASE);

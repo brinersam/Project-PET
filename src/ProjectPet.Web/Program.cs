@@ -1,10 +1,14 @@
 using ProjectPet.AccountsModule.Infrastructure;
 using ProjectPet.AccountsModule.Presentation;
+using ProjectPet.DiscussionsModule.Infrastructure;
+using ProjectPet.DiscussionsModule.Presentation;
 using ProjectPet.FileManagement.Infrastructure;
 using ProjectPet.SpeciesModule.Infrastructure;
 using ProjectPet.SpeciesModule.Presentation;
 using ProjectPet.VolunteerModule.Infrastructure;
 using ProjectPet.VolunteerModule.Presentation;
+using ProjectPet.VolunteerRequests.Infrastructure;
+using ProjectPet.VolunteerRequests.Presentation;
 using ProjectPet.Web;
 using ProjectPet.Web.Extentions;
 using ProjectPet.Web.MIddlewares;
@@ -35,6 +39,11 @@ builder.AddFileManagementInfrastructure();
 builder.AddAuthModuleHandlers();
 builder.AddAuthModuleInfrastructure();
 
+builder.AddVolunteerRequestsModuleHandlers();
+builder.AddVolunteerRequestModuleInfrastructure();
+
+builder.AddDiscussionModuleHandlers();
+builder.AddDiscussionsModuleInfrastructure();
 #endregion
 
 builder.Services.AddValidation();

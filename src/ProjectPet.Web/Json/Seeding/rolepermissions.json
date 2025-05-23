@@ -1,6 +1,7 @@
 {
   "Admin": [
-    "admin.masterkey"
+    "admin.masterkey",
+    "volunteerrequest.admin"
   ],
   "Volunteer": [
     "owned.pets.create",
@@ -11,6 +12,9 @@
   ],
   "Member": [
     "self.member.edit",
-    "pets.read"
+    "pets.read",
+    "volunteerrequest.update",
+    "volunteerrequest.create",
+    "volunteerrequest.read"
   ]
 }

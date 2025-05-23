@@ -7,10 +7,12 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.16" />
 	</ItemGroup>
 
 	<ItemGroup>
+    <ProjectReference Include="..\..\AccountsModule\ProjectPet.AccountsModule.Contracts\ProjectPet.AccountsModule.Contracts.csproj" />
+    <ProjectReference Include="..\..\DiscussionsModule\ProjectPet.DiscussionsModule.Contracts\ProjectPet.DiscussionsModule.Contracts.csproj" />
     <ProjectReference Include="..\ProjectPet.VolunteerRequest.Contracts\ProjectPet.VolunteerRequests.Contracts.csproj" />
     <ProjectReference Include="..\ProjectPet.VolunteerRequest.Domain\ProjectPet.VolunteerRequests.Domain.csproj" />
   </ItemGroup>

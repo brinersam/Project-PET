@@ -24,4 +24,8 @@ public static class PermissionCodes
     public const string SpeciesRead = "species.read";
     public const string SpeciesUpdate = "species.update";
     public const string SpeciesDelete = "species.delete";
+    public const string VolunteerRequestCreate = "volunteerrequest.create";
+    public const string VolunteerRequestRead = "volunteerrequest.read";
+    public const string VolunteerRequestUpdate = "volunteerrequest.update";
+    public const string VolunteerRequestAdmin = "volunteerrequest.admin";
 }
