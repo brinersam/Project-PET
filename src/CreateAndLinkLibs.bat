@@ -1,5 +1,5 @@
 set "mastername=ProjectPet"
-set "projectname=FileManagement"
+set "projectname=DiscussionsModule"
 
 set "solutionPath=../ProjectPet.sln"
 set "filepath=%mastername%.%projectname%.!subfolder!"
