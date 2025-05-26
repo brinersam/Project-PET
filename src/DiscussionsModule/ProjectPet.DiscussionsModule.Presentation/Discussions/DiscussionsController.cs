@@ -1,19 +1,19 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ProjectPet.Framework.Authorization;
-using ProjectPet.Framework;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.AddMessageToDiscussion;
-using ProjectPet.DiscussionsModule.Contracts.Requests;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.CloseDiscussion;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.DeleteMessage;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.EditMessage;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Queries.GetDiscussion;
+using ProjectPet.DiscussionsModule.Contracts.Requests;
+using ProjectPet.Framework;
+using ProjectPet.Framework.Authorization;
 
 namespace ProjectPet.DiscussionsModule.Presentation.Discussions;
 public class DiscussionsController : CustomControllerBase
 {
     [Permission(PermissionCodes.DiscussionsAdmin)]
-    [HttpPut("{discussionId:guid}")]
+    [HttpPut("{discussionId:guid}/close")]
     public async Task<IActionResult> DiscussionClose(
         [FromServices] CloseDiscussionHandler handler,
         [FromRoute] Guid discussionId,

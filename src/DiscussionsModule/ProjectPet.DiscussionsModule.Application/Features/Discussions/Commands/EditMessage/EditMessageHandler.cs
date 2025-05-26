@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.DiscussionsModule.Application.Interfaces;
-using ProjectPet.DiscussionsModule.Domain.Models;
 using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.EditMessage;

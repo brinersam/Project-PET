@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute.ReceivedExtensions;
 using ProjectPet.DiscussionsModule.Application.Interfaces;
 using ProjectPet.DiscussionsModule.Domain.Models;
 using ProjectPet.DiscussionsModule.Infrastructure.Database;
@@ -56,58 +55,11 @@ public class DiscussionsTestBase : IClassFixture<DiscussionsTestWebFactory>, IAs
             (Guid)entityId,
             userIds);
 
-        acts?.Invoke(discussionRes.Value); 
+        acts?.Invoke(discussionRes.Value);
 
         await _repository.AddAsync(discussionRes.Value);
 
         return discussionRes.Value;
     }
-
-    //protected async Task<VolunteerRequest> SeedVolunteerRequestAsync(Guid userId = default, Action<VolunteerRequest> action = null!)
-    //{
-    //    var volunteerReq = CreateVolunteerRequest(userId);
-
-    //    action?.Invoke(volunteerReq);
-
-    //    await _writeDbContext.VolunteerRequests.AddAsync(volunteerReq);
-    //    await _writeDbContext.SaveChangesAsync();
-    //    return volunteerReq;
-    //}
-    //protected async Task<VolunteerRequest> SeedVolunteerRequestAndSetToReview(Guid? adminId, Guid? userId)
-    //{
-    //    adminId ??= _fixture.Create<Guid>();
-    //    userId ??= _fixture.Create<Guid>();
-
-    //    var volunteerRequest = await SeedVolunteerRequestAsync((Guid)userId, x => x.BeginReview((Guid)adminId));
-
-    //    await _writeDbContext.SaveChangesAsync();
-
-    //    return volunteerRequest;
-    //}
-
-    //protected async Task<VolunteerRequest> SeedVolunteerRequestAndSetToRevisionRequired(Guid? adminId, Guid? userId)
-    //{
-    //    adminId ??= _fixture.Create<Guid>();
-    //    userId ??= _fixture.Create<Guid>();
-
-    //    var volunteerRequest = await SeedVolunteerRequestAsync((Guid)userId, x =>
-    //    {
-    //        x.BeginReview((Guid)adminId);
-    //        x.RequestRevision("revision-required");
-    //    });
-
-    //    await _writeDbContext.SaveChangesAsync();
-
-    //    return volunteerRequest;
-    //}
-
-    //private VolunteerRequest CreateVolunteerRequest(Guid userId = default)
-    //{
-    //    return VolunteerRequest.Create(
-    //        userId == default ? _fixture.Create<Guid>() : userId,
-    //        _fixture.Create<Guid>(),
-    //        _fixture.Create<VolunteerAccountData>()
-    //    ).Value;
-    //}
     #endregion
 }

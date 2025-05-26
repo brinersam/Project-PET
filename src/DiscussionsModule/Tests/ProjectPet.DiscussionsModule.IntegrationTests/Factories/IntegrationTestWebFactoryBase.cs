@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using Respawn;
-using Respawn.Graph;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
 

@@ -19,7 +19,7 @@ public class Message : EntityBase
     private Message(Guid userId,
                     DateTime createdAt,
                     string text,
-                    bool isEdited) : base(Guid.NewGuid())
+                    bool isEdited) : base(Guid.Empty)
     {
         UserId = userId;
         CreatedAt = createdAt;

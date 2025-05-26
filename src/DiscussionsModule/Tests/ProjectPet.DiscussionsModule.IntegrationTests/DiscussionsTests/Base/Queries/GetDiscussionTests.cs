@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Queries.GetDiscussion;
 using ProjectPet.DiscussionsModule.IntegrationTests.Factories;
 
-namespace ProjectPet.DiscussionsModule.IntegrationTests.DiscussionsTests.Base.Commands;
+namespace ProjectPet.DiscussionsModule.IntegrationTests.DiscussionsTests.Base.Queries;
 
 public class GetDiscussionTests : DiscussionsTestBase
 {
@@ -27,7 +27,7 @@ public class GetDiscussionTests : DiscussionsTestBase
 
         var discussion = await SeedDiscussionAsync(
             userIds: userIds,
-            acts: x => 
+            acts: x =>
         {
             x.AddComment(senderUserId, message1Text);
             x.AddComment(senderUserId, message2Text);

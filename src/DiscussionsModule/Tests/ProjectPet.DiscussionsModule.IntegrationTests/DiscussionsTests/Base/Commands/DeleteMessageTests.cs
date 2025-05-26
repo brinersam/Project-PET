@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.DeleteMessage;
-using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.EditMessage;
 using ProjectPet.DiscussionsModule.IntegrationTests.Factories;
 
 namespace ProjectPet.DiscussionsModule.IntegrationTests.DiscussionsTests.Base.Commands;

@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.CloseDiscussion;
 using ProjectPet.DiscussionsModule.Application.Interfaces;
 using ProjectPet.DiscussionsModule.Contracts.Dto;
 using ProjectPet.DiscussionsModule.Domain.Models;
