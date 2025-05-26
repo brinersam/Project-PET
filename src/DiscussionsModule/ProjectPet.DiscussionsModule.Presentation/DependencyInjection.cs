@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectPet.DiscussionsModule.Application;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.AddMessageToDiscussion;
@@ -15,7 +16,8 @@ public static class DependencyInjection
     {
         return builder
             .AddHandlers()
-            .AddContractImplementation();
+            .AddContractImplementation()
+            .AddValidators();
     }
 
     private static IHostApplicationBuilder AddContractImplementation(this IHostApplicationBuilder builder)
@@ -24,6 +26,12 @@ public static class DependencyInjection
         return builder;
     }
     
+    private static IHostApplicationBuilder AddValidators(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
+        return builder;
+    }
+
     private static IHostApplicationBuilder AddHandlers(this IHostApplicationBuilder builder)
     {
         // commands

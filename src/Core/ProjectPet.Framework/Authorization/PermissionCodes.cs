@@ -28,4 +28,9 @@ public static class PermissionCodes
     public const string VolunteerRequestRead = "volunteerrequest.read";
     public const string VolunteerRequestUpdate = "volunteerrequest.update";
     public const string VolunteerRequestAdmin = "volunteerrequest.admin";
+    public const string DiscussionsCreate = "discussions.create";
+    public const string DiscussionsRead = "discussions.read";
+    public const string DiscussionsUpdate = "discussions.update";
+    public const string DiscussionsAdmin = "discussions.admin";
+    public const string DiscussionsParticipate = "discussions.participate";
 }
