@@ -62,7 +62,7 @@ app.UseCustomExceptionHandler();
 
 app.UseSerilogRequestLogging();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); uncomment after configuring nginx support for https
 
 app.UseAuthentication();
 app.UseAuthorization();
