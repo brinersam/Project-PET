@@ -1,14 +1,18 @@
 {
   "Admin": [
     "admin.masterkey",
-    "volunteerrequest.admin"
+    "volunteerrequest.admin",
+    "discussions.admin",
+    "discussions.update"
   ],
   "Volunteer": [
     "owned.pets.create",
     "owned.pets.update",
     "owned.pets.delete",
     "self.volunteer.edit",
-    "pets.read"
+    "pets.read",
+    "discussions.read",
+    "discussions.participate"
   ],
   "Member": [
     "self.member.edit",

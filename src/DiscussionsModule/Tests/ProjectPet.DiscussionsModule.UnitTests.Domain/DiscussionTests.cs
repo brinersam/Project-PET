@@ -13,7 +13,7 @@ public class DiscussionTests
     public void CreateDiscussion_ValidEntry_Success(Guid relatedEntity,
                                                     List<Guid> users)
     {
-        users = new() 
+        users = new()
         {
             Guid.NewGuid(),
             Guid.NewGuid(),

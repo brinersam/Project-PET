@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.Framework;
 
@@ -19,5 +21,13 @@ public abstract class CustomControllerBase : ControllerBase
     {
         var envelope = Envelope.Ok(value);
         return new OkObjectResult(envelope);
+    }
+
+    protected Result<Guid, Error> GetCurrentUserId()
+    {
+        string? userId = HttpContext.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
+        if (String.IsNullOrWhiteSpace(userId))
+            return Error.Failure("claim.not.found", "Unknown user!");
+        return new Guid(userId);
     }
 }

@@ -29,7 +29,12 @@
     "volunteerrequest.create",
     "volunteerrequest.read",
     "volunteerrequest.update",
-    "volunteerrequest.admin"
+    "volunteerrequest.admin",
 
+    "discussions.create",
+    "discussions.read",
+    "discussions.update",
+    "discussions.admin",
+    "discussions.participate"
   ]
 }
