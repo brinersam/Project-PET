@@ -6,7 +6,7 @@ using ProjectPet.AccountsModule.Contracts;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Database;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.SharedKernel.ValueObjects;

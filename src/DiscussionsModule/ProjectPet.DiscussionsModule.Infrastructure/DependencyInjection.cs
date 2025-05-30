@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Database;
 using ProjectPet.DiscussionsModule.Application.Interfaces;
 using ProjectPet.DiscussionsModule.Infrastructure.Database;
 using ProjectPet.DiscussionsModule.Infrastructure.Repositories;

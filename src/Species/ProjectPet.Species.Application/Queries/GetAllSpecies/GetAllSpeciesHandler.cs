@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.Core.Extensions;
-using ProjectPet.Core.HelperModels;
+using ProjectPet.Core.ResponseModels;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SpeciesModule.Application.Interfaces;
 using ProjectPet.SpeciesModule.Contracts.Dto;

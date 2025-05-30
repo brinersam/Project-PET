@@ -8,6 +8,7 @@
 
 
 	<ItemGroup>
+		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.0" />
 		<PackageReference Include="CSharpFunctionalExtensions" Version="3.0.0" />
 		<PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
@@ -17,7 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
     <ProjectReference Include="..\ProjectPet.FileManagement.Application\ProjectPet.FileManagement.Application.csproj" />
   </ItemGroup>
 

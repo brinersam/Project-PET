@@ -2,13 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Minio;
-using ProjectPet.Core.Abstractions;
 using ProjectPet.Core.Options;
-using ProjectPet.Core.Providers;
 using ProjectPet.FileManagement.Infrastructure;
 using ProjectPet.FileManagement.Infrastructure.BackgroundServices;
 using ProjectPet.FileManagement.Infrastructure.MessageQueues;
 using ProjectPet.FileManagement.Infrastructure.Providers;
+using ProjectPet.Core.Files;
+using ProjectPet.Core.MessageQueues;
 
 namespace ProjectPet.FileManagement.Infrastructure;
 public static class DependencyInjection

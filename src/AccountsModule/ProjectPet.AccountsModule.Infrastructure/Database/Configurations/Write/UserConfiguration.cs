@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.AccountsModule.Domain;
-using ProjectPet.Framework.EFExtensions;
+using ProjectPet.Core.Extensions;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Database.Configurations.Write;
 public class UserConfiguration : IEntityTypeConfiguration<User>

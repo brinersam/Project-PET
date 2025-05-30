@@ -1,5 +1,5 @@
-﻿using ProjectPet.Core.Abstractions;
-using ProjectPet.Core.Providers;
+﻿using ProjectPet.Core.Files;
+using ProjectPet.Core.Requests;
 using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectPet.Core.Extensions;
 using ProjectPet.DiscussionsModule.Contracts.Dto;
 using ProjectPet.DiscussionsModule.Domain.Models;
-using ProjectPet.Framework.EFExtensions;
 
 namespace ProjectPet.DiscussionsModule.Infrastructure.Database.Configurations.Read;
 public class DiscussionDtoConfiguration : IEntityTypeConfiguration<DiscussionDto>

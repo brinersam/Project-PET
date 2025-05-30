@@ -13,9 +13,10 @@ using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Repositories;
 using ProjectPet.AccountsModule.Infrastructure.Seeding;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Requests;
 using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Core.Database;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
 public static class DependencyInjection

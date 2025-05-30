@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ProjectPet.Core.Providers;
+using ProjectPet.Core.Files;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;

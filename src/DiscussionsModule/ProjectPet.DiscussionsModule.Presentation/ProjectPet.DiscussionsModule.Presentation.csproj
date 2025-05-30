@@ -1,14 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
-    <ProjectReference Include="..\ProjectPet.DiscussionsModule.Application\ProjectPet.DiscussionsModule.Application.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ProjectPet.DiscussionsModule.Application\ProjectPet.DiscussionsModule.Application.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
     <ProjectReference Include="..\ProjectPet.FileManagement.Application\ProjectPet.FileManagement.Application.csproj" />
   </ItemGroup>
 

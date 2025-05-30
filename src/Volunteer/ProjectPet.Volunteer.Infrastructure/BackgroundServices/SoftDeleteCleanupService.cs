@@ -3,11 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Requests;
 using ProjectPet.Core.Options;
 using ProjectPet.SharedKernel.Entities.AbstractBase;
 using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Infrastructure.Database;
+using ProjectPet.Core.Database;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.BackgroundServices;
 public class SoftDeleteCleanupService : BackgroundService
@@ -57,7 +58,7 @@ public class SoftDeleteCleanupService : BackgroundService
         await Task.CompletedTask;
     }
 
-    private async Task<int> RemoveExpiredSoftDeletedEntitiesFromSetAsync<T>(DbContext context) where T : SoftDeletableEntity
+    private async Task<int> RemoveExpiredSoftDeletedEntitiesFromSetAsync<T>(DbContext context) where T : SoftDeletableEntityBase
     {
         int cleanedUpEntities = 0;
         var set = await context

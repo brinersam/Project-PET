@@ -1,5 +1,5 @@
-﻿using ProjectPet.Core.Abstractions;
-using ProjectPet.Core.HelperModels;
+﻿using ProjectPet.Core.Requests;
+using ProjectPet.Core.ResponseModels;
 using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;

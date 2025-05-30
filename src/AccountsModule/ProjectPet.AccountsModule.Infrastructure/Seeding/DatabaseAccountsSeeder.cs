@@ -7,7 +7,8 @@ using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Seeding.SeedDtos;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Database;
+using ProjectPet.Core.Requests;
 using System.Text.Json;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Seeding;

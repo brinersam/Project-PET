@@ -1,4 +1,4 @@
-﻿using ProjectPet.Core.Abstractions;
+﻿using ProjectPet.Core.Requests;
 using ProjectPet.DiscussionsModule.Contracts.Requests;
 
 namespace ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.AddMessageToDiscussion;

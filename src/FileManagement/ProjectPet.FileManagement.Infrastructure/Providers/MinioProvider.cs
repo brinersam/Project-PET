@@ -3,9 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Files;
 using ProjectPet.Core.Options;
-using ProjectPet.Core.Providers;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.Reactive.Linq;
 

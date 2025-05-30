@@ -1,5 +1,5 @@
 ﻿using ProjectPet.AccountsModule.Contracts.Requests;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Requests;
 using ProjectPet.SharedKernel.SharedDto;
 
 namespace ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountPayment;

@@ -1,5 +1,5 @@
-﻿using ProjectPet.Core.Abstractions;
-using ProjectPet.Core.HelperModels;
+﻿using ProjectPet.Core.Requests;
+using ProjectPet.Core.ResponseModels;
 using ProjectPet.VolunteerRequests.Contracts.Requests;
 
 namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Queries.GetByAdminIdPaginatedFiltered;

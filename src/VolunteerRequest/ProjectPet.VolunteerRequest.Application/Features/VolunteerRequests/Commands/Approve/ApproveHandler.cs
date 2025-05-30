@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using ProjectPet.AccountsModule.Contracts;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Database;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.VolunteerRequests.Application.Interfaces;

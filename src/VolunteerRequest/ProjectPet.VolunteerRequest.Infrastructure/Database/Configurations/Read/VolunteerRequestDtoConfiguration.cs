@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectPet.Framework.EFExtensions;
+using ProjectPet.Core.Extensions;
 using ProjectPet.VolunteerRequests.Contracts.Dto;
 using ProjectPet.VolunteerRequests.Domain.Models;
 

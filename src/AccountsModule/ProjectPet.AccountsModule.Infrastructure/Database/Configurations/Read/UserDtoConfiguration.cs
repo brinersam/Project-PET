@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectPet.AccountsModule.Contracts.Dto;
-using ProjectPet.Framework.EFExtensions;
+using ProjectPet.Core.Extensions;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Database.Configurations.Read;
 public class UserDtoConfiguration : IEntityTypeConfiguration<UserDto>

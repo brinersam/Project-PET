@@ -6,7 +6,7 @@ using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.VolunteerModule.Domain.Models;
 
-public class Volunteer : SoftDeletableEntity
+public class Volunteer : SoftDeletableEntityBase
 {
     public string FullName { get; private set; } = null!;
     public string Email { get; private set; } = null!;

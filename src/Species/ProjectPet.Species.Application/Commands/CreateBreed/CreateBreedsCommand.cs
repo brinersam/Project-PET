@@ -1,4 +1,4 @@
-﻿using ProjectPet.Core.Abstractions;
+﻿using ProjectPet.Core.Requests;
 using ProjectPet.SpeciesModule.Domain.Requests;
 
 namespace ProjectPet.SpeciesModule.Application.Commands.CreateBreed;

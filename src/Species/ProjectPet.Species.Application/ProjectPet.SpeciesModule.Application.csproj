@@ -8,11 +8,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.16" />
+		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\..\Core\ProjectPet.Core\ProjectPet.Core.csproj" />
-    <ProjectReference Include="..\..\Core\ProjectPet.SharedKernel\ProjectPet.SharedKernel.csproj" />
     <ProjectReference Include="..\..\Volunteer\ProjectPet.Volunteer.Contracts\ProjectPet.VolunteerModule.Contracts.csproj" />
     <ProjectReference Include="..\ProjectPet.Species.Contracts\ProjectPet.SpeciesModule.Contracts.csproj" />
     <ProjectReference Include="..\ProjectPet.Species.Domain\ProjectPet.SpeciesModule.Domain.csproj" />

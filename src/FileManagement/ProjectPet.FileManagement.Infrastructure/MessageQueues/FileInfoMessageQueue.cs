@@ -1,5 +1,6 @@
-﻿using ProjectPet.Core.Abstractions;
-using ProjectPet.Core.Providers;
+﻿using ProjectPet.Core.Files;
+using ProjectPet.Core.MessageQueues;
+using ProjectPet.Core.Requests;
 using System.Threading.Channels;
 
 namespace ProjectPet.FileManagement.Infrastructure.MessageQueues;

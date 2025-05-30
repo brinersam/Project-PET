@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 using ProjectPet.AccountsModule.Contracts;
 using ProjectPet.AccountsModule.Infrastructure.Database;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Database;
 using ProjectPet.DiscussionsModule.Contracts;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;

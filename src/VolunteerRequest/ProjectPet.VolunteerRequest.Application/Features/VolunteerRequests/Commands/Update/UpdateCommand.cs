@@ -1,4 +1,4 @@
-﻿using ProjectPet.Core.Abstractions;
+﻿using ProjectPet.Core.Requests;
 using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.VolunteerRequests.Contracts.Requests;
 namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Update;

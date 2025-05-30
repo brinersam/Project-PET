@@ -1,6 +1,6 @@
 ﻿using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Contracts.Requests;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Requests;
 
 namespace ProjectPet.AccountsModule.Application.Features.Auth.Commands.RefreshTokens;
 

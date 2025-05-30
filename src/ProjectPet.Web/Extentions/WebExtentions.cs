@@ -1,4 +1,4 @@
-﻿using ProjectPet.Core.Abstractions;
+﻿using ProjectPet.Core.Database;
 
 namespace ProjectPet.Web.Extentions;
 

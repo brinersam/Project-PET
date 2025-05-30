@@ -1,4 +1,4 @@
-﻿using ProjectPet.Core.Abstractions;
+﻿using ProjectPet.Core.Requests;
 using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeleteVolunteer;

@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
-using ProjectPet.Core.Abstractions;
-using ProjectPet.Core.Providers;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.Core.Files;
+using ProjectPet.Core.Database;
 
 namespace ProjectPet.VolunteerModule.IntegrationTests.Factories;
 public class VolunteerWebFactory : IntegrationTestWebFactoryBase

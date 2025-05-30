@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CSharpFunctionalExtensions" Version="3.0.0" />
@@ -13,14 +13,14 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
 		<PackageReference Include="Minio.AspNetCore" Version="6.0.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.0" />
+		<PackageReference Include="Brinersam.ProjectPet.Core" Version="1.0.0" />
+		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.0" />
 	</ItemGroup>
 
-	
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\ProjectPet.Core\ProjectPet.Core.csproj" />
-    <ProjectReference Include="..\..\Core\ProjectPet.Framework\ProjectPet.Framework.csproj" />
-    <ProjectReference Include="..\..\Core\ProjectPet.SharedKernel\ProjectPet.SharedKernel.csproj" />
-    <ProjectReference Include="..\ProjectPet.Volunteer.Application\ProjectPet.VolunteerModule.Application.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ProjectPet.Volunteer.Application\ProjectPet.VolunteerModule.Application.csproj" />
+	</ItemGroup>
 
 </Project>

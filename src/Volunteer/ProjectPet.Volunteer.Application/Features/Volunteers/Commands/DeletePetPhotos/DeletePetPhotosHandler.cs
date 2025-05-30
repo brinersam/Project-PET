@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Files;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePetPhotos;

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Core.Abstractions;
+using ProjectPet.Core.Database;
+using ProjectPet.Core.Files;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 
