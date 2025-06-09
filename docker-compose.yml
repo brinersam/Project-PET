@@ -4,6 +4,9 @@ services:
   projectpet.web:
     container_name: ProjectPet.web
     build:
+      args:
+        NUGET_USERNAME: ${NUGET_USERNAME}
+        NUGET_PASSWORD: ${NUGET_PASSWORD}
       context: .
       dockerfile: src/ProjectPet.Web/Dockerfile
     ports:

@@ -10,7 +10,18 @@ EXPOSE 8080
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+
+ARG NUGET_USERNAME
+ARG NUGET_PASSWORD
+
 WORKDIR /src
+
+RUN dotnet nuget add source https://nuget.pkg.github.com/brinersam/index.json \
+-n github \
+--username $NUGET_USERNAME \
+--password $NUGET_PASSWORD \
+--store-password-in-clear-text
+
 COPY ["src/ProjectPet.Web/ProjectPet.Web.csproj", "src/ProjectPet.Web/"]
 COPY ["src/AccountsModule/ProjectPet.AccountsModule.Infrastructure/ProjectPet.AccountsModule.Infrastructure.csproj", "src/AccountsModule/ProjectPet.AccountsModule.Infrastructure/"]
 COPY ["src/Core/ProjectPet.Core/ProjectPet.Core.csproj", "src/Core/ProjectPet.Core/"]
