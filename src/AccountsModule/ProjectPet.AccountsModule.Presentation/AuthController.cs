@@ -4,6 +4,7 @@ using ProjectPet.AccountsModule.Application.Features.Auth.Commands.RefreshTokens
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
 using ProjectPet.AccountsModule.Contracts.Requests;
 using ProjectPet.Framework;
+using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.AccountsModule.Presentation;
 
@@ -38,6 +39,8 @@ public class AuthController : CustomControllerBase
         if (result.IsFailure)
             return result.Error.ToResponse();
 
+        HttpContext.Response.Cookies.Append("refreshToken", result.Value.RefreshToken.ToString());
+
         return Ok(result.Value);
     }
 
@@ -59,18 +62,24 @@ public class AuthController : CustomControllerBase
 
     [HttpPost("refresh-tokens")]
     public async Task<IActionResult> RefreshTokens(
-    [FromBody] RefreshTokensRequest request,
-    [FromServices] RefreshTokensHandler handler,
+        [FromServices] RefreshTokensHandler handler,
     CancellationToken cancellationToken = default)
     {
-        var cmd = RefreshTokensCommand.FromRequest(request);
+        var refreshTokenRaw = HttpContext.Request.Cookies["refreshToken"];
+
+        if (!Guid.TryParse(refreshTokenRaw, out var refreshToken))
+            return Errors.General.ValueIsInvalid("refreshtoken", "refreshToken").ToResponse();
+
+        var cmd = new RefreshTokensCommand(refreshToken);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(result.Value);
+        HttpContext.Response.Cookies.Append("refreshToken", result.Value.RefreshToken.ToString());
+
+        return Ok(result.Value.AccessToken);
     }
 }
 
