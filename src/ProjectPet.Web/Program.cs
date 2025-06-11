@@ -18,6 +18,16 @@ DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options => 
+    options.AddDefaultPolicy(
+        policy => policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    )
+);
+
 builder.ConfigureDbCstring();
 
 builder.AddSerilogLogger();
@@ -62,7 +72,9 @@ app.UseCustomExceptionHandler();
 
 app.UseSerilogRequestLogging();
 
+
 // app.UseHttpsRedirection(); uncomment after configuring nginx support for https
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
