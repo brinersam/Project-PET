@@ -84,8 +84,7 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
         return validationResult.ClaimsIdentity.Claims.ToList().AsReadOnly();
     }
 
-    public async Task<Result<AuthTokensDto, Error>> RefreshTokens(
-        string accessToken,
+    public async Task<Result<LoginResponse, Error>> RefreshTokens(
         Guid refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -96,30 +95,15 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
         if (session.ExpiresIn < DateTime.UtcNow)
             return Error.Validation("invalid.session", "Session has expired!");
 
-        var userClaimsRes = await GetTokenClaims(accessToken, cancellationToken);
-        if (userClaimsRes.IsFailure)
-            return userClaimsRes.Error;
-
-        var userIdRaw = userClaimsRes.Value.FirstOrDefault(c => c.Properties.Values.Contains("sub"))?.Value;
-        if (Guid.TryParse(userIdRaw, out Guid userId) == false)
-            return Error.Failure("invalid.user", "Invalid user!");
-
-        if (session.UserId != userId)
-            return Error.Validation("invalid.token", "Invalid token!");
-
-        var userJtiRaw = userClaimsRes.Value.FirstOrDefault(c => c.Properties.Values.Contains("jti"))?.Value;
-        if (Guid.TryParse(userJtiRaw, out Guid userJti) == false)
-            return Error.Validation("invalid.token", "Invalid token!");
-
         await _authRepository.DeleteSessionAsync(session, cancellationToken);
 
         return await GenerateSessionAsync(session.User, cancellationToken);
     }
 
-    public async Task<Result<AuthTokensDto, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken)
     {
         var newAccessToken = GenerateJwtAccessToken(user);
         var newRefreshToken = await GenerateRefreshTokenAsync(user, newAccessToken.jti, cancellationToken);
-        return new AuthTokensDto(newRefreshToken, newAccessToken.accessToken);
+        return new LoginResponse(newRefreshToken, newAccessToken.accessToken);
     }
 }
