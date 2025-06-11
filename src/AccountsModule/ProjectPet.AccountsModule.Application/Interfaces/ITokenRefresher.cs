@@ -6,5 +6,5 @@ namespace ProjectPet.AccountsModule.Application.Interfaces;
 
 public interface ITokenRefresher
 {
-    Task<Result<AuthTokensDto, Error>> RefreshTokens(string accessToken, Guid refreshToken, CancellationToken cancellationToken = default);
+    Task<Result<LoginResponse, Error>> RefreshTokens(Guid refreshToken, CancellationToken cancellationToken = default);
 }

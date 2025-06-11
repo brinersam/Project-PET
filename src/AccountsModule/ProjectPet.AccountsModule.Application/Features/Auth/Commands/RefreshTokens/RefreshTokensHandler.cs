@@ -14,10 +14,10 @@ public class RefreshTokensHandler
         _tokenRefresher = tokenRefresher;
     }
 
-    public async Task<Result<AuthTokensDto, Error>> HandleAsync(RefreshTokensCommand cmd, CancellationToken cancellationToken = default)
+    public async Task<Result<LoginResponse, Error>> HandleAsync(RefreshTokensCommand cmd, CancellationToken cancellationToken = default)
     {
         var result = await _tokenRefresher
-            .RefreshTokens(cmd.Tokens.AccessToken, cmd.Tokens.RefreshToken, cancellationToken);
+            .RefreshTokens(cmd.RefreshToken, cancellationToken);
 
         if (result.IsFailure)
             return result.Error;

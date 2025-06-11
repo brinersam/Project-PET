@@ -1,9 +1,7 @@
-﻿using CSharpFunctionalExtensions;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
-using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Approve;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Create;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Reject;
@@ -18,6 +16,32 @@ using ProjectPet.VolunteerRequests.Contracts.Requests;
 namespace ProjectPet.VolunteerRequests.Presentation.VolunteerRequests;
 public class VolunteerRequestsController : CustomControllerBase
 {
+    [HttpGet("Test")]
+    public async Task<IActionResult> Test(CancellationToken cancellationToken = default)
+    {
+        return Ok(new string[] { "hii", "hello", "heeee" });
+    }
+
+    [HttpGet("Error")]
+    public async Task<IActionResult> Error(CancellationToken cancellationToken = default)
+    {
+        throw new Exception();
+    }
+
+    [Permission(PermissionCodes.VolunteerRequestAdmin)]
+    [HttpGet("TestAuth")]
+    public async Task<IActionResult> TestAuth(CancellationToken cancellationToken = default)
+    {
+        return Ok(new string[] { "auth", "succ", "ess" });
+    }
+
+    [Permission(PermissionCodes.PetsRead)]
+    [HttpGet("TestAuthFail")]
+    public async Task<IActionResult> TestAuthFail(CancellationToken cancellationToken = default)
+    {
+        return Ok(new string[] { "wont", "see", "this" });
+    }
+
     [Permission(PermissionCodes.VolunteerRequestCreate)]
     [HttpPost()]
     public async Task<IActionResult> CreateVolunteerRequest(
@@ -204,13 +228,5 @@ public class VolunteerRequestsController : CustomControllerBase
             return result.Error.ToResponse();
 
         return Ok(result.Value);
-    }
-
-    private Result<Guid, Error> GetCurrentUserId()
-    {
-        string? userId = HttpContext.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
-        if (String.IsNullOrWhiteSpace(userId))
-            return Error.Failure("claim.not.found", "Unknown user!");
-        return new Guid(userId);
     }
 }
