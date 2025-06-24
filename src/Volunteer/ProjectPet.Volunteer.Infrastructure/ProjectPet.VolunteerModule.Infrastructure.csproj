@@ -1,21 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
+	 
 
 	<ItemGroup>
-		<PackageReference Include="CSharpFunctionalExtensions" Version="3.0.0" />
-		<PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+		
+		<PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.6" />
 		<PackageReference Include="Minio.AspNetCore" Version="6.0.1" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.0" />
-		<PackageReference Include="Brinersam.ProjectPet.Core" Version="1.0.0" />
-		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.0" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.1" />
+		<PackageReference Include="Brinersam.ProjectPet.Core" Version="1.0.1" />
+		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.1" />
 	</ItemGroup>
 
 
