@@ -8,5 +8,5 @@ public interface ITokenProvider
 {
     AccessTokenWJti GenerateJwtAccessToken(User user);
     Task<Guid> GenerateRefreshTokenAsync(User user, Guid Jti, CancellationToken cancellationToken = default);
-    Task<Result<AuthTokensDto, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken);
+    Task<Result<LoginResponse, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken);
 }

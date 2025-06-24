@@ -24,7 +24,7 @@ public class LoginHandler
         _tokenProvider = tokenProvider;
     }
 
-    public async Task<Result<AuthTokensDto, Error>> HandleAsync(LoginCommand cmd, CancellationToken cancellationToken = default)
+    public async Task<Result<LoginResponse, Error>> HandleAsync(LoginCommand cmd, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByEmailAsync(cmd.Email);
         if (user == null)

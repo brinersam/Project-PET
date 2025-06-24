@@ -24,7 +24,10 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
     {
         string? userId = context.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
         if (String.IsNullOrWhiteSpace(userId))
-            throw new Exception($"{typeof(PermissionRequirementHandler)}: User is not authorized!");
+        {
+            context.Fail();
+            return;
+        }
 
         bool isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync(new Guid(userId), requirement.Code);
 
