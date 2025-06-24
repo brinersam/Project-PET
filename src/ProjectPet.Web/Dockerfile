@@ -1,14 +1,15 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+﻿# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
+EXPOSE 8081
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
 ARG NUGET_USERNAME
@@ -22,11 +23,9 @@ RUN dotnet nuget add source https://nuget.pkg.github.com/brinersam/index.json \
 --password $NUGET_PASSWORD \
 --store-password-in-clear-text
 
+COPY ["Directory.Build.props", "."]
 COPY ["src/ProjectPet.Web/ProjectPet.Web.csproj", "src/ProjectPet.Web/"]
 COPY ["src/AccountsModule/ProjectPet.AccountsModule.Infrastructure/ProjectPet.AccountsModule.Infrastructure.csproj", "src/AccountsModule/ProjectPet.AccountsModule.Infrastructure/"]
-COPY ["src/Core/ProjectPet.Core/ProjectPet.Core.csproj", "src/Core/ProjectPet.Core/"]
-COPY ["src/Core/ProjectPet.SharedKernel/ProjectPet.SharedKernel.csproj", "src/Core/ProjectPet.SharedKernel/"]
-COPY ["src/Core/ProjectPet.Framework/ProjectPet.Framework.csproj", "src/Core/ProjectPet.Framework/"]
 COPY ["src/AccountsModule/ProjectPet.AccountsModule.Application/ProjectPet.AccountsModule.Application.csproj", "src/AccountsModule/ProjectPet.AccountsModule.Application/"]
 COPY ["src/AccountsModule/ProjectPet.AccountsModule.Contracts/ProjectPet.AccountsModule.Contracts.csproj", "src/AccountsModule/ProjectPet.AccountsModule.Contracts/"]
 COPY ["src/AccountsModule/ProjectPet.AccountsModule.Domain/ProjectPet.AccountsModule.Domain.csproj", "src/AccountsModule/ProjectPet.AccountsModule.Domain/"]
