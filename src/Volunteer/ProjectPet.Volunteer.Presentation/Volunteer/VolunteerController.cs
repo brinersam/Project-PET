@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ProjectPet.Core.Files;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
@@ -88,6 +87,24 @@ public class VolunteerController : CustomControllerBase
         return Ok(result.Value);
     }
 
+    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos/finish")]
+    public async Task<IActionResult> FinishPetPhotoUpload(
+        [FromServices] FinishPetPhotoUploadHandler handler,
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromBody] FinishPetPhotoUploadRequest req,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = FinishPetPhotoUploadCommand.FromRequest(req, volunteerId, petid);
+
+        var result = await handler.HandleAsync(cmd, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Guid>> Delete(
         [FromServices] DeleteVolunteerHandler handler,
@@ -141,7 +158,6 @@ public class VolunteerController : CustomControllerBase
 
         return Ok(result.Value);
     }
-
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetVolunteerById(
