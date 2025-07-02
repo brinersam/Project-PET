@@ -122,17 +122,10 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                         });
                 });
 
-        builder.OwnsOne(e => e.Photos, d =>
-        {
-            d.ToJson();
-            d.OwnsMany(a => a.Data, i =>
-            {
-                i.Property(photo => photo.StoragePath)
-                    .ConfigureString();
-
-                i.Property(photo => photo.IsPrimary)
-                    .IsRequired();
-            });
-        });
+        builder.Property(e => e.Photos)
+            .JsonVOConverter()
+            .HasColumnName("photos")
+            .IsRequired(false)
+            .HasColumnType("jsonb");
     }
 }

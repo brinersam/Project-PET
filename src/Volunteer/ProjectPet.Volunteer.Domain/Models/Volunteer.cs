@@ -206,14 +206,14 @@ public class Volunteer : SoftDeletableEntityBase
         return Result.Success<Error>();
     }
 
-    public UnitResult<Error> DeletePhotos(Guid petId, string[] photoPaths)
+    public UnitResult<Error> DeletePetPhotos(Guid petId, IEnumerable<string> photoFileIds)
     {
         var petRes = GetPetById(petId);
         if (petRes.IsFailure)
             return petRes.Error;
         var pet = petRes.Value;
 
-        pet.DeletePhotos(photoPaths);
+        pet.DeletePhotos(photoFileIds);
         return Result.Success<Error>();
     }
 

@@ -20,7 +20,8 @@ public class Pet : SoftDeletableEntityBase
     public PetStatus Status { get; private set; }
     public DateOnly DateOfBirth { get; private set; }
     public DateOnly CreatedOn { get; private set; }
-    public PhotoList Photos { get; private set; } = null!;
+    public IReadOnlyList<PetPhoto> Photos => _photos;
+    private List<PetPhoto> _photos = [];
     public PaymentMethodsList PaymentMethods { get; private set; } = null!;
     public Pet() : base(Guid.Empty) { } //efcore
 
@@ -52,7 +53,7 @@ public class Pet : SoftDeletableEntityBase
         Status = status;
         DateOfBirth = dateOfBirth;
         CreatedOn = createdOn;
-        Photos = new() { Data = photos.ToList() };
+        _photos = photos.ToList();
         PaymentMethods = new() { Data = paymentMethods.ToList() };
     }
 
@@ -111,19 +112,19 @@ public class Pet : SoftDeletableEntityBase
         if (photos.Any() == false)
             return;
 
-        if (Photos.Data.Any(photo => photo.IsPrimary == true))
+        if (_photos.Any(photo => photo.IsPrimary == true))
         {
-            Photos.Data.AddRange(photos);
+            _photos.AddRange(photos);
             return;
         }
 
         List<PetPhoto> resultPhotos = photos.Skip(1).ToList();
 
-        PetPhoto mainPhoto = PetPhoto.Create(photos.First().StoragePath, true).Value;
+        PetPhoto mainPhoto = photos.First().Duplicate(isPrimary: true);
 
         resultPhotos.Insert(0, mainPhoto);
 
-        Photos.Data.AddRange(resultPhotos);
+        _photos = resultPhotos;
     }
 
     public void SetPetStatus(PetStatus status)
@@ -138,39 +139,36 @@ public class Pet : SoftDeletableEntityBase
     public void MovePositionBackwards(int amount = 1)
         => OrderingPosition = OrderingPosition.MoveBackward(amount);
 
-    public void DeletePhotos(string[] photoPaths)
+    public void DeletePhotos(IEnumerable<string> petFileIds)
     {
         bool primaryPhotoWasDeleted = false;
         bool deletedAtLeastOnePhoto = false;
 
-        var data = Photos.Data;
-        foreach (var path in photoPaths)
+        foreach (var photoFileId in petFileIds)
         {
-            int photoToDeleteIdx = data.FindIndex(x => string.Equals(path, x.StoragePath));
+            int photoToDeleteIdx = _photos.FindIndex(x => string.Equals(photoFileId, x.FileId));
             if (photoToDeleteIdx == -1)
                 continue;
 
-            var photoToDelete = data[photoToDeleteIdx];
+            var photoToDelete = _photos[photoToDeleteIdx];
 
             if (photoToDelete.IsPrimary)
                 primaryPhotoWasDeleted = true;
 
-            data.RemoveAt(photoToDeleteIdx);
+            _photos.RemoveAt(photoToDeleteIdx);
             deletedAtLeastOnePhoto = true;
         }
 
         if (deletedAtLeastOnePhoto == false)
             return;
 
-        if (primaryPhotoWasDeleted && data.Count > 0)
+        if (primaryPhotoWasDeleted && _photos.Count > 0)
         {
-            var firstPhotoMadePrimary = PetPhoto.Create(data[0].StoragePath, true).Value;
-            data[0] = firstPhotoMadePrimary;
+            var firstPhotoMadePrimary = _photos[0].Duplicate(isPrimary: true);
+            _photos[0] = firstPhotoMadePrimary;
         }
 
-        var deepCopyData = data.Select(x => PetPhoto.Create(x.StoragePath, x.IsPrimary).Value).ToList();
-
-        Photos = new PhotoList() { Data = deepCopyData };
+        _photos = _photos.Select(x => x.Duplicate()).ToList();
     }
 
     public void PatchInfo(
@@ -191,28 +189,25 @@ public class Pet : SoftDeletableEntityBase
         Phonenumber = phonenumber ?? Phonenumber;
     }
 
-    public UnitResult<Error> SetMainPhoto(string PhotoPath)
+    public UnitResult<Error> SetMainPhoto(string PhotoFileId)
     {
-        var data = Photos.Data;
-
-        var photoIdx = data.FindIndex(x => string.Equals(x.StoragePath, PhotoPath));
+        var photoIdx = _photos.FindIndex(x => string.Equals(x.FileId, PhotoFileId));
         if (photoIdx == -1)
             return Errors.General.NotFound(typeof(PetPhoto));
 
-        var oldMainPhoto = data.FindIndex(x => x.IsPrimary == true);
+        var oldMainPhoto = _photos.FindIndex(x => x.IsPrimary == true);
         if (oldMainPhoto != -1)
         {
-            var oldPrimaryPhotoMadeRegular = PetPhoto.Create(data[oldMainPhoto].StoragePath, false).Value;
-            data[oldMainPhoto] = oldPrimaryPhotoMadeRegular;
+            var oldPrimaryPhotoMadeRegular = _photos[oldMainPhoto].Duplicate(isPrimary: false);
+            _photos[oldMainPhoto] = oldPrimaryPhotoMadeRegular;
         }
 
-        var aPhotoMadePrimary = PetPhoto.Create(data[photoIdx].StoragePath, true).Value;
+        var aPhotoMadePrimary = _photos[photoIdx].Duplicate(isPrimary: true);
 
-        data.RemoveAt(photoIdx);
-        data.Insert(0, aPhotoMadePrimary);
+        _photos.RemoveAt(photoIdx);
+        _photos.Insert(0, aPhotoMadePrimary);
 
-        var deepCopyData = data.Select(x => PetPhoto.Create(x.StoragePath, x.IsPrimary).Value).ToList();
-        Photos = new PhotoList() { Data = deepCopyData };
+        _photos = _photos.Select(x => x.Duplicate()).ToList();
 
         return Result.Success<Error>();
     }
@@ -223,16 +218,10 @@ public record PaymentMethodsList
     public List<PaymentInfo> Data { get; set; } = null!;
 }
 
-public record PhotoList
-{
-    public List<PetPhoto> Data { get; set; } = null!;
-}
-
 public enum PetStatus
 {
     NotSet,
     Requires_Care,
     Looking_For_Home,
-    Home_Found
+    Home_Found,
 }
-
