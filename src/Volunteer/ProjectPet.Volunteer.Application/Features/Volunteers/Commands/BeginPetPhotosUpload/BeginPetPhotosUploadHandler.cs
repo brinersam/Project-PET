@@ -7,7 +7,6 @@ using ProjectPet.FileService.Contracts.Features.MultipartStartUpload;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.VolunteerModule.Contracts.Dto;
-using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
 

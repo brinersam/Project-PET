@@ -29,10 +29,10 @@ public class WriteDbContext : DbContext
 
 public static class WriteDbContextExtension
 {
-    public static IServiceCollection AddWriteDbContext(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddScopedWriteDbContext(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddScoped<WriteDbContext>()
+            .AddScoped<PetPhotoDeletionInterceptor>()
             .AddDbContext<WriteDbContext>(
                 (sp, options) =>
                 {
@@ -47,8 +47,7 @@ public static class WriteDbContextExtension
 
                     // interceptors that support di
                     options.AddInterceptors(sp.GetRequiredService<PetPhotoDeletionInterceptor>());
-                }
-        );
+                });
     }
 
     private static ILoggerFactory CreateLoggerFactory()
