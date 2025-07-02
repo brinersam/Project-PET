@@ -35,8 +35,6 @@
 	  <ProjectReference Include="..\AccountsModule\ProjectPet.AccountsModule.Presentation\ProjectPet.AccountsModule.Presentation.csproj" />
 	  <ProjectReference Include="..\DiscussionsModule\ProjectPet.DiscussionsModule.Infrastructure\ProjectPet.DiscussionsModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\DiscussionsModule\ProjectPet.DiscussionsModule.Presentation\ProjectPet.DiscussionsModule.Presentation.csproj" />
-	  <ProjectReference Include="..\FileManagement\ProjectPet.FileManagement.Infrastructure\ProjectPet.FileManagement.Infrastructure.csproj" />
-	  <ProjectReference Include="..\FileManagement\ProjectPet.FileManagement.Presentation\ProjectPet.FileManagement.Presentation.csproj" />
 	  <ProjectReference Include="..\Species\ProjectPet.Species.Infrastructure\ProjectPet.SpeciesModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Species\ProjectPet.Species.Presentation\ProjectPet.SpeciesModule.Presentation.csproj" />
 	  <ProjectReference Include="..\VolunteerRequest\ProjectPet.VolunteerRequest.Infrastructure\ProjectPet.VolunteerRequests.Infrastructure.csproj" />
