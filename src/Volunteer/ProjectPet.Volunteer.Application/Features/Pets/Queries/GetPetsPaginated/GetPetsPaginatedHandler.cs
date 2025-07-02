@@ -45,11 +45,13 @@ public class GetPetsPaginatedHandler
 
         var petResponsesResults = await Task.WhenAll(petPagedList.Data.Select(async x => await ToPetResponse(x, cancellationToken)));
 
-        return new PagedList<PetResponse> {
+        return new PagedList<PetResponse>
+        {
             Data = petResponsesResults,
             PageIndex = petPagedList.PageIndex,
             PageSize = petPagedList.PageSize,
-            TotalCount = petPagedList.TotalCount, };
+            TotalCount = petPagedList.TotalCount,
+        };
     }
 
     private async Task<PetResponse> ToPetResponse(PetDto pet, CancellationToken cancellationToken = default)

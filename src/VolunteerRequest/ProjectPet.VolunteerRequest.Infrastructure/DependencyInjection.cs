@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectPet.Core.Database;
-using ProjectPet.Core.Requests;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
 using ProjectPet.VolunteerRequests.Infrastructure.Database;
 using ProjectPet.VolunteerRequests.Infrastructure.Repositories;

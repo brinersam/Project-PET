@@ -25,7 +25,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<IDiscussionModuleContract, DiscussionModuleContractImplementation>();
         return builder;
     }
-    
+
     private static IHostApplicationBuilder AddValidators(this IHostApplicationBuilder builder)
     {
         builder.Services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));

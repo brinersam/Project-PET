@@ -13,7 +13,7 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
 
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("is_deleted"); ;
+            .HasColumnName("is_deleted");
 
         builder.HasQueryFilter(m => EF.Property<bool>(m, "_isDeleted") == false);
     }

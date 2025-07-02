@@ -27,7 +27,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<LoginHandler>();
         builder.Services.AddScoped<UpdateAccountPaymentHandler>();
         builder.Services.AddScoped<UpdateAccountSocialsHandler>();
-        builder.Services.AddScoped<GetUserInfoHandler>(); 
+        builder.Services.AddScoped<GetUserInfoHandler>();
         builder.Services.AddScoped<RefreshTokensHandler>();
 
         return builder;

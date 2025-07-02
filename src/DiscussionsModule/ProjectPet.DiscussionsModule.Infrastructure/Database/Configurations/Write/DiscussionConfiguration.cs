@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectPet.DiscussionsModule.Domain.Models;
 using ProjectPet.Core.Extensions;
+using ProjectPet.DiscussionsModule.Domain.Models;
 
 namespace ProjectPet.DiscussionsModule.Infrastructure.Database.Configurations.Write;
 public class DiscussionConfiguration : IEntityTypeConfiguration<Discussion>

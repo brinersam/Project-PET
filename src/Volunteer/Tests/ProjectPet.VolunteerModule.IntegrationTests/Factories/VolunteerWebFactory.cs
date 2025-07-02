@@ -1,9 +1,6 @@
-﻿using CSharpFunctionalExtensions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
-using ProjectPet.SharedKernel.ErrorClasses;
-using ProjectPet.Core.Files;
 using ProjectPet.Core.Database;
 using ProjectPet.FileService.Contracts;
 

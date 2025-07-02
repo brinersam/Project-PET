@@ -14,7 +14,7 @@ public record PetResponse(
     string Status,
     List<PetPhotoResponse> Photos) : IMapFromRequest<PetResponse, PetDto, IEnumerable<PetPhotoResponse>> // todo rename interface to IMapFrom
 {
-    public static PetResponse FromRequest(PetDto dto, IEnumerable<PetPhotoResponse> photos) 
+    public static PetResponse FromRequest(PetDto dto, IEnumerable<PetPhotoResponse> photos)
     {
         return new PetResponse(
             dto.Id,

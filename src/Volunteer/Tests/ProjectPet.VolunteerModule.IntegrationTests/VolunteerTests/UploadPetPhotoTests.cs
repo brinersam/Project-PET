@@ -1,6 +1,4 @@
-﻿using AutoFixture;
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
 using ProjectPet.VolunteerModule.IntegrationTests.Factories;
 using ProjectPet.VolunteerModule.IntegrationTests.VolunteerTests.Base;

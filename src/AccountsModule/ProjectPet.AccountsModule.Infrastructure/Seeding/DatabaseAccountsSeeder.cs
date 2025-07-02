@@ -8,7 +8,6 @@ using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Seeding.SeedDtos;
 using ProjectPet.Core.Database;
-using ProjectPet.Core.Requests;
 using System.Text.Json;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Seeding;
@@ -72,7 +71,8 @@ public class DatabaseAccountsSeeder : IDatabaseSeeder
 
         foreach (var permCode in permsToSeed)
         {
-            if (_verboseLogging) _logger.LogInformation($"Adding permission {permCode}...");
+            if (_verboseLogging)
+                _logger.LogInformation($"Adding permission {permCode}...");
             await _dbContext.Permissions.AddAsync(new Permission() { Code = permCode }, cancellationToken);
         }
     }
@@ -98,7 +98,8 @@ public class DatabaseAccountsSeeder : IDatabaseSeeder
 
         foreach (var roleName in rolesToSeed)
         {
-            if (_verboseLogging) _logger.LogInformation($"Adding role {roleName}...");
+            if (_verboseLogging)
+                _logger.LogInformation($"Adding role {roleName}...");
             await _dbContext.Roles.AddAsync(
                 new Role()
                 {
@@ -176,7 +177,8 @@ public class DatabaseAccountsSeeder : IDatabaseSeeder
             var rp = new RolePermission() { PermissionId = perm.Id, RoleId = role.Id };
             await _dbContext.RolePermissions.AddAsync(rp, cancellationToken);
             permsToSeed--;
-            if (_verboseLogging) _logger.LogInformation($"Added permission for role: {role.Name} --> {perm.Code}");
+            if (_verboseLogging)
+                _logger.LogInformation($"Added permission for role: {role.Name} --> {perm.Code}");
         }
 
         if (permsToSeed > 0)

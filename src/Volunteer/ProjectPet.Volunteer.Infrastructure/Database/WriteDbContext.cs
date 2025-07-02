@@ -10,7 +10,7 @@ namespace ProjectPet.VolunteerModule.Infrastructure.Database;
 
 public class WriteDbContext : DbContext
 {
-    public WriteDbContext(DbContextOptions<WriteDbContext> options) 
+    public WriteDbContext(DbContextOptions<WriteDbContext> options)
         : base(options)
     {
     }
