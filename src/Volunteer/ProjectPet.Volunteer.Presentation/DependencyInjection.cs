@@ -62,7 +62,7 @@ public static class DependencyInjection
     {
         // write
         builder.Services.AddScoped<CreatePetHandler>();
-        builder.Services.AddScoped<UploadPetPhotoHandler>();
+        builder.Services.AddScoped<BeginPetPhotosUploadHandler>();
         builder.Services.AddScoped<UpdatePetStatusHandler>();
         builder.Services.AddScoped<DeletePetPhotosHandler>();
         builder.Services.AddScoped<PatchPetHandler>();
