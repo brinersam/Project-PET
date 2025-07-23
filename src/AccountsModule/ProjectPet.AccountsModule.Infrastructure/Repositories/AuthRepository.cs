@@ -43,14 +43,16 @@ public class AuthRepository : IAuthRepository
         if (IsUserHasPermissionModifier(userID, permissionCode, out bool IsPermitted))
             return IsPermitted;
 
-        var roles = await _userManager.GetRolesAsync(user!);
-        var roleIds = _authDbContext.Roles.Where(r => roles.Contains(r.Name)).Select(x => x.Id).ToHashSet();
+        var userRoles = await _userManager.GetRolesAsync(user!);
+        var userRoleIds = _authDbContext.Roles.Where(r => userRoles.Contains(r.Name)).Select(x => x.Id).ToHashSet();
 
         var permissionExists = await _authDbContext.RolePermissions.AnyAsync
             (
-                rp =>
-                    roleIds.Contains(rp.RoleId) &&
-                    Equals(rp.Permission.Code, permissionCode),
+                rolePermission => rolePermission.Permission.Code == "admin.masterkey"
+                                ||
+                                  (userRoleIds.Contains(rolePermission.RoleId) // rolePermission is for user's any role
+                                  &&
+                                  Equals(rolePermission.Permission.Code, permissionCode)), // rolePermission has the required permission code),
                 cancellationToken
             );
 
