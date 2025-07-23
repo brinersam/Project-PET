@@ -1,10 +1,14 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using ProjectPet.Core.Extensions;
 using ProjectPet.Core.ResponseModels;
+using ProjectPet.FileService.Contracts;
+using ProjectPet.FileService.Contracts.Dtos;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SpeciesModule.Contracts;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.VolunteerModule.Contracts.Dto;
+using ProjectPet.VolunteerModule.Contracts.Responses;
 using System.Linq.Expressions;
 
 namespace ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
@@ -12,18 +16,24 @@ namespace ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPa
 public class GetPetsPaginatedHandler
 {
     private readonly IReadDbContext _readDbContext;
+    private readonly IFileService _fileService;
+    private readonly ILogger<GetPetsPaginatedHandler> _logger;
     private readonly ISpeciesContract _speciesContract;
 
 
     public GetPetsPaginatedHandler(
         IReadDbContext readDbContext,
+        IFileService fileService,
+        ILogger<GetPetsPaginatedHandler> logger,
         ISpeciesContract speciesContract)
     {
         _readDbContext = readDbContext;
+        _fileService = fileService;
+        _logger = logger;
         _speciesContract = speciesContract;
     }
 
-    public async Task<Result<PagedList<PetDto>, Error>> HandleAsync(GetPetsPaginatedQuery query, CancellationToken cancellationToken)
+    public async Task<Result<PagedList<PetResponse>, Error>> HandleAsync(GetPetsPaginatedQuery query, CancellationToken cancellationToken)
     {
         var dbQuery = _readDbContext.Pets.AsQueryable();
 
@@ -31,7 +41,40 @@ public class GetPetsPaginatedHandler
 
         dbQuery = ApplySorting(dbQuery, query);
 
-        return await dbQuery.ToPagedListAsync(query, cancellationToken);
+        var petPagedList = await dbQuery.ToPagedListAsync(query, cancellationToken);
+
+        var petResponsesResults = await Task.WhenAll(petPagedList.Data.Select(async x => await ToPetResponse(x, cancellationToken)));
+
+        return new PagedList<PetResponse>
+        {
+            Data = petResponsesResults,
+            PageIndex = petPagedList.PageIndex,
+            PageSize = petPagedList.PageSize,
+            TotalCount = petPagedList.TotalCount,
+        };
+    }
+
+    private async Task<PetResponse> ToPetResponse(PetDto pet, CancellationToken cancellationToken = default)
+    {
+        var photoResponseList = await _fileService.PresignedUrlsDownloadAsync(
+                new(
+                    pet.Photos
+                        .Select(x => new FileLocationDto(x.FileId, x.BucketName))
+                        .ToList()
+                ),
+                cancellationToken
+            );
+
+        if (photoResponseList.IsFailure)
+        {
+            _logger.LogError("Failed to retrieve photos for pet (id: {p1}) with error {p2}", pet.Id, photoResponseList.Error);
+            return PetResponse.FromRequest(pet, []);
+        }
+
+        var urls = photoResponseList.Value.Urls.ToDictionary(x => x.FileId, x => x.Url);
+        var photoResponses = pet.Photos.Select(x => new PetPhotoResponse(x.FileName, x.FileId, urls[x.FileId]));
+
+        return PetResponse.FromRequest(pet, photoResponses);
     }
 
     private static IQueryable<PetDto> ApplySorting(

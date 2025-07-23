@@ -1,23 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ProjectPet.Core.Options;
 using ProjectPet.VolunteerModule.Domain.Models;
+using ProjectPet.VolunteerModule.Infrastructure.Interceptors;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Database;
 
-public class WriteDbContext(IConfiguration configuration) : DbContext
+public class WriteDbContext : DbContext
 {
-    private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CStringKey];
-    public DbSet<Volunteer> Volunteers => Set<Volunteer>();
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public WriteDbContext(DbContextOptions<WriteDbContext> options)
+        : base(options)
     {
-        optionsBuilder.UseNpgsql(DATABASE);
-        optionsBuilder.UseSnakeCaseNamingConvention();
-        optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
-        optionsBuilder.EnableSensitiveDataLogging();
     }
+
+    public DbSet<Volunteer> Volunteers => Set<Volunteer>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,6 +24,30 @@ public class WriteDbContext(IConfiguration configuration) : DbContext
             x => x.FullName!.Contains("Configurations.Write"));
 
         modelBuilder.HasDefaultSchema("volunteer");
+    }
+}
+
+public static class WriteDbContextExtension
+{
+    public static IServiceCollection AddScopedWriteDbContext(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddScoped<PetPhotoDeletionInterceptor>()
+            .AddDbContext<WriteDbContext>(
+                (sp, options) =>
+                {
+                    var configuration = sp.GetRequiredService<IConfiguration>();
+                    var dbOptions = configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!;
+                    var connectionString = configuration[dbOptions.CStringKey];
+
+                    options.UseNpgsql(connectionString);
+                    options.UseSnakeCaseNamingConvention();
+                    options.UseLoggerFactory(CreateLoggerFactory());
+                    options.EnableSensitiveDataLogging();
+
+                    // interceptors that support di
+                    options.AddInterceptors(sp.GetRequiredService<PetPhotoDeletionInterceptor>());
+                });
     }
 
     private static ILoggerFactory CreateLoggerFactory()

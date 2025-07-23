@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectPet.Core.Extensions;
 using ProjectPet.SpeciesModule.Contracts.Dto;
 using ProjectPet.VolunteerModule.Contracts.Dto;
 
@@ -20,14 +21,19 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
             .WithMany()
             .HasForeignKey(x => x.SpeciesID);
 
-
         builder.HasOne<BreedDto>()
             .WithMany()
             .HasForeignKey(x => x.BreedID);
 
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("is_deleted"); ;
+            .HasColumnName("is_deleted");
+
+        builder.Property(e => e.Photos)
+            .JsonVOConverter()
+            .HasColumnName("photos")
+            .IsRequired(false)
+            .HasColumnType("jsonb");
 
         builder.HasQueryFilter(m => EF.Property<bool>(m, "_isDeleted") == false);
     }

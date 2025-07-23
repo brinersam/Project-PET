@@ -10,4 +10,5 @@ public class PetDto
     public string Coat { get; set; } = null!;
     public DateOnly DateOfBirth { get; set; }
     public string Status { get; set; } = null!;
+    public List<PetPhotoDto> Photos { get; set; } = [];
 }

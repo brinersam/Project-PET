@@ -1,8 +1,8 @@
-using ProjectPet.AccountsModule.Infrastructure;
+﻿using ProjectPet.AccountsModule.Infrastructure;
 using ProjectPet.AccountsModule.Presentation;
 using ProjectPet.DiscussionsModule.Infrastructure;
 using ProjectPet.DiscussionsModule.Presentation;
-using ProjectPet.FileManagement.Infrastructure;
+using ProjectPet.FileService.Communication.Extensions;
 using ProjectPet.SpeciesModule.Infrastructure;
 using ProjectPet.SpeciesModule.Presentation;
 using ProjectPet.VolunteerModule.Infrastructure;
@@ -18,10 +18,10 @@ DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy => policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins("http://localhost:5173", "https://localhost:8081/", "http://localhost:8080/")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials()
@@ -37,14 +37,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.AddAuthenticatedSwaggerGen();
 #endregion
+
 #region App modules 
 builder.AddVolunteerModuleHandlers();
 builder.AddVolunteerModuleInfrastructure();
 
 builder.AddSpeciesModuleHandlers();
 builder.AddSpeciesModuleInfrastructure();
-
-builder.AddFileManagementInfrastructure();
 
 builder.AddAuthModuleHandlers();
 builder.AddAuthModuleInfrastructure();
@@ -54,6 +53,10 @@ builder.AddVolunteerRequestModuleInfrastructure();
 
 builder.AddDiscussionModuleHandlers();
 builder.AddDiscussionsModuleInfrastructure();
+#endregion
+
+#region Microservice clients
+builder.AddFileServiceHttpClient();
 #endregion
 
 builder.Services.AddValidation();

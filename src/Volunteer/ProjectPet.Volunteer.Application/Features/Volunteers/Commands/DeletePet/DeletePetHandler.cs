@@ -1,6 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using ProjectPet.Core.Database;
-using ProjectPet.Core.Files;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 
@@ -8,20 +6,14 @@ namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.De
 
 public class DeletePetHandler
 {
-    private readonly string BUCKETNAME = Constants.PET_PHOTOS_BUCKETNAME;
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly IFileProvider _fileProvider;
-    private readonly IUnitOfWork _unitOfWork;
 
     public DeletePetHandler(
-        IVolunteerRepository volunteerRepository,
-        IFileProvider fileProvider,
-        IUnitOfWork unitOfWork)
+        IVolunteerRepository volunteerRepository)
     {
         _volunteerRepository = volunteerRepository;
-        _fileProvider = fileProvider;
-        _unitOfWork = unitOfWork;
     }
+
     public async Task<UnitResult<Error>> HandleAsync(DeletePetCommand cmd, CancellationToken cancellationToken)
     {
         var volunteerRes = await _volunteerRepository.GetByIdAsync(cmd.VolunteerId, cancellationToken);
@@ -41,35 +33,13 @@ public class DeletePetHandler
         }
         else
         {
-            var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
-
             var petRes = volunteer.GetPetById(cmd.PetId);
             if (petRes.IsFailure)
                 return petRes.Error;
 
-            var photoPaths = petRes.Value.Photos.Data.Select(x => x.StoragePath).ToArray();
-
             var deletePetRes = volunteer.DeletePet(cmd.PetId);
             if (deletePetRes.IsFailure)
                 return deletePetRes.Error;
-
-            petRes.Value.DeletePhotos(photoPaths);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            var deleteFilesResult = await _fileProvider.DeleteFilesAsync(
-                BUCKETNAME,
-                cmd.VolunteerId,
-                photoPaths,
-                cancellationToken);
-
-            if (deleteFilesResult.IsFailure)
-            {
-                transaction.Rollback();
-                return deleteFilesResult.Error;
-            }
-
-            transaction.Commit();
         }
 
         return Result.Success<Error>();

@@ -3,12 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ProjectPet.Core.Requests;
+using ProjectPet.Core.Database;
 using ProjectPet.Core.Options;
 using ProjectPet.SharedKernel.Entities.AbstractBase;
 using ProjectPet.VolunteerModule.Domain.Models;
 using ProjectPet.VolunteerModule.Infrastructure.Database;
-using ProjectPet.Core.Database;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.BackgroundServices;
 public class SoftDeleteCleanupService : BackgroundService

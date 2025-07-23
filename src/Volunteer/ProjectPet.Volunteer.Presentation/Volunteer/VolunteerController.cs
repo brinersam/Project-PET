@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ProjectPet.Core.Files;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
@@ -8,6 +7,7 @@ using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.Create
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePet;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePetPhotos;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeleteVolunteer;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.FinishPetPhotoUpload;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.PatchPet;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.SetMainPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdatePetStatus;
@@ -64,21 +64,40 @@ public class VolunteerController : CustomControllerBase
         return Ok(result.Value);
     }
 
-    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos")]
-    public async Task<IActionResult> UploadPetPhoto(
-        [FromServices] UploadPetPhotoHandler service,
+    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos/start")]
+    public async Task<IActionResult> BeginPetPhotosUpload(
+        [FromServices] BeginPetPhotosUploadHandler handler,
         [FromRoute] Guid volunteerId,
         [FromRoute] Guid petid,
-        [FromForm] UploadFileRequest req,
+        [FromBody] BeginPetPhotosUploadRequest request,
+        IValidator<BeginPetPhotosUploadRequest> validator,
         CancellationToken cancellationToken = default)
     {
-        await using var processor = new FormFileProcessor();
+        var validatorRes = await validator.ValidateAsync(request, cancellationToken);
+        if (validatorRes.IsValid == false)
+            return Envelope.ToResponse(validatorRes.Errors);
 
-        List<FileDto> filesDto = processor.Process(req.Files);
+        var cmd = BeginPetPhotosUploadCommand.FromRequest(request, volunteerId, petid);
 
-        var cmd = UploadPetPhotoCommand.FromRequest(req, volunteerId, petid, filesDto);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
-        var result = await service.HandleAsync(cmd, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPost("{volunteerId:guid}/pet/{petid:guid}/photos/finish")]
+    public async Task<IActionResult> FinishPetPhotoUpload(
+        [FromServices] FinishPetPhotoUploadHandler handler,
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petid,
+        [FromBody] FinishPetPhotoUploadRequest req,
+        CancellationToken cancellationToken = default)
+    {
+        var cmd = FinishPetPhotoUploadCommand.FromRequest(req, volunteerId, petid);
+
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -139,7 +158,6 @@ public class VolunteerController : CustomControllerBase
 
         return Ok(result.Value);
     }
-
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetVolunteerById(

@@ -272,6 +272,7 @@ dotnet_diagnostic.SA1000.severity = none
 dotnet_diagnostic.SA1009.severity = none
 dotnet_diagnostic.SA1011.severity = none
 dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1111.severity = none
 dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1602.severity = none
 dotnet_diagnostic.SA1201.severity = none
@@ -279,6 +280,10 @@ dotnet_diagnostic.SA1623.severity = none
 dotnet_diagnostic.SA1118.severity = none
 dotnet_diagnostic.SA1121.severity = none
 dotnet_diagnostic.CS0219.severity = warning
+dotnet_diagnostic.IDE0060.severity = warning
+dotnet_diagnostic.IDE0290.severity = none
+dotnet_diagnostic.IDE0008.severity = none
+dotnet_diagnostic.IDE0049.severity = none
 
 
 
