@@ -46,13 +46,13 @@ public class AuthRepository : IAuthRepository
         var userRoles = await _userManager.GetRolesAsync(user!);
         var userRoleIds = _authDbContext.Roles.Where(r => userRoles.Contains(r.Name)).Select(x => x.Id).ToHashSet();
 
-        var permissionExists = await _authDbContext.RolePermissions.AnyAsync
+        if (userRoleIds.Count <= 0)
+            return false;
+
+        var permissionExists = await _authDbContext.RolePermissions.Where(rp => userRoleIds.Contains(rp.RoleId)).AnyAsync
             (
-                rolePermission => rolePermission.Permission.Code == "admin.masterkey"
-                                ||
-                                  (userRoleIds.Contains(rolePermission.RoleId) // rolePermission is for user's any role
-                                  &&
-                                  Equals(rolePermission.Permission.Code, permissionCode)), // rolePermission has the required permission code),
+                rolePermission => Equals(rolePermission.Permission.Code, permissionCode) || // rolePermission has the required permission code
+                                  Equals(rolePermission.Permission.Code, "admin.masterkey"), // rolePermission is admin sudo),
                 cancellationToken
             );
 

@@ -16,32 +16,6 @@ using ProjectPet.VolunteerRequests.Contracts.Requests;
 namespace ProjectPet.VolunteerRequests.Presentation.VolunteerRequests;
 public class VolunteerRequestsController : CustomControllerBase
 {
-    [HttpGet("Test")]
-    public async Task<IActionResult> Test(CancellationToken cancellationToken = default)
-    {
-        return Ok(new string[] { "hii", "hello", "heeee" });
-    }
-
-    [HttpGet("Error")]
-    public async Task<IActionResult> Error(CancellationToken cancellationToken = default)
-    {
-        throw new Exception();
-    }
-
-    [Permission(PermissionCodes.VolunteerRequestAdmin)]
-    [HttpGet("TestAuth")]
-    public async Task<IActionResult> TestAuth(CancellationToken cancellationToken = default)
-    {
-        return Ok(new string[] { "auth", "succ", "ess" });
-    }
-
-    [Permission(PermissionCodes.PetsRead)]
-    [HttpGet("TestAuthFail")]
-    public async Task<IActionResult> TestAuthFail(CancellationToken cancellationToken = default)
-    {
-        return Ok(new string[] { "wont", "see", "this" });
-    }
-
     [Permission(PermissionCodes.VolunteerRequestCreate)]
     [HttpPost()]
     public async Task<IActionResult> CreateVolunteerRequest(

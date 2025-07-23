@@ -65,36 +65,52 @@ services:
         - projectpet.web
     restart: always
 
-  # projectpet.fileservice:
-  #   container_name: ProjectPet.fileservice
-  #   build:
-  #     args:
-  #       NUGET_USERNAME: ${NUGET_USERNAME}
-  #       NUGET_PASSWORD: ${NUGET_PASSWORD}
-  #     context: .
-  #     dockerfile: ../ProjectPet.FileService/ProjectPet.FileService/ProjectPet.FileService/Dockerfile
-  #   ports:
-  #       - "6060:6060"
-  #       - "6061:6061"
-  #   environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
-  #       - ASPNETCORE_HTTP_PORTS=6060
-  #       - ASPNETCORE_HTTPS_PORTS=6061
-  #   volumes:
-  #       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-  #       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-  #   depends_on:
-  #       - "projectpet.minio"
+    # file service start
+  projectpet.fileservice:
+    container_name: ProjectPet.fileservice
+    build:
+      args:
+        NUGET_USERNAME: ${NUGET_USERNAME}
+        NUGET_PASSWORD: ${NUGET_PASSWORD}
+      context: ../ProjectPet.FileService/ProjectPet.FileService
+      dockerfile: ProjectPet.FileService/Dockerfile
+    ports:
+        - "6060:6060"
+        - "6061:6061"
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_HTTP_PORTS=6060
+        - ASPNETCORE_HTTPS_PORTS=6061
+    volumes:
+        - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+        - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+        - "projectpet.minio"
+        - "projectpet.fileservice.mongodb"
+    networks:
+      - ProjectPetNetwork
+      - default
 
-  # projectpet.minio:
-  #   image: minio/minio
-  #   container_name: ProjectPet.fileservice.minio
-  #   command: server --address ":5000" --console-address ":5001" /var/lib/minio/data
-  #   environment:
-  #     MINIO_ROOT_USER: minioadmin
-  #     MINIO_ROOT_PASSWORD: minioadmin
-  #   ports:
-  #       - "5000:5000"
-  #       - "5001:5001"
-  #   volumes:
-  #       - ./minio-data:/var/lib/minio/data
+  projectpet.minio:
+    image: minio/minio
+    container_name: ProjectPet.fileservice.minio
+    command: server --address ":5000" --console-address ":5001" /var/lib/minio/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+        - "5000:5000"
+        - "5001:5001"
+    volumes:
+        - ./minio-data:/var/lib/minio/data
+    
+
+  projectpet.fileservice.mongodb:
+    image: mongo:latest
+    container_name: ProjectPet.fileservice.mongodb
+    command: mongod -port 5050
+    ports:
+      - "5050:5050"
+    volumes:
+        - ./mongoDb-data:/data/db
+    # file service end
