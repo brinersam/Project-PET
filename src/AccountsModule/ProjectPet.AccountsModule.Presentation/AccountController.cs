@@ -66,7 +66,7 @@ public class AccountController : CustomControllerBase
         return Ok();
     }
 
-    //[Permission(PermissionCodes.AdminMasterkey)]
+    [Permission(PermissionCodes.AdminMasterkey)]
     [HttpGet("{userId:guid}")]
     public async Task<ActionResult<Guid>> GetUserInfo(
         [FromServices] GetUserInfoHandler handler,

@@ -9,12 +9,14 @@ public class DebugController : CustomControllerBase
     [HttpGet("TestUnauthenticated")]
     public async Task<IActionResult> Test(CancellationToken cancellationToken = default)
     {
+        await Task.Delay(2000, cancellationToken);
         return Ok(new string[] { "hii", "hello", "heeee" });
     }
 
     [HttpGet("Exception")]
     public async Task<IActionResult> Error(CancellationToken cancellationToken = default)
     {
+        await Task.Delay(2000, cancellationToken);
         throw new Exception();
     }
 
@@ -22,6 +24,7 @@ public class DebugController : CustomControllerBase
     [HttpGet("TestAuthenticatedOnly")]
     public async Task<IActionResult> TestAuth(CancellationToken cancellationToken = default)
     {
+        await Task.Delay(2000, cancellationToken);
         return Ok(new string[] { "auth", "succ", "ess" });
     }
 
@@ -29,6 +32,7 @@ public class DebugController : CustomControllerBase
     [HttpGet("TestAdminOnly")]
     public async Task<IActionResult> TestAuthFail(CancellationToken cancellationToken = default)
     {
+        await Task.Delay(2000, cancellationToken);
         return Ok(new string[] { "wont", "see", "this" });
     }
 }

@@ -7,7 +7,7 @@ using ProjectPet.VolunteerModule.Contracts.Requests;
 
 namespace ProjectPet.VolunteerModule.Presentation.Pets;
 
-[Permission(PermissionCodes.PetsRead)]
+//[Permission(PermissionCodes.PetsRead)]
 public class PetController : CustomControllerBase
 {
     [HttpGet("{petid:guid}")]
@@ -27,7 +27,7 @@ public class PetController : CustomControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<Guid>> GetPetsPaginated(
+    public async Task<IActionResult> GetPetsPaginated(
         [FromServices] GetPetsPaginatedHandler handler,
         [FromQuery] GetPetsPaginatedRequest request,
         CancellationToken cancellationToken = default)

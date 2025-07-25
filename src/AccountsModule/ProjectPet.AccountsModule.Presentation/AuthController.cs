@@ -63,7 +63,7 @@ public class AuthController : CustomControllerBase
     [HttpPost("refresh-tokens")]
     public async Task<IActionResult> RefreshTokens(
         [FromServices] RefreshTokensHandler handler,
-    CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default)
     {
         var refreshTokenRaw = HttpContext.Request.Cookies["refreshToken"];
 
