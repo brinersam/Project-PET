@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using ProjectPet.Core.Options;
+using ProjectPet.Web.ActionFilters;
 using Serilog;
 using Serilog.Events;
 
@@ -29,7 +31,16 @@ public static class RegisterServices
 
     public static IServiceCollection AddValidation(this IServiceCollection services)
     {
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
+        services.AddMvc(options =>
+        {
+            options.Filters.Add(typeof(FluentValidationFilter));
+        });
         services.AddValidatorsFromAssemblyContaining<Program>();
+
         return services;
     }
 

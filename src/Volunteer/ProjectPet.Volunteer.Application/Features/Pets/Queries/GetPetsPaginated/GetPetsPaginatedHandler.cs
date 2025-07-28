@@ -96,7 +96,7 @@ public class GetPetsPaginatedHandler
             "VolunteerId" => (x) => x.VolunteerId,
             "Name" => (x) => x.Name,
             "Age" => (x) => x.DateOfBirth,
-            "Coat" => (x) => x.Coat
+            "Coat" => (x) => x.Coat,
             // todo maybe rewrite to dapper so we can use SpeciesName and BreedName for sorting
         };
 
