@@ -44,21 +44,25 @@ public class AuthController : CustomControllerBase
         return Ok(result.Value);
     }
 
-    //[HttpPost("logout")]
-    //public async Task<IActionResult> Logout(
-    //[FromBody] LogoutRequest request,
-    //[FromServices] LogoutHandler handler,
-    //CancellationToken cancellationToken = default)
-    //{
-    //    var cmd = LogoutCommand.FromRequest(request);
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(
+    [FromServices] LogoutHandler handler,
+    CancellationToken cancellationToken = default)
+    {
+        var successfulTokenParse = Guid.TryParse(HttpContext.Request.Cookies["refreshToken"], out Guid refreshToken);
+        HttpContext.Response.Cookies.Append("refreshToken", String.Empty);
 
-    //    var result = await handler.HandleAsync(cmd, cancellationToken);
+        if (!successfulTokenParse)
+            return Ok();
 
-    //    if (result.IsFailure)
-    //        return result.Error.ToResponse();
+        var cmd = new LogoutCommand(refreshToken);
+        var result = await handler.HandleAsync(cmd, cancellationToken);
 
-    //    return Ok(result.Value);
-    //}
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
 
     [HttpPost("refresh-tokens")]
     public async Task<IActionResult> RefreshTokens(
@@ -68,7 +72,7 @@ public class AuthController : CustomControllerBase
         var refreshTokenRaw = HttpContext.Request.Cookies["refreshToken"];
 
         if (!Guid.TryParse(refreshTokenRaw, out var refreshToken))
-            return Errors.General.ValueIsInvalid("refreshtoken", "refreshToken").ToResponse();
+            return Ok();// Errors.General.ValueIsInvalid("refreshtoken", "refreshToken").ToResponse();
 
         var cmd = new RefreshTokensCommand(refreshToken);
 
