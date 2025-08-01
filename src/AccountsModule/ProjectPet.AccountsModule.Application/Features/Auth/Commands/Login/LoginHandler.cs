@@ -34,8 +34,15 @@ public class LoginHandler
         if (isPasswordValid == false)
             return Error.Validation("invalid.credentials", $"Invalid credentials");
 
+        var userRoles = await _userManager.GetRolesAsync(user!);
+
+
         _logger.LogInformation($"User {user.Id} successfully logged in!");
 
-        return await _tokenProvider.GenerateSessionAsync(user, cancellationToken);
+        var session = await _tokenProvider.GenerateSessionAsync(user, cancellationToken);
+        if (session.IsFailure)
+            return session.Error;
+
+        return session.Value with { Roles = userRoles.ToList()};
     }
 }

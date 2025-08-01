@@ -1,2 +1,2 @@
 ﻿namespace ProjectPet.AccountsModule.Contracts.Dto;
-public record LoginResponse(Guid RefreshToken, string AccessToken);
+public record LoginResponse(Guid RefreshToken, string AccessToken, List<string> Roles);

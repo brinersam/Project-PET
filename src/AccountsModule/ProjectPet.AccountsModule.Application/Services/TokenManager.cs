@@ -104,6 +104,6 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
     {
         var newAccessToken = GenerateJwtAccessToken(user);
         var newRefreshToken = await GenerateRefreshTokenAsync(user, newAccessToken.jti, cancellationToken);
-        return new LoginResponse(newRefreshToken, newAccessToken.accessToken);
+        return new LoginResponse(newRefreshToken, newAccessToken.accessToken, []);
     }
 }
