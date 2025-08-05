@@ -2,6 +2,5 @@
 
 namespace ProjectPet.VolunteerRequests.Contracts.Requests;
 public record CreateVolunteerRequestRequest(
-    VolunteerAccountDto AccountDto,
-    Guid UserId)
+    VolunteerAccountDto AccountDto)
 { }

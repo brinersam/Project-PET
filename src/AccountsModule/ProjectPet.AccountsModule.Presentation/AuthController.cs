@@ -41,7 +41,7 @@ public class AuthController : CustomControllerBase
 
         HttpContext.Response.Cookies.Append("refreshToken", result.Value.RefreshToken.ToString());
 
-        return Ok(result.Value);
+        return Ok(result.Value with { RefreshToken = default });
     }
 
     [HttpPost("logout")]
@@ -83,7 +83,7 @@ public class AuthController : CustomControllerBase
 
         HttpContext.Response.Cookies.Append("refreshToken", result.Value.RefreshToken.ToString());
 
-        return Ok(result.Value.AccessToken);
+        return Ok(result.Value with { RefreshToken = default});
     }
 }
 
