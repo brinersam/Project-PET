@@ -17,6 +17,7 @@ public class AccountController : CustomControllerBase
     [Permission(PermissionCodes.SelfVolunteerEdit)]
     [HttpPut("payment")]
     public async Task<IActionResult> PatchPayment(
+        [FromServices] UserScopedData userData,
         [FromServices] UpdateAccountPaymentHandler handler,
         IValidator<UpdateAccountPaymentRequest> validator,
         [FromBody] UpdateAccountPaymentRequest request,
@@ -26,11 +27,10 @@ public class AccountController : CustomControllerBase
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        string? userId = HttpContext.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
-        if (String.IsNullOrWhiteSpace(userId))
-            return Error.Failure("claim.not.found", "Unknown user!").ToResponse();
+        if (userData.IsSuccess == false)
+            return userData.Error!.ToResponse();
 
-        var cmd = UpdateAccountPaymentCommand.FromRequest(request, new Guid(userId));
+        var cmd = UpdateAccountPaymentCommand.FromRequest(request, (Guid)userData.UserId!);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 
@@ -43,6 +43,7 @@ public class AccountController : CustomControllerBase
     [Permission(PermissionCodes.SelfMemberEdit)]
     [HttpPut("social")]
     public async Task<ActionResult<Guid>> PatchSocial(
+        [FromServices] UserScopedData userData,
         [FromServices] UpdateAccountSocialsHandler handler,
         IValidator<UpdateAccountSocialsRequest> validator,
         [FromBody] UpdateAccountSocialsRequest request,
@@ -52,11 +53,10 @@ public class AccountController : CustomControllerBase
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        string? userId = HttpContext.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
-        if (String.IsNullOrWhiteSpace(userId))
-            return Error.Failure("claim.not.found", "Unknown user!").ToResponse();
+        if (userData.IsSuccess == false)
+            return userData.Error!.ToResponse();
 
-        var cmd = UpdateAccountSocialsCommand.FromRequest(request, new Guid(userId));
+        var cmd = UpdateAccountSocialsCommand.FromRequest(request, (Guid)userData.UserId!);
 
         var result = await handler.HandleAsync(cmd, cancellationToken);
 

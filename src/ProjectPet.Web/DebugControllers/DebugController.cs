@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
 
@@ -22,10 +23,15 @@ public class DebugController : CustomControllerBase
 
     [Permission(PermissionCodes.PetsRead)]
     [HttpGet("TestAuthenticatedOnly")]
-    public async Task<IActionResult> TestAuth(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> TestAuth(
+        [FromServices] UserScopedData userData,
+        CancellationToken cancellationToken = default)
     {
+        if (userData.IsSuccess == false)
+            return userData.Error!.ToResponse();
+
         await Task.Delay(2000, cancellationToken);
-        return Ok(new string[] { "auth", "succ", "ess" });
+        return Ok(new string[] { "auth", "succ", "ess", userData.UserId!.ToString() });
     }
 
     [Permission(PermissionCodes.AdminMasterkey)]

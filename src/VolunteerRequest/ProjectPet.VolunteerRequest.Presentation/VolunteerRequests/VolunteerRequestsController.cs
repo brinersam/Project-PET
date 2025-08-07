@@ -19,6 +19,7 @@ public class VolunteerRequestsController : CustomControllerBase
     [Permission(PermissionCodes.VolunteerRequestCreate)]
     [HttpPost()]
     public async Task<IActionResult> CreateVolunteerRequest(
+        [FromServices] UserScopedData userData,
         [FromServices] CreateHandler handler,
         IValidator<CreateVolunteerRequestRequest> validator,
         [FromBody] CreateVolunteerRequestRequest request,
@@ -28,11 +29,10 @@ public class VolunteerRequestsController : CustomControllerBase
         if (validatorRes.IsValid == false)
             return Envelope.ToResponse(validatorRes.Errors);
 
-        var userIdRes = GetCurrentUserId();
-        if (userIdRes.IsFailure)
-            return userIdRes.Error.ToResponse();
+        if (userData.IsSuccess == false)
+            return userData.Error!.ToResponse();
 
-        var command = CreateCommand.FromRequest(request, userIdRes.Value);
+        var command = CreateCommand.FromRequest(request, (Guid)userData.UserId!);
         var result = await handler.HandleAsync(command, cancellationToken);
 
         if (result.IsFailure)
@@ -66,15 +66,15 @@ public class VolunteerRequestsController : CustomControllerBase
     [Permission(PermissionCodes.VolunteerRequestAdmin)]
     [HttpPut("{requestId:Guid}/review")]
     public async Task<IActionResult> ReviewVolunteerRequest(
+        [FromServices] UserScopedData userData,
         [FromServices] ReviewHandler handler,
         [FromRoute] Guid requestId,
         CancellationToken cancellationToken = default)
     {
-        var adminIdRes = GetCurrentUserId();
-        if (adminIdRes.IsFailure)
-            return adminIdRes.Error.ToResponse();
+        if (userData.IsSuccess == false)
+            return userData.Error!.ToResponse();
 
-        var command = new ReviewCommand(requestId, adminIdRes.Value);
+        var command = new ReviewCommand(requestId, (Guid)userData.UserId!);
         var result = await handler.HandleAsync(command, cancellationToken);
 
         if (result.IsFailure)
@@ -187,15 +187,15 @@ public class VolunteerRequestsController : CustomControllerBase
     [Permission(PermissionCodes.VolunteerRequestRead)]
     [HttpGet("byuser")]
     public async Task<IActionResult> GetVolunteerRequestsByUserId(
+        [FromServices] UserScopedData userData,
         [FromServices] GetByUserIdPaginatedFilteredHandler handler,
         [FromQuery] GetVolunteerRequestFilteredPaginatedRequest request,
         CancellationToken cancellationToken = default)
     {
-        var getUserIdRes = GetCurrentUserId();
-        if (getUserIdRes.IsFailure)
-            return getUserIdRes.Error.ToResponse();
+        if (userData.IsSuccess == false)
+            return userData.Error!.ToResponse();
 
-        var query = GetByUserIdPaginatedFilteredQuery.FromRequest(request, getUserIdRes.Value);
+        var query = GetByUserIdPaginatedFilteredQuery.FromRequest(request, (Guid)userData.UserId!);
         var result = await handler.HandleAsync(query, cancellationToken);
 
         if (result.IsFailure)

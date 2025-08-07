@@ -91,6 +91,9 @@ public static class DependencyInjection
 
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<UserScopedData>();
+
         return builder;
     }
 
