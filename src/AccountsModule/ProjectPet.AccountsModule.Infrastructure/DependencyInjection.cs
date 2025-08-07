@@ -16,6 +16,7 @@ using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Database;
 using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
+using tempShared.Framework.Authorization;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
 public static class DependencyInjection
@@ -90,6 +91,9 @@ public static class DependencyInjection
         builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
 
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<UserScopedData>();
 
         return builder;
     }
