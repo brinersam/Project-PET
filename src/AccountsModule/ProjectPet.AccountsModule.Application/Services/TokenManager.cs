@@ -6,12 +6,12 @@ using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Core.Options;
+using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using tempShared.Framework.Authorization;
 
 namespace ProjectPet.AccountsModule.Application.Services;
 public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccessor

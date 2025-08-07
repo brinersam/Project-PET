@@ -2,7 +2,6 @@
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
-using tempShared.Framework.Authorization;
 
 namespace ProjectPet.Web.DebugControllers;
 

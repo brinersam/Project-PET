@@ -30,7 +30,7 @@ public class AccountRepository : IAccountRepository
             .Include(x => x.Roles)
                 .ThenInclude(x => x.RolePermissions)
                 .ThenInclude(x => x.Permission)
-            .FirstOrDefaultAsync(x => x.Email!.ToLowerInvariant().Equals(email.ToLowerInvariant()), cancellationToken);
+            .FirstOrDefaultAsync(x => x.Email!.ToLower().Equals(email.ToLower()), cancellationToken);
 
         if (user == null)
             return Errors.General.NotFound(typeof(User));

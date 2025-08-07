@@ -1,6 +1,6 @@
-﻿using ProjectPet.SharedKernel.ErrorClasses;
+﻿using ProjectPet.Framework.Authorization;
+using ProjectPet.SharedKernel.ErrorClasses;
 using System.Security.Claims;
-using tempShared.Framework.Authorization;
 
 namespace ProjectPet.Web.MIddlewares;
 
