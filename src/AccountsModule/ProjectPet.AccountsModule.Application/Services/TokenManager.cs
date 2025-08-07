@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectPet.AccountsModule.Application.Interfaces;
@@ -7,8 +8,10 @@ using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Core.Options;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using tempShared.Framework.Authorization;
 
 namespace ProjectPet.AccountsModule.Application.Services;
 public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccessor
@@ -31,12 +34,22 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
     {
         var jti = Guid.NewGuid();
 
-        Claim[] claims =
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        var userRoleClaims = user.Roles
+            .Select(role => new Claim(CustomClaims.ROLE, role.Name ?? "UNKNOWN_ROLE_NAME"));
+
+        var userPermissionClaims = user.Roles
+            .SelectMany(role => role.RolePermissions.Select(y => y.Permission.Code))
+            .Distinct()
+            .Select(code => new Claim(CustomClaims.PERMISSION, code));
+
+        List<Claim> claims =
+        [
             new Claim(JwtRegisteredClaimNames.Jti, jti.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? throw new ArgumentException($"Null email got through to {typeof(TokenManager)}"))
-        };
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? throw new ArgumentException($"Null email got through to {typeof(TokenManager)}")),
+            new Claim(CustomClaims.ID, user.Id.ToString()),
+            .. userRoleClaims,
+            .. userPermissionClaims,
+        ];
 
         var secKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
 
