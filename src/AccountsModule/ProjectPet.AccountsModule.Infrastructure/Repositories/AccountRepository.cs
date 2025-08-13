@@ -24,6 +24,20 @@ public class AccountRepository : IAccountRepository
         return user;
     }
 
+    public async Task<Result<User, Error>> GetByEmailWRolesAsync(string email, CancellationToken cancellationToken)
+    {
+        var user = await _authDbContext.Users
+            .Include(x => x.Roles)
+                .ThenInclude(x => x.RolePermissions)
+                .ThenInclude(x => x.Permission)
+            .FirstOrDefaultAsync(x => x.Email!.ToLower().Equals(email.ToLower()), cancellationToken);
+
+        if (user == null)
+            return Errors.General.NotFound(typeof(User));
+
+        return user;
+    }
+
     public async Task Save(User user, CancellationToken cancellationToken)
     {
         _authDbContext.Attach(user);

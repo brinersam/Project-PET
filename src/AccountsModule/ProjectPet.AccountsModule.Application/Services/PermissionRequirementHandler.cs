@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.Framework.Authorization;
 
@@ -7,31 +8,32 @@ namespace ProjectPet.AccountsModule.Application.Services;
 
 public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttribute>
 {
-    private readonly IAuthRepository _authRepository;
-    private readonly ILogger<PermissionRequirementHandler> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public PermissionRequirementHandler(
-        IAuthRepository authRepository,
-        ILogger<PermissionRequirementHandler> logger)
+        IHttpContextAccessor httpContextAccessor)
     {
-        _authRepository = authRepository;
-        _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
         PermissionAttribute requirement)
     {
-        string? userId = context.User.Claims.FirstOrDefault(u => u.Properties.Values.Contains("sub"))?.Value;
-        if (String.IsNullOrWhiteSpace(userId))
+        if (context.User.Identity?.IsAuthenticated == false || _httpContextAccessor.HttpContext is null)
         {
             context.Fail();
             return;
         }
 
-        bool isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync(new Guid(userId), requirement.Code);
+        var userScopedData = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<UserScopedData>();
 
-        if (isRoleAuthorized)
-            context.Succeed(requirement);
+        if (userScopedData.Permissions?.Contains(requirement.Code) == false)
+        {
+            context.Fail();
+            return;
+        }
+
+        context.Succeed(requirement);
     }
 }

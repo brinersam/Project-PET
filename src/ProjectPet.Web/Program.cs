@@ -60,6 +60,7 @@ builder.AddFileServiceHttpClient();
 #endregion
 
 builder.Services.AddValidation();
+builder.Services.AddScoped<ScopedUserDataMiddleware>();
 
 var app = builder.Build();
 
@@ -80,6 +81,7 @@ app.UseSerilogRequestLogging();
 app.UseCors();
 
 app.UseAuthentication();
+app.UseMiddleware<ScopedUserDataMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
