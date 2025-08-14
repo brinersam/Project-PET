@@ -1,27 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
-using MediatR;
 using ProjectPet.Core.Validator;
 using ProjectPet.SharedKernel;
-using ProjectPet.SharedKernel.Entities.AbstractBase;
 using ProjectPet.SharedKernel.ErrorClasses;
-using ProjectPet.VolunteerRequests.Contracts.Events; //todo remove
+using ProjectPet.VolunteerRequests.Contracts.Events;
 
 namespace ProjectPet.VolunteerRequests.Domain.Models;
 
-public abstract class DomainEventEntity : EntityBase
-{
-    protected DomainEventEntity(Guid id)
-        : base(id)
-    { }
 
-    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    private List<IDomainEvent> _domainEvents = [];
-
-    public void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
-
-    public void ClearDomainEvents() => _domainEvents.Clear();
-}
 
 public class VolunteerRequest : DomainEventEntity
 {

@@ -1,11 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using ProjectPet.Core.Database;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
-using ProjectPet.VolunteerRequests.Contracts.Events;
-using ProjectPet.VolunteerRequests.Domain.Models;
 
 namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Review;
 public class ReviewHandler
@@ -67,15 +64,3 @@ public class ReviewHandler
     }
 }
 
-public static class MediatrExtensions
-{
-    public async static Task PublishDomainEventsAsync(this IPublisher publisher, DomainEventEntity entity, CancellationToken cancellationToken = default)
-    {
-        foreach (var domainEvent in entity.DomainEvents)
-        {
-            await publisher.Publish(domainEvent, cancellationToken);
-        }
-        entity.ClearDomainEvents();
-    }
-
-}
