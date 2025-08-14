@@ -8,6 +8,7 @@ using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.Core.Database;
 using ProjectPet.DiscussionsModule.Contracts;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.SharedKernel.Exceptions;
 using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
 using ProjectPet.VolunteerRequests.Contracts.Events;

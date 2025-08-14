@@ -16,9 +16,9 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.6" />
 		<PackageReference Include="Minio.AspNetCore" Version="6.0.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.2" />
-		<PackageReference Include="Brinersam.ProjectPet.Core" Version="1.0.2" />
-		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.2" />
+		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.5" />
+		<PackageReference Include="Brinersam.ProjectPet.Core" Version="1.0.5" />
+		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.5" />
 	</ItemGroup>
 
 

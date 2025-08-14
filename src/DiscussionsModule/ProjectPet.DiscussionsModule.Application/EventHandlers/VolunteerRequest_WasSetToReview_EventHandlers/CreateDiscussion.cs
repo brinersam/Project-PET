@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using ProjectPet.DiscussionsModule.Application.Interfaces;
 using ProjectPet.DiscussionsModule.Domain.Models;
+using ProjectPet.SharedKernel.Exceptions;
 using ProjectPet.VolunteerRequests.Contracts.Events;
 
 namespace ProjectPet.DiscussionsModule.Application.EventHandlers.VolunteerRequest_WasSetToReview_EventHandlers;

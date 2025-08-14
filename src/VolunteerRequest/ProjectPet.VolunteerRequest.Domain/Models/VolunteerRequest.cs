@@ -1,13 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using ProjectPet.Core.Validator;
 using ProjectPet.SharedKernel;
+using ProjectPet.SharedKernel.Entities.AbstractBase;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerRequests.Contracts.Events;
 
 namespace ProjectPet.VolunteerRequests.Domain.Models;
-
-
-
 
 public class VolunteerRequest : DomainEventEntity
 {
