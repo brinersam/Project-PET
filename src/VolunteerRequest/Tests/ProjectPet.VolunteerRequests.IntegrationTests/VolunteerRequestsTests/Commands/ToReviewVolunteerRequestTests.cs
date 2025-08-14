@@ -21,7 +21,7 @@ public class ToReviewVolunteerRequestTests : VolunteerRequestsTestBase
     }
 
     [Fact]
-    public async Task VolunteerRequest_ToReview__Success()
+    public async Task VolunteerRequest_ToReview_Success()
     {
         // Arrange
         var volunteerRequest = await SeedVolunteerRequestAsync();
@@ -33,21 +33,46 @@ public class ToReviewVolunteerRequestTests : VolunteerRequestsTestBase
         var result = await _sut.HandleAsync(cmd, default);
 
         // Assert
+        var readVolunteerRequest = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
         var discussion = await _discussionsReadDbContext.Discussions.FirstOrDefaultAsync();
 
         result.IsSuccess.Should().BeTrue();
-        volunteerRequest.Status.Should().Be(VolunteerRequestStatus.onReview);
+        readVolunteerRequest.Status.Should().Be((Contracts.Dto.VolunteerRequestStatusDto)VolunteerRequestStatus.onReview);
         discussion.Should().NotBeNull();
         discussion.UserIds.Should().Contain(adminId);
         discussion.UserIds.Should().Contain(volunteerRequest.UserId);
         discussion.UserIds.Should().HaveCount(2);
     }
 
+    //[Fact] obsolete as of replacing contract with domain events
+    //public async Task VolunteerRequest_ToReview_DiscussionContractFailure_DiscussionAndRequestNotCreated()
+    //{
+    //    // Arrange
+    //    _factory.IDiscussionModuleContractMock_CreateDiscussionAsync_Failure();
+
+    //    var volunteerRequest = await SeedVolunteerRequestAsync();
+    //    var initialStatus = volunteerRequest.Status;
+    //    var adminId = _fixture.Create<Guid>();
+
+    //    var cmd = new ReviewCommand(volunteerRequest.Id, adminId);
+
+    //    // Act
+    //    var result = await _sut.HandleAsync(cmd, default);
+
+    //    // Assert
+    //    var discussion = await _discussionsReadDbContext.Discussions.FirstOrDefaultAsync();
+
+    //    result.IsSuccess.Should().BeFalse();
+
+    //    volunteerRequest.Status.Should().Be(initialStatus);
+    //    discussion.Should().BeNull();
+    //}
+
     [Fact]
-    public async Task VolunteerRequest_ToReview_DiscussionContractFailure_RequestNotCreated()
+    public async Task VolunteerRequest_ToReview_CreateDiscussionEventHandlerFailure_DiscussionNotCreatedRequestNotChanged()
     {
         // Arrange
-        _factory.IDiscussionModuleContractMock_CreateDiscussionAsync_Failure();
+        _factory.CreateDiscussionEventHandlerMock_Handle_ThrowException();
 
         var volunteerRequest = await SeedVolunteerRequestAsync();
         var initialStatus = volunteerRequest.Status;
@@ -59,16 +84,38 @@ public class ToReviewVolunteerRequestTests : VolunteerRequestsTestBase
         var result = await _sut.HandleAsync(cmd, default);
 
         // Assert
+        var readVolunteerRequesst = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
         var discussion = await _discussionsReadDbContext.Discussions.FirstOrDefaultAsync();
 
         result.IsSuccess.Should().BeFalse();
 
-        volunteerRequest.Status.Should().Be(initialStatus);
+        readVolunteerRequesst.Status.Should().Be((Contracts.Dto.VolunteerRequestStatusDto)initialStatus);
         discussion.Should().BeNull();
     }
 
-    //[Fact]
-    //public async Task VolunteerRequest_ToReview_RequestCreationFailure_DiscussionIsNotCreated()
-    // if domain method would fail, then this will cover that case (error in not doing both db changes though transaction)
+    [Fact]
+    public async Task VolunteerRequest_ToReview_RequestCreationFailure_DiscussionNotCreatedRequestNotChanged()
+    {
+        // Arrange
+        _factory.IVolunteerRequestRepository_Save_Fail();
+
+        var volunteerRequest = await SeedVolunteerRequestAsync();
+        var initialStatus = volunteerRequest.Status;
+        var adminId = _fixture.Create<Guid>();
+
+        var cmd = new ReviewCommand(volunteerRequest.Id, adminId);
+
+        // Act
+        var result = await _sut.HandleAsync(cmd, default);
+
+        // Assert
+        var readVolunteerRequesst = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
+        var discussion = await _discussionsReadDbContext.Discussions.FirstOrDefaultAsync();
+
+        result.IsSuccess.Should().BeFalse();
+
+        readVolunteerRequesst.Status.Should().Be((Contracts.Dto.VolunteerRequestStatusDto)initialStatus);
+        discussion.Should().BeNull();
+    }
 
 }
