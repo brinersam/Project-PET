@@ -3,9 +3,11 @@ using ProjectPet.Core.Validator;
 using ProjectPet.SharedKernel;
 using ProjectPet.SharedKernel.Entities.AbstractBase;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.VolunteerRequests.Contracts.Events;
 
 namespace ProjectPet.VolunteerRequests.Domain.Models;
-public class VolunteerRequest : EntityBase
+
+public class VolunteerRequest : DomainEventEntity
 {
     public Guid AdminId { get; private set; }
     public Guid UserId { get; private set; }
@@ -68,6 +70,9 @@ public class VolunteerRequest : EntityBase
     {
         if (TryTransitionTo(VolunteerRequestStatus.onReview, out Error error) == false)
             return error;
+
+        AddDomainEvent(new VolunteerRequest_WasSetToReview_Event(
+                Id, [UserId, adminId]));
 
         AdminId = adminId;
         return Result.Success<Error>();

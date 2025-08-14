@@ -3,10 +3,11 @@
 	 
 
 	<ItemGroup>
-		<PackageReference Include="Brinersam.ProjectPet.Core" Version="1.0.2" />
+		<PackageReference Include="Brinersam.ProjectPet.Core" Version="1.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\VolunteerRequest\ProjectPet.VolunteerRequest.Contracts\ProjectPet.VolunteerRequests.Contracts.csproj" />
 		<ProjectReference Include="..\ProjectPet.DiscussionsModule.Contracts\ProjectPet.DiscussionsModule.Contracts.csproj" />
 		<ProjectReference Include="..\ProjectPet.DiscussionsModule.Domain\ProjectPet.DiscussionsModule.Domain.csproj" />
 	</ItemGroup>

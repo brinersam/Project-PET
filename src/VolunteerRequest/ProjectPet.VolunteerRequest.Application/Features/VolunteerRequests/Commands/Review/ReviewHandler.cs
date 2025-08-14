@@ -1,27 +1,29 @@
 ﻿using CSharpFunctionalExtensions;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using ProjectPet.Core.Database;
-using ProjectPet.DiscussionsModule.Contracts;
+using ProjectPet.Core.Extensions;
 using ProjectPet.SharedKernel.ErrorClasses;
+using ProjectPet.SharedKernel.Exceptions;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
 
 namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Review;
 public class ReviewHandler
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDiscussionModuleContract _discussionModule;
     private readonly IVolunteerRequestRepository _requestRepository;
+    private readonly IPublisher _publisher;
     private readonly ILogger<ReviewHandler> _logger;
 
     public ReviewHandler(
         IUnitOfWork unitOfWork,
-        IDiscussionModuleContract discussionModule,
         IVolunteerRequestRepository requestRepository,
+        IPublisher publisher,
         ILogger<ReviewHandler> logger)
     {
         _unitOfWork = unitOfWork;
-        _discussionModule = discussionModule;
         _requestRepository = requestRepository;
+        _publisher = publisher;
         _logger = logger;
     }
 
@@ -32,31 +34,36 @@ public class ReviewHandler
         var requestRes = await _requestRepository.GetByIdAsync(command.RequestId, cancellationToken);
         if (requestRes.IsFailure)
             return requestRes.Error;
+        var request = requestRes.Value;
 
         var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        var discussionRes = await _discussionModule.CreateDiscussionAsync(
-            requestRes.Value.Id,
-            [requestRes.Value.UserId, command.AdminId]);
-
-        if (discussionRes.IsFailure)
-            return discussionRes.Error;
-
-        var beginReviewRes = requestRes.Value.BeginReview(command.AdminId);
+        var beginReviewRes = request.BeginReview(command.AdminId);
         if (beginReviewRes.IsFailure)
             return beginReviewRes.Error;
+
+        try
+        {
+            await _publisher.PublishDomainEventsAsync(request, cancellationToken);
+        }
+        catch (DomainEventException ex)
+        {
+            return Error.Failure("domain.event.failure",ex.Message);
+        }
 
         var saveRes = await _requestRepository.Save(requestRes.Value, cancellationToken);
         if (saveRes.IsFailure)
             return saveRes.Error;
 
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         transaction.Commit();
 
         _logger.LogInformation(
             "Volunteer request (id {O1}) taken into review by user (id {O2})",
-            requestRes.Value.Id,
-            requestRes.Value.UserId);
+            request.Id,
+            request.UserId);
 
         return saveRes.Value;
     }
 }
+
