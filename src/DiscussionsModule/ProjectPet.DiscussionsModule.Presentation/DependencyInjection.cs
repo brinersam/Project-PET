@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectPet.DiscussionsModule.Application;
+using ProjectPet.DiscussionsModule.Application.EventHandlers.VolunteerRequest_WasSetToReview_EventHandlers;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.AddMessageToDiscussion;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.CloseDiscussion;
 using ProjectPet.DiscussionsModule.Application.Features.Discussions.Commands.DeleteMessage;
@@ -42,6 +43,9 @@ public static class DependencyInjection
 
         // queries
         builder.Services.AddScoped<GetDiscussionHandler>();
+
+        // event handlers
+        builder.Services.AddScoped<CreateDiscussion>();
 
         return builder;
     }
