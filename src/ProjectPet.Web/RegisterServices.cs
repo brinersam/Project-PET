@@ -1,5 +1,9 @@
-﻿using FluentValidation;
+﻿using DEVShared;
+using FluentValidation;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using ProjectPet.AccountsModule.Infrastructure;
 using ProjectPet.Core.Options;
 using ProjectPet.Web.ActionFilters;
 using Serilog;
@@ -50,5 +54,40 @@ public static class RegisterServices
             builder.Configuration.GetSection(OptionsDb.SECTION));
 
         return builder;
+    }
+
+    public static IHostApplicationBuilder AddRabbitMQ(this IHostApplicationBuilder builder)
+    {
+        builder.Services.Configure<RabbitMQOptions>(builder.Configuration.GetSection(RabbitMQOptions.REGION));
+        builder.Services.AddMassTransit(config =>
+        {
+            config.SetKebabCaseEndpointNameFormatter();
+
+            config.AddModuleConsumers();
+
+            config.UsingRabbitMq((context, config) =>
+            {
+                var options = context.GetRequiredService<IOptions<RabbitMQOptions>>().Value;
+                config.Host(
+                    new Uri(options.Host),
+                    configure =>
+                    {
+                        configure.Username(options.Username);
+                        configure.Password(options.Password);
+                    }
+                );
+
+                config.Durable = true;
+
+                config.ConfigureEndpoints(context);
+            });
+        });
+        return builder;
+
+    }
+
+    public static void AddModuleConsumers(this IBusRegistrationConfigurator config)
+    {
+        
     }
 }
