@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using DEVShared;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using ProjectPet.AccountsModule.Application.Interfaces;
+using ProjectPet.AccountsModule.Contracts.Events;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.SharedKernel.ErrorClasses;

@@ -51,7 +51,7 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         roles.Should().Contain(VolunteerAccount.ROLENAME);
     }
 
-    [Obsolete ("We now use rabbitMq instead of contracts")]
+    [Obsolete("We now use rabbitMq instead of contracts")]
     private async Task Approve_VolunteerRequest_CreateVolunteerAccountFailure_RequestUnchanged()
     {
         // Arrange

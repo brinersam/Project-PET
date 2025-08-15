@@ -45,7 +45,7 @@ public abstract class ToggleMockBase<TInterface, TImplementation> : ToggleMockBa
         _mockedFunctionNames.Clear();
     }
 
-    protected TInterface CreateInstance() 
+    protected TInterface CreateInstance()
         => (TImplementation)ActivatorUtilities.CreateInstance(ServiceProvider, typeof(TImplementation));
     // todo
     // maybe on registering the mock itself, we first switch the original service to keyed service

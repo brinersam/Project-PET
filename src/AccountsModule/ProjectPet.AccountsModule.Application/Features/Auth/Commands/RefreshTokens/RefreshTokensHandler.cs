@@ -37,6 +37,6 @@ public class RefreshTokensHandler
 
         var userRoles = await _userManager.GetRolesAsync(session.User);
 
-        return Result.Success<LoginResponse, Error>(result.Value with {Roles = userRoles.ToList()});
+        return Result.Success<LoginResponse, Error>(result.Value with { Roles = userRoles.ToList() });
     }
 }

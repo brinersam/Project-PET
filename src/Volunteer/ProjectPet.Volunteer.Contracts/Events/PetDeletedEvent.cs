@@ -3,5 +3,5 @@
 namespace ProjectPet.VolunteerModule.Contracts.Events;
 public record PetDeletedEvent(
     Guid PetId,
-    List<FileLocationDto> FileLocations) //todo carry this to NEW contracts just for the originating slice
+    List<FileLocationDto> FileLocations)
 { }

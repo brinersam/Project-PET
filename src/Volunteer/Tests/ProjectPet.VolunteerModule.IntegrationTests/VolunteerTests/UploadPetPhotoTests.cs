@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.BeginPetPhotosUpload;
 using ProjectPet.VolunteerModule.IntegrationTests.Factories;
 using ProjectPet.VolunteerModule.IntegrationTests.VolunteerTests.Base;
 

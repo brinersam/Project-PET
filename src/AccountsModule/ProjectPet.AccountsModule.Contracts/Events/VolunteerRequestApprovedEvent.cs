@@ -1,8 +1,7 @@
-﻿
-using ProjectPet.SharedKernel.SharedDto;
+﻿using ProjectPet.SharedKernel.SharedDto;
 
-namespace DEVShared;
+namespace ProjectPet.AccountsModule.Contracts.Events;
 public record VolunteerRequestApprovedEvent(
     Guid userId,
-    VolunteerAccountDto accountDto) //todo carry this to NEW contracts just for the originating slice
+    VolunteerAccountDto accountDto)
 { }

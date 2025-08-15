@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.AccountsModule.Application.Interfaces;
-using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework.Authorization;
 
 namespace ProjectPet.AccountsModule.Application.Services;
