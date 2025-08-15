@@ -33,7 +33,7 @@ public class ToReviewVolunteerRequestTests : VolunteerRequestsTestBase
         var result = await _sut.HandleAsync(cmd, default);
 
         // Assert
-        var readVolunteerRequest = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
+        var readVolunteerRequest = await _readDbContextVR.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
         var discussion = await _discussionsReadDbContext.Discussions.FirstOrDefaultAsync();
 
         result.IsSuccess.Should().BeTrue();
@@ -84,7 +84,7 @@ public class ToReviewVolunteerRequestTests : VolunteerRequestsTestBase
         var result = await _sut.HandleAsync(cmd, default);
 
         // Assert
-        var readVolunteerRequesst = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
+        var readVolunteerRequesst = await _readDbContextVR.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
         var discussion = await _discussionsReadDbContext.Discussions.FirstOrDefaultAsync();
 
         result.IsSuccess.Should().BeFalse();
@@ -109,7 +109,7 @@ public class ToReviewVolunteerRequestTests : VolunteerRequestsTestBase
         var result = await _sut.HandleAsync(cmd, default);
 
         // Assert
-        var readVolunteerRequesst = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
+        var readVolunteerRequesst = await _readDbContextVR.VolunteerRequests.FirstOrDefaultAsync(x => x.Id == volunteerRequest.Id);
         var discussion = await _discussionsReadDbContext.Discussions.FirstOrDefaultAsync();
 
         result.IsSuccess.Should().BeFalse();

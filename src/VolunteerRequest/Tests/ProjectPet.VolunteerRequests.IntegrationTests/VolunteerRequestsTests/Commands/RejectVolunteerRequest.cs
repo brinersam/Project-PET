@@ -33,7 +33,7 @@ public class RejectVolunteerRequest : VolunteerRequestsTestBase
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        var volunteerRequestAssert = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync();
+        var volunteerRequestAssert = await _readDbContextVR.VolunteerRequests.FirstOrDefaultAsync();
 
         volunteerRequestAssert!.Status.Should().Be(VolunteerRequestStatusDto.rejected);
         volunteerRequestAssert.RejectionComment.Should().BeEquivalentTo(rejectMsg);

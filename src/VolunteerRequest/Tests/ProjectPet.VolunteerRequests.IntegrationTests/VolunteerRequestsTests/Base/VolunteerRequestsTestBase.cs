@@ -4,16 +4,18 @@ using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.AccountsModule.Infrastructure.Database;
-using ProjectPet.VolunteerRequests.Application.Interfaces;
 using ProjectPet.VolunteerRequests.Domain.Models;
 using ProjectPet.VolunteerRequests.Infrastructure.Database;
 using ProjectPet.VolunteerRequests.IntegrationTests.Factories;
+using ReadDbContextACC = ProjectPet.AccountsModule.Infrastructure.Database.ReadDbContext;
+using ReadDbContextVR = ProjectPet.VolunteerRequests.Infrastructure.Database.ReadDbContext;
 
 namespace ProjectPet.VolunteerRequests.IntegrationTests.VolunteerRequestsTests.Base;
 public class VolunteerRequestsTestBase : IClassFixture<VolunteerRequestsWebFactory>, IAsyncLifetime
 {
     protected readonly Fixture _fixture;
-    protected readonly IReadDbContext _readDbContext;
+    protected readonly ReadDbContextVR _readDbContextVR;
+    protected readonly ReadDbContextACC _readDbContextACC;
     protected readonly WriteDbContext _writeDbContext;
     protected readonly AuthDbContext _authDbContext;
     protected readonly UserManager<User> _userManager;
@@ -24,12 +26,13 @@ public class VolunteerRequestsTestBase : IClassFixture<VolunteerRequestsWebFacto
         _factory = factory;
         _serviceScope = _factory.Services.CreateScope();
         _fixture = new Fixture();
-        _readDbContext = _serviceScope.ServiceProvider.GetRequiredService<IReadDbContext>();
+        _readDbContextVR = _serviceScope.ServiceProvider.GetRequiredService<ReadDbContextVR>();
+        _readDbContextACC = _serviceScope.ServiceProvider.GetRequiredService<ReadDbContextACC>();
         _writeDbContext = _serviceScope.ServiceProvider.GetRequiredService<WriteDbContext>();
         _authDbContext = _serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
         _userManager = _serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-        _factory.SetMockProviders(_serviceScope.ServiceProvider);
+        _factory.ToggleMocks.SetMockProviders(_serviceScope.ServiceProvider);
         SetupFixtures();
     }
 
@@ -38,7 +41,7 @@ public class VolunteerRequestsTestBase : IClassFixture<VolunteerRequestsWebFacto
 
     public async Task DisposeAsync()
     {
-        _factory.ResetMocks();
+        _factory.ToggleMocks.ResetMocks();
         _serviceScope.Dispose();
         await _factory.ResetDatabaseAsync();
     }

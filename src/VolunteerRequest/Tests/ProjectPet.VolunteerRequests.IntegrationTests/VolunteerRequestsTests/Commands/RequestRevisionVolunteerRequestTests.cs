@@ -33,7 +33,7 @@ public class RequestRevisionVolunteerRequestTests : VolunteerRequestsTestBase
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        var volunteerRequestAssert = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync();
+        var volunteerRequestAssert = await _readDbContextVR.VolunteerRequests.FirstOrDefaultAsync();
         volunteerRequestAssert!.Status.Should().Be(VolunteerRequestStatusDto.revisionRequired);
         volunteerRequestAssert.RejectionComment.Should().BeEquivalentTo(revisionMsg);
     }

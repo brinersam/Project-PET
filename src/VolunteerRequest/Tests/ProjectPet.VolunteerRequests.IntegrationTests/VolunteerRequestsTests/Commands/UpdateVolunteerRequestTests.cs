@@ -35,7 +35,7 @@ public class UpdateVolunteerRequestTests : VolunteerRequestsTestBase
         // Assert
         result.IsSuccess.Should().BeTrue();
 
-        var volunteerRequestAssert = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync();
+        var volunteerRequestAssert = await _readDbContextVR.VolunteerRequests.FirstOrDefaultAsync();
 
         // request status is on review
         volunteerRequestAssert!.Status.Should().Be(VolunteerRequestStatusDto.onReview);
