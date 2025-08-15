@@ -1,11 +1,10 @@
-﻿using DEVShared;
-using MassTransit;
-using MediatR;
+﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using ProjectPet.FileService.Contracts;
 using ProjectPet.FileService.Contracts.Dtos;
+using ProjectPet.VolunteerModule.Contracts.Events;
 using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Interceptors;

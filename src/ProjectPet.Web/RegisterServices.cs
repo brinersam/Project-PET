@@ -1,5 +1,4 @@
-﻿using DEVShared;
-using FluentValidation;
+﻿using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

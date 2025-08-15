@@ -7,7 +7,6 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\..\AccountsModule\ProjectPet.AccountsModule.Contracts\ProjectPet.AccountsModule.Contracts.csproj" />
-    <ProjectReference Include="..\..\DEVShared\DEVShared.csproj" />
     <ProjectReference Include="..\..\DiscussionsModule\ProjectPet.DiscussionsModule.Contracts\ProjectPet.DiscussionsModule.Contracts.csproj" />
     <ProjectReference Include="..\ProjectPet.VolunteerRequest.Contracts\ProjectPet.VolunteerRequests.Contracts.csproj" />
     <ProjectReference Include="..\ProjectPet.VolunteerRequest.Domain\ProjectPet.VolunteerRequests.Domain.csproj" />

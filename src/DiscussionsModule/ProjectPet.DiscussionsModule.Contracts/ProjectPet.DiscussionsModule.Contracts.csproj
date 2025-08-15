@@ -3,6 +3,6 @@
 	 
 	
 	<ItemGroup>
-		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.5" />
+		<PackageReference Include="Brinersam.ProjectPet.SharedKernel" Version="1.0.6" />
 	</ItemGroup>
 </Project>
