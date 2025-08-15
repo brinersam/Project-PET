@@ -8,7 +8,6 @@ using ProjectPet.AccountsModule.Contracts.Requests;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
-using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.AccountsModule.Presentation;
 public class AccountController : CustomControllerBase

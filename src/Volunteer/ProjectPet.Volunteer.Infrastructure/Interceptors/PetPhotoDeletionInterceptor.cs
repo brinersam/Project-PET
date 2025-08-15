@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using ProjectPet.FileService.Contracts;
 using ProjectPet.FileService.Contracts.Dtos;
+using ProjectPet.VolunteerModule.Contracts.Events;
 using ProjectPet.VolunteerModule.Domain.Models;
 
 namespace ProjectPet.VolunteerModule.Infrastructure.Interceptors;
@@ -10,13 +12,16 @@ public class PetPhotoDeletionInterceptor : SaveChangesInterceptor
 {
     private readonly IFileService _fileService;
     private readonly ILogger<PetPhotoDeletionInterceptor> _logger;
+    private readonly IPublishEndpoint _publisher;
 
     public PetPhotoDeletionInterceptor(
         IFileService fileService,
-        ILogger<PetPhotoDeletionInterceptor> logger)
+        ILogger<PetPhotoDeletionInterceptor> logger,
+        IPublishEndpoint publisher)
     {
         _fileService = fileService;
         _logger = logger;
+        _publisher = publisher;
     }
 
     public async override ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -47,28 +52,10 @@ public class PetPhotoDeletionInterceptor : SaveChangesInterceptor
 
             var photosToDelete = petWithPhotos.Photos.Select(x => new FileLocationDto(x.FileId, x.BucketName)).ToList();
 
+            _publisher.Publish(new PetDeletedEvent(pet.Id, photosToDelete), CancellationToken.None);
             _logger.LogInformation(
                 "Pet Deletion! Also deleting photos: {PhotosList}",
                 String.Join(";\n", photosToDelete.Select(x => $"{x.BucketName}: Photo with id {x.FileId}")));
-
-            await Task.WhenAll(
-                photosToDelete.Select(async x =>
-                     {
-                         var deleteResult = await _fileService.DeleteFileAsync(x);
-                         if (deleteResult.IsFailure)
-                         {
-                             _logger.LogWarning(
-                                 "Failed to delete photo (id: {photoId}) that was owned by now deleted pet (id: {petId}): {error}",
-                                 x.FileId,
-                                 pet.Id,
-                                 deleteResult.Error.Message
-                             );
-                         }
-
-                         return deleteResult;
-                     }
-                )
-            );
         }
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);

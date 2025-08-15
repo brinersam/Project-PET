@@ -6,7 +6,6 @@ using ProjectPet.AccountsModule.Contracts;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Domain.Accounts;
-using ProjectPet.Core.Database;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.SharedKernel.ValueObjects;
@@ -17,24 +16,22 @@ public class AccountsModuleContractImplementation : IAccountsModuleContract
 {
     private readonly IPermissionModifierRepository _permissionModRepository;
     private readonly IAccountRepository _accountRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
     private readonly ILogger<AccountsModuleContractImplementation> _logger;
 
     public AccountsModuleContractImplementation(
         IPermissionModifierRepository permissionModifier,
         IAccountRepository accountRepository,
-        IUnitOfWork unitOfWork,
         UserManager<User> userManager,
         ILogger<AccountsModuleContractImplementation> logger)
     {
         _permissionModRepository = permissionModifier;
         _accountRepository = accountRepository;
-        _unitOfWork = unitOfWork;
         _userManager = userManager;
         _logger = logger;
     }
 
+    [Obsolete("Refactored to eventconsumer")]
     public async Task<UnitResult<Error>> MakeUserVolunteerAsync(Guid userId,
                                                                 VolunteerAccountDto accountDto,
                                                                 CancellationToken ctoken = default)

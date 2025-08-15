@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectPet.AccountsModule.Application.Interfaces;
@@ -9,7 +8,6 @@ using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 

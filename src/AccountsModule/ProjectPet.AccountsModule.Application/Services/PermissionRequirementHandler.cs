@@ -9,11 +9,14 @@ namespace ProjectPet.AccountsModule.Application.Services;
 public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttribute>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IAuthRepository _authRepository;
 
     public PermissionRequirementHandler(
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IAuthRepository authRepository)
     {
         _httpContextAccessor = httpContextAccessor;
+        _authRepository = authRepository;
     }
 
     protected override async Task HandleRequirementAsync(
@@ -27,13 +30,14 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
         }
 
         var userScopedData = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<UserScopedData>();
-
-        if (userScopedData.Permissions?.Contains(requirement.Code) == false)
+        if (userScopedData.IsSuccess == false)
         {
             context.Fail();
             return;
         }
 
-        context.Succeed(requirement);
+        bool isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync((Guid)userScopedData.UserId!, requirement.Code);
+        if (isRoleAuthorized)
+            context.Succeed(requirement);
     }
 }

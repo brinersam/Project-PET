@@ -6,6 +6,7 @@ using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
 
 namespace ProjectPet.VolunteerRequests.IntegrationTests.ToggleMocks;
+[Obsolete("We now use rabbitMq instead of contracts")]
 public class AccountsModuleContractToggleMock : ToggleMockBase<IAccountsModuleContract, AccountsModuleContractImplementation>, IAccountsModuleContract
 {
     public async Task<Result<Guid, Error>> CreatePermissionModifierAsync(Guid userId, PermissionModifierDto modifierDto, CancellationToken ctoken = default)

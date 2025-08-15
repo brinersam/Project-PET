@@ -60,6 +60,7 @@ builder.AddFileServiceHttpClient();
 #endregion
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+builder.AddRabbitMQ();
 
 builder.Services.AddValidation();
 builder.Services.AddScoped<ScopedUserDataMiddleware>();

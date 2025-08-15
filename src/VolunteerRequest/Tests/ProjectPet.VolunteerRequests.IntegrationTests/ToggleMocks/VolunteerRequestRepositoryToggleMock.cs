@@ -6,7 +6,7 @@ using ProjectPet.VolunteerRequests.Infrastructure.Repositories;
 
 namespace ProjectPet.VolunteerRequests.IntegrationTests.ToggleMocks;
 public class VolunteerRequestRepositoryToggleMock
-    : 
+    :
     ToggleMockBase<IVolunteerRequestRepository, VolunteerRequestRepository>,
     IVolunteerRequestRepository
 {

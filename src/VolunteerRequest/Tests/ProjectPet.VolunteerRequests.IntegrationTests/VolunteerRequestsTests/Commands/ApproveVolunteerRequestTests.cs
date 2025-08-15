@@ -21,6 +21,8 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
     public async Task Approve_VolunteerRequest_Success()
     {
         // Arrange
+        await _messageBusHarness.Start();
+
         var user = await SeedUserAsync();
         var volunteerRequest = await SeedVolunteerRequestAndSetToReview(null, user.Id);
 
@@ -30,15 +32,17 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         var result = await _sut.HandleAsync(cmd, default);
 
         // Assert
+        await _messageBusHarness.InactivityTask; // wait for all messages from the bus to be consumed
         result.IsSuccess.Should().BeTrue();
 
-        var volunteerRequestAssert = await _readDbContext.VolunteerRequests.AsNoTracking().FirstOrDefaultAsync();
+        var volunteerRequestAssert = await _readDbContextVR.VolunteerRequests.AsNoTracking().FirstOrDefaultAsync();
+        var userAssert = await _readDbContextACC.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
 
         // request status is set to approved
         volunteerRequestAssert!.Status.Should().Be(VolunteerRequestStatusDto.approved);
 
         // volunteer data is created for user
-        user.VolunteerData.Should().NotBeNull();
+        userAssert!.VolunteerData.Should().NotBeNull();
 
         // volunteer role is set for user, user still has member role
         var roles = await _userManager.GetRolesAsync(user);
@@ -47,11 +51,11 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         roles.Should().Contain(VolunteerAccount.ROLENAME);
     }
 
-    [Fact]
-    public async Task Approve_VolunteerRequest_CreateVolunteerAccountFailure_RequestUnchanged()
+    [Obsolete("We now use rabbitMq instead of contracts")]
+    private async Task Approve_VolunteerRequest_CreateVolunteerAccountFailure_RequestUnchanged()
     {
         // Arrange
-        _factory.IAccountsModuleContract_MakeUserVolunteerAsync_Failure();
+        //_factory.IAccountsModuleContract_MakeUserVolunteerAsync_Failure();
 
         var user = await SeedUserAsync();
         var volunteerRequest = await SeedVolunteerRequestAndSetToReview(default, user.Id);
@@ -66,7 +70,7 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         // Assert
         result.IsSuccess.Should().BeFalse();
 
-        var volunteerRequestAssert = await _readDbContext.VolunteerRequests.FirstOrDefaultAsync();
+        var volunteerRequestAssert = await _readDbContextVR.VolunteerRequests.FirstOrDefaultAsync();
 
         // request status is unchanged
         volunteerRequestAssert!.Status.Should().Be((VolunteerRequestStatusDto)initialStatus);

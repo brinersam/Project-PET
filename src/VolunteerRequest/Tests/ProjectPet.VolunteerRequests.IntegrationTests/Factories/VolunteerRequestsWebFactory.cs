@@ -43,7 +43,7 @@ public class VolunteerRequestsWebFactory : IntegrationTestWebFactoryBase
 
     private void AddMessageQueue(IServiceCollection services)
     {
-        services.AddMassTransitTestHarness(options => 
+        services.AddMassTransitTestHarness(options =>
         {
             options.SetKebabCaseEndpointNameFormatter();
             RegisterServices.AddModuleConsumers(options);

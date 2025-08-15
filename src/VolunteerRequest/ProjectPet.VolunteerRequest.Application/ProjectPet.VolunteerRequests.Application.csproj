@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-   
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
-	</ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.2" />
+  </ItemGroup>
 
 	<ItemGroup>
     <ProjectReference Include="..\..\AccountsModule\ProjectPet.AccountsModule.Contracts\ProjectPet.AccountsModule.Contracts.csproj" />
