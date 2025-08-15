@@ -26,6 +26,7 @@ services:
     depends_on:
         - projectpet.database
         - projectpet.seq
+        - projectpet.rabbitmq
     restart: always
     networks:
       - ProjectPetNetwork
@@ -126,6 +127,7 @@ services:
     ports:
         - "5800:5800"
         - "5818:5818"
-    depends_on:
-        - projectpet.web
     restart: always
+    networks:
+      - ProjectPetNetwork
+      - default
