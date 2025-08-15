@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using MassTransit.Testing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectPet.AccountsModule.Domain;
@@ -20,6 +21,7 @@ public class VolunteerRequestsTestBase : IClassFixture<VolunteerRequestsWebFacto
     protected readonly AuthDbContext _authDbContext;
     protected readonly UserManager<User> _userManager;
     protected readonly VolunteerRequestsWebFactory _factory;
+    protected readonly ITestHarness _messageBusHarness;
     protected readonly IServiceScope _serviceScope;
     public VolunteerRequestsTestBase(VolunteerRequestsWebFactory factory)
     {
@@ -31,6 +33,7 @@ public class VolunteerRequestsTestBase : IClassFixture<VolunteerRequestsWebFacto
         _writeDbContext = _serviceScope.ServiceProvider.GetRequiredService<WriteDbContext>();
         _authDbContext = _serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
         _userManager = _serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        _messageBusHarness = _serviceScope.ServiceProvider.GetTestHarness();
 
         _factory.ToggleMocks.SetMockProviders(_serviceScope.ServiceProvider);
         SetupFixtures();

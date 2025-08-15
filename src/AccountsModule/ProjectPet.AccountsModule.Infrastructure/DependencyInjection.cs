@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@ using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database;
+using ProjectPet.AccountsModule.Infrastructure.EventConsumers.VolunteerRequestApproved;
 using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Repositories;
 using ProjectPet.AccountsModule.Infrastructure.Seeding;
@@ -23,6 +25,7 @@ public static class DependencyInjection
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
         builder.AddAuth();
+        builder.AddEventConsumers();
         builder.Services.AddScoped<IDatabaseSeeder, DatabaseAccountsSeeder>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IPermissionModifierRepository, PermissionModifierRepository>();
@@ -30,6 +33,18 @@ public static class DependencyInjection
         builder.Services.Configure<AdminCredsOptions>(builder.Configuration.GetSection(AdminCredsOptions.SECTION));
 
         return builder;
+    }
+
+    public static IHostApplicationBuilder AddEventConsumers(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<UpgradeAccountToVolunteer>();
+        return builder;
+    }
+
+    public static IBusRegistrationConfigurator RegisterAccountsModuleConsumers(this IBusRegistrationConfigurator cfg)
+    {
+        cfg.AddConsumers(typeof(DependencyInjection).Assembly);
+        return cfg;
     }
 
     public static IHostApplicationBuilder AddAuthenticatedSwaggerGen(this IHostApplicationBuilder builder)

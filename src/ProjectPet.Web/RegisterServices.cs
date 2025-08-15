@@ -88,6 +88,6 @@ public static class RegisterServices
 
     public static void AddModuleConsumers(this IBusRegistrationConfigurator config)
     {
-        
+        config.RegisterAccountsModuleConsumers();
     }
 }
