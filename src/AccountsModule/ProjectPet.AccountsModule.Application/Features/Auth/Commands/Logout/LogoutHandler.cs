@@ -2,7 +2,7 @@
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.SharedKernel.ErrorClasses;
 
-namespace ProjectPet.AccountsModule.Application.Features.Auth.Commands.Login;
+namespace ProjectPet.AccountsModule.Application.Features.Auth.Commands.Logout;
 
 public class LogoutHandler
 {

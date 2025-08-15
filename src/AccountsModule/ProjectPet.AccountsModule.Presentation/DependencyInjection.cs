@@ -6,6 +6,7 @@ using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAcco
 using ProjectPet.AccountsModule.Application.Features.Account.Commands.UpdateAccountSocials;
 using ProjectPet.AccountsModule.Application.Features.Account.Queries;
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Login;
+using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Logout;
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.RefreshTokens;
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
 using ProjectPet.AccountsModule.Contracts;
