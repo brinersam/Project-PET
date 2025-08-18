@@ -48,7 +48,7 @@ public class ReviewHandler
         }
         catch (DomainEventException ex)
         {
-            return Error.Failure("domain.event.failure",ex.Message);
+            return Error.Failure("domain.event.failure", ex.Message);
         }
 
         var saveRes = await _requestRepository.Save(requestRes.Value, cancellationToken);

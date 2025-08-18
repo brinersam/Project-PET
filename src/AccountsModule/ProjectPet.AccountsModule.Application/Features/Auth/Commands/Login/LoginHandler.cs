@@ -44,6 +44,6 @@ public class LoginHandler
         if (session.IsFailure)
             return session.Error;
 
-        return session.Value with { Roles = user.Roles.Select(x => x.Name!).ToList()};
+        return session.Value with { Roles = user.Roles.Select(x => x.Name!).ToList() };
     }
 }

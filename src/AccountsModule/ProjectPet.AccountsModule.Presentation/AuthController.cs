@@ -5,7 +5,6 @@ using ProjectPet.AccountsModule.Application.Features.Auth.Commands.RefreshTokens
 using ProjectPet.AccountsModule.Application.Features.Auth.Commands.Register;
 using ProjectPet.AccountsModule.Contracts.Requests;
 using ProjectPet.Framework;
-using ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.AccountsModule.Presentation;
 
@@ -84,7 +83,7 @@ public class AuthController : CustomControllerBase
 
         HttpContext.Response.Cookies.Append("refreshToken", result.Value.RefreshToken.ToString());
 
-        return Ok(result.Value with { RefreshToken = default});
+        return Ok(result.Value with { RefreshToken = default });
     }
 }
 

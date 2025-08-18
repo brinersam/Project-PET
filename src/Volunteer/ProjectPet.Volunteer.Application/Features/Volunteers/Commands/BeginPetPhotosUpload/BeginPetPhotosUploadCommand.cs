@@ -2,7 +2,7 @@
 using ProjectPet.FileService.Contracts.Dtos;
 using ProjectPet.VolunteerModule.Contracts.Requests;
 
-namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
+namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.BeginPetPhotosUpload;
 
 public record BeginPetPhotosUploadCommand(
     Guid VolunteerId,

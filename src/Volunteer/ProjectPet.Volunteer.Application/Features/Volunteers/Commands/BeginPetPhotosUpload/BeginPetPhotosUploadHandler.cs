@@ -8,7 +8,7 @@ using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.VolunteerModule.Application.Interfaces;
 using ProjectPet.VolunteerModule.Contracts.Dto;
 
-namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
+namespace ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.BeginPetPhotosUpload;
 
 public class BeginPetPhotosUploadHandler
 {
@@ -136,9 +136,9 @@ public class BeginPetPhotosUploadHandler
     {
         return new BeginPetPhotoUploadDto(
                     error,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
                     []
                 );
     }

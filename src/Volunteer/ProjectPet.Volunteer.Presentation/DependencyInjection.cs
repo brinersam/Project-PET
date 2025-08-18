@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using ProjectPet.VolunteerModule.Application;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetById;
 using ProjectPet.VolunteerModule.Application.Features.Pets.Queries.GetPetsPaginated;
+using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.BeginPetPhotosUpload;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreatePet;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.CreateVolunteer;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.DeletePet;
@@ -14,7 +15,6 @@ using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.PatchP
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.SetMainPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdatePetStatus;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UpdateVolunteerInfo;
-using ProjectPet.VolunteerModule.Application.Features.Volunteers.Commands.UploadPetPhoto;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteerById;
 using ProjectPet.VolunteerModule.Application.Features.Volunteers.Queries.GetVolunteers;
 using ProjectPet.VolunteerModule.Contracts;
