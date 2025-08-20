@@ -17,6 +17,8 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<WriteDbContext>();
 
+        builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
+
         builder.Services.AddScoped<IVolunteerRequestRepository, VolunteerRequestRepository>();
 
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
