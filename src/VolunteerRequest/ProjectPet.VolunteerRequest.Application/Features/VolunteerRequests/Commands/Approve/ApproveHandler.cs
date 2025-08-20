@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using DEVShared;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using ProjectPet.AccountsModule.Contracts.Events;
+using ProjectPet.Core.Database;
 using ProjectPet.SharedKernel.ErrorClasses;
 using ProjectPet.SharedKernel.SharedDto;
 using ProjectPet.VolunteerRequests.Application.Interfaces;
@@ -10,16 +11,19 @@ namespace ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Co
 public class ApproveHandler
 {
     private readonly IVolunteerRequestRepository _requestRepository;
-    private readonly IPublishEndpoint _publisher;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IOutboxRepository _outboxRepository;
     private readonly ILogger<ApproveHandler> _logger;
 
     public ApproveHandler(
         IVolunteerRequestRepository requestRepository,
-        IPublishEndpoint publisher,
+        IUnitOfWork unitOfWork,
+        IOutboxRepository outboxRepository,
         ILogger<ApproveHandler> logger)
     {
         _requestRepository = requestRepository;
-        _publisher = publisher;
+        _unitOfWork = unitOfWork;
+        _outboxRepository = outboxRepository;
         _logger = logger;
     }
 
@@ -27,6 +31,8 @@ public class ApproveHandler
         ApproveCommand command,
         CancellationToken cancellationToken)
     {
+        var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
         var requestRes = await _requestRepository.GetByIdAsync(command.RequestId, cancellationToken);
         if (requestRes.IsFailure)
             return requestRes.Error;
@@ -42,11 +48,14 @@ public class ApproveHandler
             PaymentInfos = requestRes.Value.VolunteerData.PaymentInfos.Select(x => new PaymentInfoDto(x.Title, x.Instructions)).ToList(),
         };
 
-        _publisher.Publish(new VolunteerRequestApprovedEvent(requestRes.Value.UserId, data), CancellationToken.None);
+        await _outboxRepository.AddAsync(new VolunteerRequestApprovedEvent(requestRes.Value.UserId, data), CancellationToken.None);
 
         var saveRes = await _requestRepository.Save(requestRes.Value, cancellationToken);
         if (saveRes.IsFailure)
             return saveRes.Error;
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        transaction.Commit();
 
         _logger.LogInformation(
             "Volunteer request (id {O1}) was approved. Was assigned admin (id {O2})",

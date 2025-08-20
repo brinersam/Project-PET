@@ -1,9 +1,12 @@
 ﻿using FluentAssertions;
+using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ProjectPet.AccountsModule.Contracts.Events;
 using ProjectPet.AccountsModule.Domain.Accounts;
 using ProjectPet.VolunteerRequests.Application.Features.VolunteerRequests.Commands.Approve;
 using ProjectPet.VolunteerRequests.Contracts.Dto;
+using ProjectPet.VolunteerRequests.Infrastructure.Jobs;
 using ProjectPet.VolunteerRequests.IntegrationTests.Factories;
 using ProjectPet.VolunteerRequests.IntegrationTests.VolunteerRequestsTests.Base;
 
@@ -12,7 +15,8 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
 {
     protected ApproveHandler _sut;
 
-    public ApproveVolunteerRequestTests(VolunteerRequestsWebFactory factory) : base(factory)
+    public ApproveVolunteerRequestTests(VolunteerRequestsWebFactory factory)
+        : base(factory)
     {
         _sut = _serviceScope.ServiceProvider.GetRequiredService<ApproveHandler>();
     }
@@ -23,6 +27,8 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         // Arrange
         await _messageBusHarness.Start();
 
+        var outboxHandler = _serviceScope.ServiceProvider.GetRequiredService<PublishOutboxMessagesHandle>();
+
         var user = await SeedUserAsync();
         var volunteerRequest = await SeedVolunteerRequestAndSetToReview(null, user.Id);
 
@@ -32,7 +38,15 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         var result = await _sut.HandleAsync(cmd, default);
 
         // Assert
-        await _messageBusHarness.InactivityTask; // wait for all messages from the bus to be consumed
+        await outboxHandler.HandleAsync(CancellationToken.None);
+
+        // await _messageBusHarness.InactivityTask; // hangs debugger
+        var consumed = await _messageBusHarness.Consumed  // wait for all messages from the bus to be consumed
+            .SelectAsync<VolunteerRequestApprovedEvent>()
+            .FirstOrDefault();
+
+        consumed.Should().NotBeNull(); // ensure it was consumed
+
         result.IsSuccess.Should().BeTrue();
 
         var volunteerRequestAssert = await _readDbContextVR.VolunteerRequests.AsNoTracking().FirstOrDefaultAsync();
@@ -85,4 +99,3 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         roles.Should().NotContain(VolunteerAccount.ROLENAME);
     }
 }
-
