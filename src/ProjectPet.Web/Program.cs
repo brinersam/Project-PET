@@ -61,6 +61,7 @@ builder.AddFileServiceHttpClient();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.AddRabbitMQ();
+builder.AddQuartzScheduler();
 
 builder.Services.AddValidation();
 builder.Services.AddScoped<ScopedUserDataMiddleware>();
