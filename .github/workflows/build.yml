@@ -28,10 +28,10 @@ jobs:
           --store-password-in-clear-text
 
     - name: Restore dependencies
-      run: dotnet restore .\ProjectPet.sln
+      run: dotnet restore ./ProjectPet.sln
 
     - name: Build
-      run: dotnet build .\ProjectPet.sln --configuration Release --no-restore
+      run: dotnet build ./ProjectPet.sln --configuration Release --no-restore
 
     - name: Tests
-      run: dotnet test .\ProjectPet.sln --configuration Release --no-restore
+      run: dotnet test ./ProjectPet.sln --configuration Release --no-restore
