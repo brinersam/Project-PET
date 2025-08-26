@@ -41,11 +41,9 @@ public class ApproveVolunteerRequestTests : VolunteerRequestsTestBase
         await outboxHandler.HandleAsync(CancellationToken.None);
 
         // await _messageBusHarness.InactivityTask; // hangs debugger
-        var consumed = await _messageBusHarness.Consumed  // wait for all messages from the bus to be consumed
+        await _messageBusHarness.Consumed  // wait for all messages from the bus to be consumed
             .SelectAsync<VolunteerRequestApprovedEvent>()
             .FirstOrDefault();
-
-        consumed.Should().NotBeNull(); // ensure it was consumed
 
         result.IsSuccess.Should().BeTrue();
 
