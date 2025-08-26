@@ -1,0 +1,37 @@
+name: .NET
+
+env:
+  NUGET_USERNAME: ${{ secrets.NUGET_USERNAME }}
+  NUGET_PASSWORD: ${{ secrets.NUGET_PASSWORD }}
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Add NuGet source
+      run: |
+        dotnet nuget add source https://nuget.pkg.github.com/brinersam/index.json \
+          --name github \
+          --username $NUGET_USERNAME \
+          --password $NUGET_PASSWORD \
+          --store-password-in-clear-text
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Tests
+      run: dotnet test --configuration Release --no-restore
