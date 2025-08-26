@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ProjectPet.Core.Options;
 using ProjectPet.VolunteerRequests.Domain.Models;
+using ProjectPet.VolunteerRequests.Infrastructure.Outbox;
 
 namespace ProjectPet.VolunteerRequests.Infrastructure.Database;
 
@@ -10,6 +11,7 @@ public class WriteDbContext(IConfiguration configuration) : DbContext
 {
     private readonly string DATABASE = configuration[configuration.GetRequiredSection(OptionsDb.SECTION).Get<OptionsDb>()!.CStringKey];
     public DbSet<VolunteerRequest> VolunteerRequests => Set<VolunteerRequest>();
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

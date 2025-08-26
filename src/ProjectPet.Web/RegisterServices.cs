@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ProjectPet.AccountsModule.Infrastructure;
 using ProjectPet.Core.Options;
+using ProjectPet.VolunteerRequests.Infrastructure;
 using ProjectPet.Web.ActionFilters;
+using Quartz;
 using Serilog;
 using Serilog.Events;
+using System.Collections.Specialized;
 
 namespace ProjectPet.Web;
 
@@ -88,5 +91,25 @@ public static class RegisterServices
     public static void AddModuleConsumers(this IBusRegistrationConfigurator config)
     {
         config.RegisterAccountsModuleConsumers();
+    }
+
+    public static IHostApplicationBuilder AddQuartzScheduler(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddQuartz(q =>
+        {
+            q.AddModuleQuartzJobs();
+        });
+
+        builder.Services.AddQuartzHostedService(q =>
+        {
+            q.WaitForJobsToComplete = true;
+        });
+
+        return builder;
+    }
+
+    public static void AddModuleQuartzJobs(this IServiceCollectionQuartzConfigurator config)
+    {
+        config.RegisterVolunteerRequestModuleJobs();
     }
 }
