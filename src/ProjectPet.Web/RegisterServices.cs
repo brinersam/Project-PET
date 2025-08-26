@@ -9,7 +9,6 @@ using ProjectPet.Web.ActionFilters;
 using Quartz;
 using Serilog;
 using Serilog.Events;
-using System.Collections.Specialized;
 
 namespace ProjectPet.Web;
 
@@ -17,8 +16,9 @@ public static class RegisterServices
 {
     public static IHostApplicationBuilder AddSerilogLogger(this IHostApplicationBuilder builder)
     {
-        string seqConnectionString = builder.Configuration["CStrings:Seq"]
-            ?? throw new ArgumentNullException("CStrings:Seq");
+        string seqConnectionString = builder.Configuration["CStrings:Seq"];
+        if (seqConnectionString is null )
+            return builder;
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
