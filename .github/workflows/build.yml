@@ -1,4 +1,4 @@
-name: .NET
+﻿name: .NET
 
 env:
   NUGET_USERNAME: ${{ secrets.NUGET_USERNAME }}
@@ -28,10 +28,10 @@ jobs:
           --store-password-in-clear-text
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore .\ProjectPet.sln
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build .\ProjectPet.sln --configuration Release --no-restore
 
     - name: Tests
-      run: dotnet test --configuration Release --no-restore
+      run: dotnet test .\ProjectPet.sln --configuration Release --no-restore
