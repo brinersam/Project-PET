@@ -5,8 +5,8 @@ env:
   NUGET_PASSWORD: ${{ secrets.NUGET_PASSWORD }}
 
 on: 
-  push
-  pull_request
+  push:
+  pull_request:
 
 jobs:
   build:
