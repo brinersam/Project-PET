@@ -16,9 +16,8 @@ public static class RegisterServices
 {
     public static IHostApplicationBuilder AddSerilogLogger(this IHostApplicationBuilder builder)
     {
-        string seqConnectionString = builder.Configuration["CStrings:Seq"];
-        if (seqConnectionString is null )
-            return builder;
+        string seqConnectionString = builder.Configuration["CStrings:Seq"]
+            ?? throw new ArgumentNullException("CStrings:Seq");
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
