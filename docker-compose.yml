@@ -25,7 +25,7 @@ services:
         - ASPNETCORE_HTTPS_PORTS=8081
     depends_on:
         - projectpet.database
-        - projectpet.seq
+        - projectpet.elasticsearch
         - projectpet.rabbitmq
     restart: always
     networks:
@@ -45,15 +45,29 @@ services:
         - ./postgres-data:/var/lib/postgresql/data
     restart: always
 
-  projectpet.seq:
-    image: datalust/seq:latest
-    container_name: ProjectPet.seq
+  projectpet.elasticsearch:
+    image: elasticsearch:9.1.2
+    container_name: ProjectPet.elasticsearch
     restart: always
     environment:
-        - ACCEPT_EULA=Y
+        - xpack.security.enabled=false
+        - discovery.type=single-node
     ports:
-        - "5341:5341"
-        - "8078:80"
+        - "9200:9200"
+    volumes:
+        - ./elasticsearch-data:/usr/share/elasticsearch/data
+
+  projectpet.kibana:
+    image: kibana:9.1.2
+    container_name: ProjectPet.kibana
+    restart: always
+    environment:
+        - ELASTICSEARCH_URL=http://projectpet.elasticsearch:9200
+        - SERVER_PORT=8078
+    ports:
+        - "8078:8078"
+    depends_on:
+        - projectpet.elasticsearch
 
   projectpet.nginx:
     image: nginx
