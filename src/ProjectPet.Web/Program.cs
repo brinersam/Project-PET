@@ -63,6 +63,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Pr
 builder.AddRabbitMQ();
 builder.AddQuartzScheduler();
 
+builder.Services.AddAppMetrics();
+
 builder.Services.AddValidation();
 builder.Services.AddScoped<ScopedUserDataMiddleware>();
 
@@ -74,6 +76,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseOpenTelemetryPrometheusScrapingEndpoint();
 }
 
 app.UseCustomExceptionHandler();
