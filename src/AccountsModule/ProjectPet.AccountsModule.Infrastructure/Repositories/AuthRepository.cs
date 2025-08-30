@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database;
+using ProjectPet.Framework.Authorization;
 
 namespace ProjectPet.AccountsModule.Infrastructure.Repositories;
 public class AuthRepository : IAuthRepository
@@ -64,6 +65,17 @@ public class AuthRepository : IAuthRepository
                 rolePermission => Equals(rolePermission.Permission.Code, permissionCode) || // rolePermission has the required permission code
                                   Equals(rolePermission.Permission.Code, "admin.masterkey"), // rolePermission is admin sudo),
                 cancellationToken
+            );
+
+        return permissionExists;
+    }
+
+    public bool DoesUserHavePermissionCode(UserScopedData userData, string permissionCode)
+    {
+        var permissionExists = userData.Permissions.Any
+            (
+                permission => Equals(permission, permissionCode) || // rolePermission has the required permission code
+                              Equals(permission, "admin.masterkey") // rolePermission is admin sudo),
             );
 
         return permissionExists;

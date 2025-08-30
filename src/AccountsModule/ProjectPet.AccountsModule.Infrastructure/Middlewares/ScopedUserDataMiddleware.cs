@@ -1,4 +1,5 @@
-﻿using ProjectPet.Framework.Authorization;
+﻿using Microsoft.AspNetCore.Http;
+using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.Security.Claims;
 

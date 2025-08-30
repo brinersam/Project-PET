@@ -108,6 +108,7 @@ public static class DependencyInjection
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<UserScopedData>();
+        builder.Services.AddScoped<ScopedUserDataMiddleware>();
 
         return builder;
     }

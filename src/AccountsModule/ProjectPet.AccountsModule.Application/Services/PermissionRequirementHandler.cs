@@ -30,13 +30,23 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
         }
 
         var userScopedData = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<UserScopedData>();
-        if (userScopedData.IsSuccess == false)
+        if (userScopedData.UserId is null || userScopedData.IsSuccess == false)
         {
             context.Fail();
             return;
         }
 
-        bool isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync((Guid)userScopedData.UserId!, requirement.Code);
+        bool isRoleAuthorized = false;
+
+        try
+        {
+            isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync((Guid)userScopedData.UserId!, requirement.Code);
+        }
+        catch (InvalidOperationException ex) // no db, verify using whatever is in jwt
+        {
+            isRoleAuthorized = _authRepository.DoesUserHavePermissionCode(userScopedData, requirement.Code);
+        }
+
         if (isRoleAuthorized)
             context.Succeed(requirement);
     }
