@@ -110,6 +110,10 @@ public static class DependencyInjection
         builder.Services.AddScoped<UserScopedData>();
         builder.Services.AddScoped<ScopedUserDataMiddleware>();
 
+
+        builder.Services.AddTransient<JwtForwardingHttpHandler>();
+        builder.Services.AddSingleton<IHttpMessageHandlerBuilderFilter, JwtForwardingHttpFilter>();
+
         return builder;
     }
 

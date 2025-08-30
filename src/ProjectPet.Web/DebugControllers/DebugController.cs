@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectPet.AccountsModule.Domain;
+using ProjectPet.FileService.Contracts;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
+using System.Net;
+using Err = ProjectPet.SharedKernel.ErrorClasses;
 
 namespace ProjectPet.Web.DebugControllers;
 
@@ -41,4 +44,40 @@ public class DebugController : CustomControllerBase
         await Task.Delay(2000, cancellationToken);
         return Ok(new string[] { "wont", "see", "this" });
     }
+
+    [Permission(PermissionCodes.AdminMasterkey)]
+    [HttpGet("JwtForwarding")]
+    public async Task<IActionResult> JwtForwarding(
+        [FromServices] IFileService fileService,
+        [FromServices] IHttpClientFactory clientFactory,
+        CancellationToken ct = default)
+    {
+        var client = clientFactory.CreateClient();
+        HttpResponseMessage response = await client.GetAsync("http://projectpet.debugservice:3080/debugep", ct);
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            string text = await response.Content.ReadAsStringAsync(ct);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                text = response.StatusCode.ToString();
+            }
+
+            return Err.Error.Failure("fileservice.error", text).ToResponse();
+        }
+        var responseData = await response.Content.ReadAsStringAsync(ct);
+
+        return Ok(responseData);
+    }
+
+    //[Permission(PermissionCodes.AdminMasterkey)]
+    //[HttpGet("InterServiceEvent")]
+    //public async Task<IActionResult> EventSendInterService(
+    //    [FromServices] IPublishEndpoint publish,
+    //    CancellationToken cancellationToken = default)
+    //{
+    //    publish.Publish(new DebugEvent("event"));
+
+
+    //    return Ok(new string[] { "interservice event sent! ", response.IsFailure ? response.Error.Message : response.Value.FileId });
+    //}
 }
