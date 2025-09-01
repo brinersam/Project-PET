@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using DEVShared;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ProjectPet.Core.Options;
 using System.Text;
 
 namespace ProjectPet.AccountsModule.Application.Services;
@@ -13,21 +13,17 @@ public class TokenValidationParametersFactory
         _tokenOptions = tokenOptions.Value;
     }
 
-    public TokenValidationParameters Create(bool validateLifeTime = true)
-        => Create(_tokenOptions, validateLifeTime);
+    public TokenValidationParameters Create(RsaSecurityKey key, bool validateLifeTime = true)
+        => Create(_tokenOptions, key, validateLifeTime);
 
-    public static TokenValidationParameters Create(OptionsTokens _tokenOptions, bool validateLifetime = true)
+    public static TokenValidationParameters Create(OptionsTokens _tokenOptions, RsaSecurityKey key, bool validateLifetime = true)
     {
         return new TokenValidationParameters
         {
-            ValidIssuer = _tokenOptions.Issuer,
-            ValidateIssuer = true,
-
-            ValidAudience = _tokenOptions.Audience,
+            ValidateIssuer = false,
             ValidateAudience = false,
 
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenOptions.Key)),
-            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = key,
 
             ValidateLifetime = validateLifetime,
 

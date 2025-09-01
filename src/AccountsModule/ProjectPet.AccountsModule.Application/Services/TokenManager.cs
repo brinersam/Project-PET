@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
+using DEVShared;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
-using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,22 +15,28 @@ namespace ProjectPet.AccountsModule.Application.Services;
 public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccessor
 {
     private readonly OptionsTokens _options;
+    private readonly IRsaKeyProvider _keyProvider;
     private readonly IAuthRepository _authRepository;
     private readonly TokenValidationParametersFactory _tokenValidationParametersFactory;
 
     public TokenManager(
         IOptions<OptionsTokens> options,
+        IRsaKeyProvider keyProvider,
         IAuthRepository authRepository,
         TokenValidationParametersFactory tokenValidationParametersFactory)
     {
         _options = options.Value;
+        _keyProvider = keyProvider;
         _authRepository = authRepository;
         _tokenValidationParametersFactory = tokenValidationParametersFactory;
     }
 
-    public AccessTokenWJti GenerateJwtAccessToken(User user)
+    public AccessTokenWJti GenerateRsaAccessToken(User user)
     {
         var jti = Guid.NewGuid();
+
+        var rsaKey = _keyProvider.GetPrivateRsa();
+        var rsa = new RsaSecurityKey(rsaKey);
 
         var userRoleClaims = user.Roles
             .Select(role => new Claim(CustomClaims.ROLE, role.Name ?? "UNKNOWN_ROLE_NAME"));
@@ -42,16 +48,13 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
 
         List<Claim> claims =
         [
-            new Claim(JwtRegisteredClaimNames.Jti, jti.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? throw new ArgumentException($"Null email got through to {typeof(TokenManager)}")),
             new Claim(CustomClaims.ID, user.Id.ToString()),
             .. userRoleClaims,
             .. userPermissionClaims,
         ];
 
-        var secKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
-
-        var signCredts = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256);
+        var signCredts = new SigningCredentials(rsa, SecurityAlgorithms.RsaSha256);
 
         var jwtToken = new JwtSecurityToken(
             issuer: _options.Issuer,
@@ -86,8 +89,11 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
         CancellationToken cancellationToken = default)
     {
         var jwtHandler = new JwtSecurityTokenHandler();
+        var rsaKey = _keyProvider.GetPublicRsa();
+        var key = new RsaSecurityKey(rsaKey);
+
         var validationResult = await jwtHandler
-            .ValidateTokenAsync(accessToken, _tokenValidationParametersFactory.Create(validateLifeTime: false));
+            .ValidateTokenAsync(accessToken, _tokenValidationParametersFactory.Create(key, validateLifeTime: false));
 
         if (validationResult.IsValid == false)
             return Error.Validation("invalid.token", "Invalid token!");
@@ -113,7 +119,7 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
 
     public async Task<Result<LoginResponse, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken)
     {
-        var newAccessToken = GenerateJwtAccessToken(user);
+        var newAccessToken = GenerateRsaAccessToken(user);
         var newRefreshToken = await GenerateRefreshTokenAsync(user, newAccessToken.jti, cancellationToken);
         return new LoginResponse(newRefreshToken, newAccessToken.accessToken, []);
     }

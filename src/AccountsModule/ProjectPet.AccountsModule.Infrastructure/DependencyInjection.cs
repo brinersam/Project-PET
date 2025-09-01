@@ -81,6 +81,14 @@ public static class DependencyInjection
 
     private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
     {
+        builder.Services.Configure<OptionsTokens>(
+                builder.Configuration.GetRequiredSection(OptionsTokens.SECTION));
+
+        var options = builder.Configuration.Get<OptionsTokens>();
+
+        var rsaKeyProvider = new RsaKeyProvider(options.GenerateTokens);
+        builder.Services.AddSingleton<IRsaKeyProvider>(rsaKeyProvider);
+
         builder.Services.AddTransient<TokenValidationParametersFactory>();
         builder.Services.AddScoped<AuthDbContext>();
         builder.Services.AddScoped<IReadDbContext, ReadDbContext>();
@@ -100,7 +108,7 @@ public static class DependencyInjection
         builder.Services
             .AddAuthorization(ConfigureAuthorizationOptions)
             .AddAuthentication(ConfigureAuthenticationOptions)
-            .AddJwtBearer(x => ConfigureTokenValidationOptions(x, builder));
+            .AddJwtBearer(x => ConfigureRsaTokenValidationOptions(x, builder));
 
         builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
 
@@ -134,6 +142,18 @@ public static class DependencyInjection
         options.AddPolicy("IsAuthorized", policy =>
             policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser());
     }
+
+    private static void ConfigureRsaTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
+    {
+        var tokenOptions = builder.Configuration.Get<OptionsTokens>();
+
+        var rsaKeyProvider = new RsaKeyProvider(false);
+        var rsaKey = rsaKeyProvider.GetPublicRsa();
+        var key = new RsaSecurityKey(rsaKey);
+
+        options.TokenValidationParameters = TokenValidationParametersFactory.Create(tokenOptions, key, true);
+    }
+}
 
     private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
     {
