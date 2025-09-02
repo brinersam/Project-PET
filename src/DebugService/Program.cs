@@ -1,4 +1,5 @@
 ﻿
+using DebugService.BuilderAppExtensions;
 using ProjectPet.AccountsModule.Infrastructure;
 using ProjectPet.Framework.Authorization;
 using ProjectPet.Web.MIddlewares;
@@ -13,9 +14,12 @@ public class Program
 
         builder.AddAuthModuleInfrastructure();
 
+        builder.AddRabbitMQ();
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddHttpClient();
 
         var app = builder.Build();
 

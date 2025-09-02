@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DEVShared;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using ProjectPet.AccountsModule.Domain;
+using ProjectPet.DiscussionsModule.Domain.Models;
 using ProjectPet.FileService.Contracts;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
@@ -69,15 +73,30 @@ public class DebugController : CustomControllerBase
         return Ok(responseData);
     }
 
-    //[Permission(PermissionCodes.AdminMasterkey)]
-    //[HttpGet("InterServiceEvent")]
-    //public async Task<IActionResult> EventSendInterService(
-    //    [FromServices] IPublishEndpoint publish,
-    //    CancellationToken cancellationToken = default)
-    //{
-    //    publish.Publish(new DebugEvent("event"));
+    [Permission(PermissionCodes.AdminMasterkey)]
+    [HttpGet("InterServiceEvent")]
+    public async Task<IActionResult> SendDebugEvent(
+        [FromServices] IPublishEndpoint publish,
+        [FromServices] IMemoryCache memoryCache,
+        CancellationToken cancellationToken = default)
+    {
+        publish.Publish(new DebugEvent("event"));
+        await Task.Delay(2000);
 
+        memoryCache.TryGetValue("DebugValue", out string memoryValue);
 
-    //    return Ok(new string[] { "interservice event sent! ", response.IsFailure ? response.Error.Message : response.Value.FileId });
-    //}
+        return Ok(new string[] { "interservice event sent! Result: ", memoryValue ?? "no value was set"});
+    }
+
+    [Permission(PermissionCodes.AdminMasterkey)]
+    [HttpGet("InterServiceEventCallback")]
+    public async Task<IActionResult> DebugEventCallback(
+        [FromServices] IPublishEndpoint publish,
+        [FromServices] IMemoryCache memoryCache,
+        [FromQuery] string data,
+        CancellationToken cancellationToken = default)
+    {
+        memoryCache.Set("DebugValue", DateTime.Now.ToString() + " :: " + data);
+        return Ok("Request received!");
+    }
 }

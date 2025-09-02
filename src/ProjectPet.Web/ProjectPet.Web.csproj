@@ -45,6 +45,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\AccountsModule\ProjectPet.AccountsModule.Infrastructure\ProjectPet.AccountsModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\AccountsModule\ProjectPet.AccountsModule.Presentation\ProjectPet.AccountsModule.Presentation.csproj" />
+	  <ProjectReference Include="..\DEVShared\DEVShared.csproj" />
 	  <ProjectReference Include="..\DiscussionsModule\ProjectPet.DiscussionsModule.Infrastructure\ProjectPet.DiscussionsModule.Infrastructure.csproj" />
 	  <ProjectReference Include="..\DiscussionsModule\ProjectPet.DiscussionsModule.Presentation\ProjectPet.DiscussionsModule.Presentation.csproj" />
 	  <ProjectReference Include="..\Species\ProjectPet.Species.Infrastructure\ProjectPet.SpeciesModule.Infrastructure.csproj" />
