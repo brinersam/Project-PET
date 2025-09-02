@@ -24,17 +24,11 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
         PermissionAttribute requirement)
     {
         if (context.User.Identity?.IsAuthenticated == false || _httpContextAccessor.HttpContext is null)
-        {
-            context.Fail();
             return;
-        }
 
         var userScopedData = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<UserScopedData>();
         if (userScopedData.UserId is null || userScopedData.IsSuccess == false)
-        {
-            context.Fail();
             return;
-        }
 
         bool isRoleAuthorized = false;
 

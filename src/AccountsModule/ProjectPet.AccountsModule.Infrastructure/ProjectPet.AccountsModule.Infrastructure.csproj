@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\DEVShared\DEVShared.csproj" />
 	  <ProjectReference Include="..\ProjectPet.AccountsModule.Application\ProjectPet.AccountsModule.Application.csproj" />
 	</ItemGroup>
 

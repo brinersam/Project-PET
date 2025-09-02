@@ -1,24 +1,44 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DEVShared;
+using MassTransit.Configuration;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using System.Net;
 
 namespace ProjectPet.AccountsModule.Infrastructure.HttpFilters;
 public class JwtForwardingHttpHandler : DelegatingHandler
 {
     private readonly IHttpContextAccessor _context;
+    private readonly OptionsTokens _tokenOptions;
 
-    public JwtForwardingHttpHandler(IHttpContextAccessor context)
+    public JwtForwardingHttpHandler(
+        IHttpContextAccessor context,
+        IOptions<OptionsTokens> optionsTokens)
     {
         _context = context;
+        _tokenOptions = optionsTokens.Value;
     }
 
     protected override Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellation)
     {
-        if (_context.HttpContext is null)
-            return base.SendAsync(request, cancellation);
+        const string key_Secret = "X-Internal-Service-Key";
+        const string key_Authorization = "Authorization";
 
-        if (_context.HttpContext.Request.Headers.TryGetValue("Authorization", out var jwt))
-            request.Headers.Add("Authorization", jwt.FirstOrDefault());
+        bool isHttpContextValid = _context.HttpContext is not null;
+
+        if (isHttpContextValid == false)
+        {
+            request.Headers.Add(key_Secret, _tokenOptions.SecretKey);
+            return base.SendAsync(request, cancellation);
+        }
+
+        bool isJwtValueValid = _context.HttpContext!.Request.Headers.TryGetValue(key_Authorization, out var jwt) &&
+                               (string.IsNullOrWhiteSpace(jwt.FirstOrDefault()) == false);
+
+        if (isJwtValueValid)
+            request.Headers.Add(key_Authorization, jwt.First());
 
         return base.SendAsync(request, cancellation);
     }

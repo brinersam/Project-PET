@@ -6,6 +6,8 @@ public class OptionsTokens
 
     public bool GenerateTokens { get; init; } = false;
 
+    public string SecretKey { get; init; } = "DEFAULT-SECRET-KEY";
+
     public string Issuer { get; init; } = string.Empty;
 
 

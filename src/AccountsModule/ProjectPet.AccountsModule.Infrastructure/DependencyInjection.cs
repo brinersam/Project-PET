@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using DEVShared;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -6,18 +7,22 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.AccountsModule.Infrastructure.Database;
 using ProjectPet.AccountsModule.Infrastructure.EventConsumers.VolunteerRequestApproved;
+using ProjectPet.AccountsModule.Infrastructure.HttpFilters;
 using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Repositories;
+using ProjectPet.AccountsModule.Infrastructure.SecretKeyAuthentication;
 using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Database;
-using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Web.MIddlewares;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
 public static class DependencyInjection
@@ -98,9 +103,6 @@ public static class DependencyInjection
         builder.Services.AddTransient<ITokenClaimsAccessor, TokenManager>();
         builder.Services.AddTransient<ITokenRefresher, TokenManager>();
 
-        builder.Services.Configure<OptionsTokens>(
-                builder.Configuration.GetRequiredSection(OptionsTokens.SECTION));
-
         builder.Services
             .AddIdentity<User, Role>(ConfigureIdentityOptions)
             .AddEntityFrameworkStores<AuthDbContext>();
@@ -108,11 +110,13 @@ public static class DependencyInjection
         builder.Services
             .AddAuthorization(ConfigureAuthorizationOptions)
             .AddAuthentication(ConfigureAuthenticationOptions)
-            .AddJwtBearer(x => ConfigureRsaTokenValidationOptions(x, builder));
+            .AddJwtBearer(x => ConfigureRsaTokenValidationOptions(x, builder))
+            .AddScheme<SecretKeyAuthenticationOptions, SecretKeyAuthenticationHandler>("SecretKey", opts => opts.ExpectedKey = options.SecretKey);
 
         builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
+        builder.Services.AddScoped<IAuthorizationHandler, SecretKeyAuthorizationHandler>();
 
-        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProviderWSecretKey>();
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<UserScopedData>();
@@ -155,11 +159,41 @@ public static class DependencyInjection
     }
 }
 
-    private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
+public class PermissionPolicyProviderWSecretKey : IAuthorizationPolicyProvider
+{
+    public Task<AuthorizationPolicy> GetDefaultPolicyAsync()
     {
-        var optionsJwt = builder.Configuration.GetRequiredSection(OptionsTokens.SECTION).Get<OptionsTokens>();
-        if (optionsJwt == null)
-            throw new ArgumentNullException(nameof(optionsJwt));
-        options.TokenValidationParameters = TokenValidationParametersFactory.Create(optionsJwt);
+        return Task.FromResult
+        (
+             new AuthorizationPolicyBuilder
+                 (
+                    JwtBearerDefaults.AuthenticationScheme,
+                    "SecretKey"
+                 )
+                 .RequireAuthenticatedUser()
+                 .Build()
+        );
+    }
+
+    public Task<AuthorizationPolicy?> GetFallbackPolicyAsync()
+    {
+        return Task.FromResult<AuthorizationPolicy>(null);
+    }
+
+    public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
+    {
+        if (string.IsNullOrWhiteSpace(policyName))
+            return Task.FromResult<AuthorizationPolicy>(null);
+
+        var policy = new AuthorizationPolicyBuilder
+            (
+                JwtBearerDefaults.AuthenticationScheme,
+                "SecretKey"
+            )
+            .RequireAuthenticatedUser()
+            .AddRequirements(new PermissionAttribute(policyName))
+            .Build();
+
+        return Task.FromResult<AuthorizationPolicy?>(policy);
     }
 }
