@@ -3,7 +3,7 @@
 	 
 
 	<ItemGroup>
-		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.5" />
+		<PackageReference Include="Brinersam.ProjectPet.Framework" Version="1.0.7" />
 	</ItemGroup>
 
 	<ItemGroup>

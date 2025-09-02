@@ -8,6 +8,7 @@ using ProjectPet.DiscussionsModule.Application.Features.Discussions.Queries.GetD
 using ProjectPet.DiscussionsModule.Contracts.Requests;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.UserData;
 
 namespace ProjectPet.DiscussionsModule.Presentation.Discussions;
 public class DiscussionsController : CustomControllerBase

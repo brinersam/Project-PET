@@ -3,6 +3,8 @@ using ProjectPet.AccountsModule.Presentation;
 using ProjectPet.DiscussionsModule.Infrastructure;
 using ProjectPet.DiscussionsModule.Presentation;
 using ProjectPet.FileService.Communication.Extensions;
+using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.UserData;
 using ProjectPet.SpeciesModule.Infrastructure;
 using ProjectPet.SpeciesModule.Presentation;
 using ProjectPet.VolunteerModule.Infrastructure;
@@ -47,6 +49,7 @@ builder.AddSpeciesModuleInfrastructure();
 
 builder.AddAuthModuleHandlers();
 builder.AddAuthModuleInfrastructure();
+builder.AddAuth();
 
 builder.AddVolunteerRequestsModuleHandlers();
 builder.AddVolunteerRequestModuleInfrastructure();

@@ -1,12 +1,8 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Application.Services;
 using ProjectPet.AccountsModule.Domain;
@@ -18,13 +14,14 @@ using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Database;
 using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.Authorization.Rsa;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
 public static class DependencyInjection
 {
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
-        builder.AddAuth();
+        builder.SetupAuthService();
         builder.AddEventConsumers();
         builder.Services.AddScoped<IDatabaseSeeder, DatabaseAccountsSeeder>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
@@ -47,41 +44,17 @@ public static class DependencyInjection
         return cfg;
     }
 
-    public static IHostApplicationBuilder AddAuthenticatedSwaggerGen(this IHostApplicationBuilder builder)
+    private static IHostApplicationBuilder SetupAuthService(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddSwaggerGen(c =>
-        {
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Scheme = "bearer",
-                Name = "Authorization",
-                Description = "Please insert JWT token into field (no bearer prefix)",
-            });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-               {
-                 new OpenApiSecurityScheme
-                 {
-                   Reference = new OpenApiReference
-                   {
-                     Type = ReferenceType.SecurityScheme,
-                     Id = "Bearer"
-                   }
-                 },
-                  Array.Empty<string>()
-                }
-            });
-        });
+        builder.Services.Configure<OptionsTokens>(
+                builder.Configuration.GetRequiredSection(OptionsTokens.SECTION));
+        var options = builder.Configuration.Get<OptionsTokens>();
 
-        return builder;
-    }
+        var rsaKeyProvider = new RsaKeyProvider(options.GenerateTokens);
+        builder.Services.AddSingleton<IRsaKeyProvider>(rsaKeyProvider);
 
-    private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
-    {
         builder.Services.AddTransient<TokenValidationParametersFactory>();
+
         builder.Services.AddScoped<AuthDbContext>();
         builder.Services.AddScoped<IReadDbContext, ReadDbContext>();
         builder.Services.AddScoped<IAuthRepository, AuthRepository>();
@@ -90,24 +63,9 @@ public static class DependencyInjection
         builder.Services.AddTransient<ITokenClaimsAccessor, TokenManager>();
         builder.Services.AddTransient<ITokenRefresher, TokenManager>();
 
-        builder.Services.Configure<OptionsTokens>(
-                builder.Configuration.GetRequiredSection(OptionsTokens.SECTION));
-
         builder.Services
             .AddIdentity<User, Role>(ConfigureIdentityOptions)
             .AddEntityFrameworkStores<AuthDbContext>();
-
-        builder.Services
-            .AddAuthorization(ConfigureAuthorizationOptions)
-            .AddAuthentication(ConfigureAuthenticationOptions)
-            .AddJwtBearer(x => ConfigureTokenValidationOptions(x, builder));
-
-        builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
-
-        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddScoped<UserScopedData>();
 
         return builder;
     }
@@ -115,26 +73,5 @@ public static class DependencyInjection
     private static void ConfigureIdentityOptions(IdentityOptions options)
     {
         options.User.RequireUniqueEmail = true;
-    }
-
-    private static void ConfigureAuthenticationOptions(AuthenticationOptions options)
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-    }
-
-    private static void ConfigureAuthorizationOptions(AuthorizationOptions options)
-    {
-        options.AddPolicy("IsAuthorized", policy =>
-            policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser());
-    }
-
-    private static void ConfigureTokenValidationOptions(JwtBearerOptions options, IHostApplicationBuilder builder)
-    {
-        var optionsJwt = builder.Configuration.GetRequiredSection(OptionsTokens.SECTION).Get<OptionsTokens>();
-        if (optionsJwt == null)
-            throw new ArgumentNullException(nameof(optionsJwt));
-        options.TokenValidationParameters = TokenValidationParametersFactory.Create(optionsJwt);
     }
 }

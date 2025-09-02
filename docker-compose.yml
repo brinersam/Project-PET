@@ -15,17 +15,15 @@ services:
       dockerfile: src/ProjectPet.Web/Dockerfile
     ports:
         - "8080:8080"
-        - "8081:8081"
     volumes:
         - $APPDATA/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
         - $APPDATA/ASP.NET/Https:/home/app/.aspnet/https:ro
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
         - ASPNETCORE_HTTP_PORTS=8080
-        - ASPNETCORE_HTTPS_PORTS=8081
     depends_on:
         - projectpet.database
-        - projectpet.elasticsearch
+        # - projectpet.elasticsearch
         - projectpet.rabbitmq
     restart: always
     networks:
@@ -45,29 +43,29 @@ services:
         - ./postgres-data:/var/lib/postgresql/data
     restart: always
 
-  projectpet.elasticsearch:
-    image: elasticsearch:9.1.2
-    container_name: ProjectPet.elasticsearch
-    restart: always
-    environment:
-        - xpack.security.enabled=false
-        - discovery.type=single-node
-    ports:
-        - "9200:9200"
-    volumes:
-        - ./elasticsearch-data:/usr/share/elasticsearch/data
+  # projectpet.elasticsearch:
+  #   image: elasticsearch:9.1.2
+  #   container_name: ProjectPet.elasticsearch
+  #   restart: always
+  #   environment:
+  #       - xpack.security.enabled=false
+  #       - discovery.type=single-node
+  #   ports:
+  #       - "9200:9200"
+  #   volumes:
+  #       - ./elasticsearch-data:/usr/share/elasticsearch/data
 
-  projectpet.kibana:
-    image: kibana:9.1.2
-    container_name: ProjectPet.kibana
-    restart: always
-    environment:
-        - ELASTICSEARCH_URL=http://projectpet.elasticsearch:9200
-        - SERVER_PORT=8078
-    ports:
-        - "8078:8078"
-    depends_on:
-        - projectpet.elasticsearch
+  # projectpet.kibana:
+  #   image: kibana:9.1.2
+  #   container_name: ProjectPet.kibana
+  #   restart: always
+  #   environment:
+  #       - ELASTICSEARCH_URL=http://projectpet.elasticsearch:9200
+  #       - SERVER_PORT=8078
+  #   ports:
+  #       - "8078:8078"
+  #   depends_on:
+  #       - projectpet.elasticsearch
 
   projectpet.nginx:
     image: nginx
@@ -81,55 +79,55 @@ services:
     restart: always
 
     # file service start
-  projectpet.fileservice:
-    container_name: ProjectPet.fileservice
-    build:
-      args:
-        NUGET_USERNAME: ${NUGET_USERNAME}
-        NUGET_PASSWORD: ${NUGET_PASSWORD}
-      context: ../ProjectPet.FileService/ProjectPet.FileService
-      dockerfile: ProjectPet.FileService/Dockerfile
-    ports:
-        - "6060:6060"
-        - "6061:6061"
-    environment:
-        - ASPNETCORE_ENVIRONMENT=Development
-        - ASPNETCORE_HTTP_PORTS=6060
-        - ASPNETCORE_HTTPS_PORTS=6061
-    volumes:
-        - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-        - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-    depends_on:
-        - "projectpet.minio"
-        - "projectpet.fileservice.mongodb"
-    networks:
-      - ProjectPetNetwork
-      - default
-    restart: always
+  # projectpet.fileservice:
+  #   container_name: ProjectPet.fileservice
+  #   build:
+  #     args:
+  #       NUGET_USERNAME: ${NUGET_USERNAME}
+  #       NUGET_PASSWORD: ${NUGET_PASSWORD}
+  #     context: ../ProjectPet.FileService/ProjectPet.FileService
+  #     dockerfile: ProjectPet.FileService/Dockerfile
+  #   ports:
+  #       - "6060:6060"
+  #       - "6061:6061"
+  #   environment:
+  #       - ASPNETCORE_ENVIRONMENT=Development
+  #       - ASPNETCORE_HTTP_PORTS=6060
+  #       - ASPNETCORE_HTTPS_PORTS=6061
+  #   volumes:
+  #       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+  #       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  #   depends_on:
+  #       - "projectpet.minio"
+  #       - "projectpet.fileservice.mongodb"
+  #   networks:
+  #     - ProjectPetNetwork
+  #     - default
+  #   restart: always
 
-  projectpet.minio:
-    image: minio/minio
-    container_name: ProjectPet.fileservice.minio
-    command: server --address ":5000" --console-address ":5001" /var/lib/minio/data
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    ports:
-        - "5000:5000"
-        - "5001:5001"
-    volumes:
-        - ./minio-data:/var/lib/minio/data
-    restart: always
+  # projectpet.minio:
+  #   image: minio/minio
+  #   container_name: ProjectPet.fileservice.minio
+  #   command: server --address ":5000" --console-address ":5001" /var/lib/minio/data
+  #   environment:
+  #     MINIO_ROOT_USER: minioadmin
+  #     MINIO_ROOT_PASSWORD: minioadmin
+  #   ports:
+  #       - "5000:5000"
+  #       - "5001:5001"
+  #   volumes:
+  #       - ./minio-data:/var/lib/minio/data
+  #   restart: always
 
-  projectpet.fileservice.mongodb:
-    image: mongo:latest
-    container_name: ProjectPet.fileservice.mongodb
-    command: mongod -port 5050
-    ports:
-      - "5050:5050"
-    volumes:
-        - ./mongoDb-data:/data/db
-    restart: always
+  # projectpet.fileservice.mongodb:
+  #   image: mongo:latest
+  #   container_name: ProjectPet.fileservice.mongodb
+  #   command: mongod -port 5050
+  #   ports:
+  #     - "5050:5050"
+  #   volumes:
+  #       - ./mongoDb-data:/data/db
+  #   restart: always
     # file service end
 
   projectpet.rabbitmq:
@@ -146,28 +144,49 @@ services:
       - ProjectPetNetwork
       - default
   
-  projectpet.prometheus:
-    image: prom/prometheus
-    container_name: ProjectPet.prometheus
-    volumes:
-        - ./prometheus.yml:/etc/prometheus/prometheus.yml
-        - ./prometheus-data:/prometheus
-    ports:
-        - "9090:9090"
-    restart: always
+  # projectpet.prometheus:
+  #   image: prom/prometheus
+  #   container_name: ProjectPet.prometheus
+  #   volumes:
+  #       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #       - ./prometheus-data:/prometheus
+  #   ports:
+  #       - "9090:9090"
+  #   restart: always
   
-  projectpet.grafana:
-    image: grafana/grafana
-    container_name: ProjectPet.grafana
-    environment:
-        - GF_SECURITY_ADMIN_USER=admin
-        - GF_SECURITY_ADMIN_PASSWORD=admin
-        - GF_INSTALL_PLUGINS=grafana-clock-panel
-        - grafana-simple-json-datastructure
-    volumes:
-        - ./grafana-data:/var/lib/grafana
+  # projectpet.grafana:
+  #   image: grafana/grafana
+  #   container_name: ProjectPet.grafana
+  #   environment:
+  #       - GF_SECURITY_ADMIN_USER=admin
+  #       - GF_SECURITY_ADMIN_PASSWORD=admin
+  #       - GF_INSTALL_PLUGINS=grafana-clock-panel
+  #       - grafana-simple-json-datastructure
+  #   volumes:
+  #       - ./grafana-data:/var/lib/grafana
+  #   ports:
+  #       - "3000:3000"
+  #   restart: always
+  #   depends_on:
+  #       - projectpet.prometheus
+  
+  projectpet.debugservice:
+    container_name: ProjectPet.debugservice
+    build:
+      args:
+        NUGET_USERNAME: ${NUGET_USERNAME}
+        NUGET_PASSWORD: ${NUGET_PASSWORD}
+      context: .
+      dockerfile: src/DebugService/Dockerfile
     ports:
-        - "3000:3000"
+        - "3080:3080"
+    volumes:
+        - ~/.aspnet/https:/root/.aspnet/https:ro
+        - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_HTTP_PORTS=3080
     restart: always
-    depends_on:
-        - projectpet.prometheus
+    networks:
+      - ProjectPetNetwork
+      - default

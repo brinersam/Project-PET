@@ -6,56 +6,66 @@ using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
 using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.Authorization.Rsa;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace ProjectPet.AccountsModule.Application.Services;
 public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccessor
 {
     private readonly OptionsTokens _options;
+    private readonly IRsaKeyProvider _keyProvider;
     private readonly IAuthRepository _authRepository;
+    private readonly IAccountRepository _accountRepository;
     private readonly TokenValidationParametersFactory _tokenValidationParametersFactory;
 
     public TokenManager(
         IOptions<OptionsTokens> options,
+        IRsaKeyProvider keyProvider,
         IAuthRepository authRepository,
+        IAccountRepository accountRepository,
         TokenValidationParametersFactory tokenValidationParametersFactory)
     {
         _options = options.Value;
+        _keyProvider = keyProvider;
         _authRepository = authRepository;
+        _accountRepository = accountRepository;
         _tokenValidationParametersFactory = tokenValidationParametersFactory;
     }
 
-    public AccessTokenWJti GenerateJwtAccessToken(User user)
+    public async Task<AccessTokenWJti> GenerateRsaAccessTokenAsync(User user, CancellationToken ct = default)
     {
         var jti = Guid.NewGuid();
+
+        var rsaKey = _keyProvider.GetPrivateRsa();
+        var rsa = new RsaSecurityKey(rsaKey);
 
         var userRoleClaims = user.Roles
             .Select(role => new Claim(CustomClaims.ROLE, role.Name ?? "UNKNOWN_ROLE_NAME"));
 
+        var userPermissionModifiers = await _accountRepository.GetPermissionModifiersAsync(user.Id, ct);
+        var userPermissionModifiersInclude = userPermissionModifiers.Where(x => x.IsAllowed).Select(x => x.Code).ToHashSet();
+        var userPermissionModifiersExclude = userPermissionModifiers.Where(x => x.IsAllowed == false).Select(x => x.Code).ToHashSet();
+
         var userPermissionClaims = user.Roles
             .SelectMany(role => role.RolePermissions.Select(y => y.Permission.Code))
             .Distinct()
+            .Where(code => userPermissionModifiersExclude.Contains(code) == false)
+            .Concat(userPermissionModifiersInclude)
             .Select(code => new Claim(CustomClaims.PERMISSION, code));
 
         List<Claim> claims =
         [
-            new Claim(JwtRegisteredClaimNames.Jti, jti.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? throw new ArgumentException($"Null email got through to {typeof(TokenManager)}")),
             new Claim(CustomClaims.ID, user.Id.ToString()),
             .. userRoleClaims,
             .. userPermissionClaims,
         ];
 
-        var secKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
-
-        var signCredts = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256);
+        var signCredts = new SigningCredentials(rsa, SecurityAlgorithms.RsaSha256);
 
         var jwtToken = new JwtSecurityToken(
-            issuer: _options.Issuer,
-            audience: _options.Audience,
             expires: DateTime.UtcNow.AddMinutes(_options.AccessExpiresMin),
             signingCredentials: signCredts,
             claims: claims);
@@ -86,8 +96,11 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
         CancellationToken cancellationToken = default)
     {
         var jwtHandler = new JwtSecurityTokenHandler();
+        var rsaKey = _keyProvider.GetPublicRsa();
+        var key = new RsaSecurityKey(rsaKey);
+
         var validationResult = await jwtHandler
-            .ValidateTokenAsync(accessToken, _tokenValidationParametersFactory.Create(validateLifeTime: false));
+            .ValidateTokenAsync(accessToken, _tokenValidationParametersFactory.Create(key, validateLifeTime: false));
 
         if (validationResult.IsValid == false)
             return Error.Validation("invalid.token", "Invalid token!");
@@ -113,7 +126,7 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
 
     public async Task<Result<LoginResponse, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken)
     {
-        var newAccessToken = GenerateJwtAccessToken(user);
+        var newAccessToken = await GenerateRsaAccessTokenAsync(user);
         var newRefreshToken = await GenerateRefreshTokenAsync(user, newAccessToken.jti, cancellationToken);
         return new LoginResponse(newRefreshToken, newAccessToken.accessToken, []);
     }
