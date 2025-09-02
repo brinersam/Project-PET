@@ -25,7 +25,7 @@ services:
         - ASPNETCORE_HTTPS_PORTS=8081
     depends_on:
         - projectpet.database
-        - projectpet.seq
+        - projectpet.elasticsearch
         - projectpet.rabbitmq
     restart: always
     networks:
@@ -45,15 +45,29 @@ services:
         - ./postgres-data:/var/lib/postgresql/data
     restart: always
 
-  projectpet.seq:
-    image: datalust/seq:latest
-    container_name: ProjectPet.seq
+  projectpet.elasticsearch:
+    image: elasticsearch:9.1.2
+    container_name: ProjectPet.elasticsearch
     restart: always
     environment:
-        - ACCEPT_EULA=Y
+        - xpack.security.enabled=false
+        - discovery.type=single-node
     ports:
-        - "5341:5341"
-        - "8078:80"
+        - "9200:9200"
+    volumes:
+        - ./elasticsearch-data:/usr/share/elasticsearch/data
+
+  projectpet.kibana:
+    image: kibana:9.1.2
+    container_name: ProjectPet.kibana
+    restart: always
+    environment:
+        - ELASTICSEARCH_URL=http://projectpet.elasticsearch:9200
+        - SERVER_PORT=8078
+    ports:
+        - "8078:8078"
+    depends_on:
+        - projectpet.elasticsearch
 
   projectpet.nginx:
     image: nginx
@@ -131,3 +145,29 @@ services:
     networks:
       - ProjectPetNetwork
       - default
+  
+  projectpet.prometheus:
+    image: prom/prometheus
+    container_name: ProjectPet.prometheus
+    volumes:
+        - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        - ./prometheus-data:/prometheus
+    ports:
+        - "9090:9090"
+    restart: always
+  
+  projectpet.grafana:
+    image: grafana/grafana
+    container_name: ProjectPet.grafana
+    environment:
+        - GF_SECURITY_ADMIN_USER=admin
+        - GF_SECURITY_ADMIN_PASSWORD=admin
+        - GF_INSTALL_PLUGINS=grafana-clock-panel
+        - grafana-simple-json-datastructure
+    volumes:
+        - ./grafana-data:/var/lib/grafana
+    ports:
+        - "3000:3000"
+    restart: always
+    depends_on:
+        - projectpet.prometheus

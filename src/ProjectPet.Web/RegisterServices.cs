@@ -1,7 +1,12 @@
-﻿using FluentValidation;
+﻿using Elastic.Ingest.Elasticsearch;
+using Elastic.Ingest.Elasticsearch.DataStreams;
+using Elastic.Serilog.Sinks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using ProjectPet.AccountsModule.Infrastructure;
 using ProjectPet.Core.Options;
 using ProjectPet.VolunteerRequests.Infrastructure;
@@ -16,13 +21,18 @@ public static class RegisterServices
 {
     public static IHostApplicationBuilder AddSerilogLogger(this IHostApplicationBuilder builder)
     {
-        string seqConnectionString = builder.Configuration["CStrings:Seq"]
-            ?? throw new ArgumentNullException("CStrings:Seq");
-
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .WriteTo.Debug()
-            .WriteTo.Seq(seqConnectionString)
+            .WriteTo.Elasticsearch
+            (
+                [new Uri("http://projectpet.elasticsearch:9200")],
+                options =>
+                {
+                    options.DataStream = new DataStreamName("projectpet-api");
+                    options.BootstrapMethod = BootstrapMethod.Silent;
+                }
+            )
             .Enrich.WithThreadId()
             .Enrich.WithEnvironmentName()
             .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
@@ -55,6 +65,23 @@ public static class RegisterServices
             builder.Configuration.GetSection(OptionsDb.SECTION));
 
         return builder;
+    }
+
+    public static IServiceCollection AddAppMetrics(this IServiceCollection services)
+    {
+        services.AddOpenTelemetry()
+            .WithMetrics
+            (c => c
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ProjectPetApi"))
+                .AddMeter("ProjectPet")
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddRuntimeInstrumentation()
+                .AddProcessInstrumentation()
+                .AddPrometheusExporter()
+            );
+
+        return services;
     }
 
     public static IHostApplicationBuilder AddRabbitMQ(this IHostApplicationBuilder builder)
