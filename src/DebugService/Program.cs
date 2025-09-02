@@ -12,7 +12,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.AddAuthModuleInfrastructure();
+        builder.AddAuthInfrastructure();
 
         builder.AddRabbitMQ();
 

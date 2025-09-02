@@ -47,6 +47,7 @@ builder.AddSpeciesModuleInfrastructure();
 
 builder.AddAuthModuleHandlers();
 builder.AddAuthModuleInfrastructure();
+builder.AddAuthInfrastructure();
 
 builder.AddVolunteerRequestsModuleHandlers();
 builder.AddVolunteerRequestModuleInfrastructure();

@@ -29,13 +29,39 @@ public static class DependencyInjection
 {
     public static IHostApplicationBuilder AddAuthModuleInfrastructure(this IHostApplicationBuilder builder)
     {
-        builder.AddAuth();
+        builder.SetupAuthService();
         builder.AddEventConsumers();
         builder.Services.AddScoped<IDatabaseSeeder, DatabaseAccountsSeeder>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IPermissionModifierRepository, PermissionModifierRepository>();
 
         builder.Services.Configure<AdminCredsOptions>(builder.Configuration.GetSection(AdminCredsOptions.SECTION));
+
+        return builder;
+    }
+
+    public static IHostApplicationBuilder AddAuthInfrastructure(this IHostApplicationBuilder builder) // todo move out into shared framework
+    {
+        builder.Services.Configure<OptionsTokens>(
+                builder.Configuration.GetRequiredSection(OptionsTokens.SECTION));
+        var options = builder.Configuration.Get<OptionsTokens>();
+
+        builder.Services
+            .AddAuthorization(ConfigureAuthorizationOptions)
+            .AddAuthentication(ConfigureAuthenticationOptions)
+            .AddJwtBearer(x => ConfigureRsaTokenValidationOptions(x, builder))
+            .AddScheme<SecretKeyAuthenticationOptions, SecretKeyAuthenticationHandler>("SecretKey", opts => opts.ExpectedKey = options.SecretKey);
+
+        builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
+        builder.Services.AddScoped<IAuthorizationHandler, SecretKeyAuthorizationHandler>();
+        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProviderWSecretKey>();
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<UserScopedData>();
+        builder.Services.AddScoped<ScopedUserDataMiddleware>();
+
+        builder.Services.AddTransient<JwtForwardingHttpHandler>();
+        builder.Services.AddSingleton<IHttpMessageHandlerBuilderFilter, JwtForwardingHttpFilter>();
 
         return builder;
     }
@@ -84,17 +110,17 @@ public static class DependencyInjection
         return builder;
     }
 
-    private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
+    private static IHostApplicationBuilder SetupAuthService(this IHostApplicationBuilder builder)
     {
         builder.Services.Configure<OptionsTokens>(
                 builder.Configuration.GetRequiredSection(OptionsTokens.SECTION));
-
         var options = builder.Configuration.Get<OptionsTokens>();
 
         var rsaKeyProvider = new RsaKeyProvider(options.GenerateTokens);
         builder.Services.AddSingleton<IRsaKeyProvider>(rsaKeyProvider);
 
         builder.Services.AddTransient<TokenValidationParametersFactory>();
+
         builder.Services.AddScoped<AuthDbContext>();
         builder.Services.AddScoped<IReadDbContext, ReadDbContext>();
         builder.Services.AddScoped<IAuthRepository, AuthRepository>();
@@ -106,25 +132,6 @@ public static class DependencyInjection
         builder.Services
             .AddIdentity<User, Role>(ConfigureIdentityOptions)
             .AddEntityFrameworkStores<AuthDbContext>();
-
-        builder.Services
-            .AddAuthorization(ConfigureAuthorizationOptions)
-            .AddAuthentication(ConfigureAuthenticationOptions)
-            .AddJwtBearer(x => ConfigureRsaTokenValidationOptions(x, builder))
-            .AddScheme<SecretKeyAuthenticationOptions, SecretKeyAuthenticationHandler>("SecretKey", opts => opts.ExpectedKey = options.SecretKey);
-
-        builder.Services.AddScoped<IAuthorizationHandler, PermissionRequirementHandler>();
-        builder.Services.AddScoped<IAuthorizationHandler, SecretKeyAuthorizationHandler>();
-
-        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProviderWSecretKey>();
-
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddScoped<UserScopedData>();
-        builder.Services.AddScoped<ScopedUserDataMiddleware>();
-
-
-        builder.Services.AddTransient<JwtForwardingHttpHandler>();
-        builder.Services.AddSingleton<IHttpMessageHandlerBuilderFilter, JwtForwardingHttpFilter>();
 
         return builder;
     }

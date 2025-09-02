@@ -3,7 +3,6 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using ProjectPet.AccountsModule.Domain;
-using ProjectPet.DiscussionsModule.Domain.Models;
 using ProjectPet.FileService.Contracts;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
@@ -73,7 +72,6 @@ public class DebugController : CustomControllerBase
         return Ok(responseData);
     }
 
-    [Permission(PermissionCodes.AdminMasterkey)]
     [HttpGet("InterServiceEvent")]
     public async Task<IActionResult> SendDebugEvent(
         [FromServices] IPublishEndpoint publish,
