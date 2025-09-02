@@ -1,5 +1,4 @@
-﻿using DEVShared;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +12,9 @@ using ProjectPet.AccountsModule.Infrastructure.Options;
 using ProjectPet.AccountsModule.Infrastructure.Repositories;
 using ProjectPet.AccountsModule.Infrastructure.Seeding;
 using ProjectPet.Core.Database;
+using ProjectPet.Core.Options;
+using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.Authorization.Rsa;
 
 namespace ProjectPet.AccountsModule.Infrastructure;
 public static class DependencyInjection

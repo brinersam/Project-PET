@@ -6,6 +6,7 @@ using ProjectPet.AccountsModule.Domain;
 using ProjectPet.FileService.Contracts;
 using ProjectPet.Framework;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.UserData;
 using System.Net;
 using Err = ProjectPet.SharedKernel.ErrorClasses;
 

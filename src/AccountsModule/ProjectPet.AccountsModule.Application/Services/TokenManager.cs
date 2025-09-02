@@ -1,15 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using DEVShared;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.AccountsModule.Contracts.Dto;
 using ProjectPet.AccountsModule.Domain;
+using ProjectPet.Core.Options;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.Authorization.Rsa;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace ProjectPet.AccountsModule.Application.Services;
 public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccessor

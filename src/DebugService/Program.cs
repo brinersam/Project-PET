@@ -1,8 +1,7 @@
 ﻿
 using DebugService.BuilderAppExtensions;
-using DEVShared;
-using DEVShared.Middlewares;
 using ProjectPet.Framework.Authorization;
+using ProjectPet.Framework.UserData;
 
 namespace DebugService;
 
