@@ -1,8 +1,8 @@
 ﻿
 using DebugService.BuilderAppExtensions;
-using ProjectPet.AccountsModule.Infrastructure;
+using DEVShared;
+using DEVShared.Middlewares;
 using ProjectPet.Framework.Authorization;
-using ProjectPet.Web.MIddlewares;
 
 namespace DebugService;
 
@@ -12,7 +12,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.AddAuthInfrastructure();
+        builder.AddAuth();
 
         builder.AddRabbitMQ();
 

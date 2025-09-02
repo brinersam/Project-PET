@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace ProjectPet.AccountsModule.Infrastructure.SecretKeyAuthentication;
+namespace DEVShared.SecretKeyAuthentication;
 
 public class SecretKeyAuthenticationHandler : AuthenticationHandler<SecretKeyAuthenticationOptions>
 {

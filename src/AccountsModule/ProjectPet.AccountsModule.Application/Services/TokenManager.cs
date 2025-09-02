@@ -66,8 +66,6 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
         var signCredts = new SigningCredentials(rsa, SecurityAlgorithms.RsaSha256);
 
         var jwtToken = new JwtSecurityToken(
-            issuer: _options.Issuer,
-            audience: _options.Audience,
             expires: DateTime.UtcNow.AddMinutes(_options.AccessExpiresMin),
             signingCredentials: signCredts,
             claims: claims);

@@ -1,4 +1,6 @@
-﻿using ProjectPet.AccountsModule.Infrastructure;
+﻿using DEVShared;
+using DEVShared.Middlewares;
+using ProjectPet.AccountsModule.Infrastructure;
 using ProjectPet.AccountsModule.Presentation;
 using ProjectPet.DiscussionsModule.Infrastructure;
 using ProjectPet.DiscussionsModule.Presentation;
@@ -47,7 +49,7 @@ builder.AddSpeciesModuleInfrastructure();
 
 builder.AddAuthModuleHandlers();
 builder.AddAuthModuleInfrastructure();
-builder.AddAuthInfrastructure();
+builder.AddAuth();
 
 builder.AddVolunteerRequestsModuleHandlers();
 builder.AddVolunteerRequestModuleInfrastructure();

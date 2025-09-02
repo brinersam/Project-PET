@@ -1,11 +1,7 @@
-﻿using DEVShared;
-using MassTransit.Configuration;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System.Net;
 
-namespace ProjectPet.AccountsModule.Infrastructure.HttpFilters;
+namespace DEVShared.HttpFilters;
 public class JwtForwardingHttpHandler : DelegatingHandler
 {
     private readonly IHttpContextAccessor _context;
@@ -35,7 +31,7 @@ public class JwtForwardingHttpHandler : DelegatingHandler
         }
 
         bool isJwtValueValid = _context.HttpContext!.Request.Headers.TryGetValue(key_Authorization, out var jwt) &&
-                               (string.IsNullOrWhiteSpace(jwt.FirstOrDefault()) == false);
+                               string.IsNullOrWhiteSpace(jwt.FirstOrDefault()) == false;
 
         if (isJwtValueValid)
             request.Headers.Add(key_Authorization, jwt.First());

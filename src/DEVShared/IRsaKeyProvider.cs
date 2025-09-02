@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace ProjectPet.AccountsModule.Application.Interfaces;
+namespace DEVShared;
 public interface IRsaKeyProvider
 {
     RSA GetPrivateRsa();

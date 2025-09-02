@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 
-namespace ProjectPet.AccountsModule.Infrastructure.SecretKeyAuthentication;
+namespace DEVShared.SecretKeyAuthentication;
 
 public class SecretKeyAuthenticationOptions : AuthenticationSchemeOptions
 {

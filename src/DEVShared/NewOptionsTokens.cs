@@ -8,15 +8,6 @@ public class OptionsTokens
 
     public string SecretKey { get; init; } = "DEFAULT-SECRET-KEY";
 
-    public string Issuer { get; init; } = string.Empty;
-
-
-    public string Audience { get; init; } = string.Empty;
-
-
-    public string Key { get; init; } = string.Empty;
-
-
     public int AccessExpiresMin { get; init; }
 
     public int RefreshExpiresMin { get; init; }

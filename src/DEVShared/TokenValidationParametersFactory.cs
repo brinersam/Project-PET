@@ -1,9 +1,7 @@
-﻿using DEVShared;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
-namespace ProjectPet.AccountsModule.Application.Services;
+namespace DEVShared;
 public class TokenValidationParametersFactory
 {
     private readonly OptionsTokens _tokenOptions;

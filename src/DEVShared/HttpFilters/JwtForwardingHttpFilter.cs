@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 
-namespace ProjectPet.AccountsModule.Infrastructure.HttpFilters;
+namespace DEVShared.HttpFilters;
 public class JwtForwardingHttpFilter : IHttpMessageHandlerBuilderFilter
 {
     private readonly IServiceProvider _services;

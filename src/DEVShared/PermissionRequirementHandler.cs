@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using ProjectPet.AccountsModule.Application.Interfaces;
 using ProjectPet.Framework.Authorization;
 
-namespace ProjectPet.AccountsModule.Application.Services;
+namespace DEVShared;
 
 public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttribute>
 {

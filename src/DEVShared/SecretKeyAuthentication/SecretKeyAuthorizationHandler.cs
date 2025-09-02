@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using ProjectPet.Framework.Authorization;
 
-namespace ProjectPet.AccountsModule.Infrastructure.SecretKeyAuthentication;
+namespace DEVShared.SecretKeyAuthentication;
 
 public class SecretKeyAuthorizationHandler : AuthorizationHandler<PermissionAttribute> 
 {

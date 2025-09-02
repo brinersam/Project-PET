@@ -1,7 +1,6 @@
-﻿using ProjectPet.AccountsModule.Application.Interfaces;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
-namespace ProjectPet.AccountsModule.Infrastructure;
+namespace DEVShared;
 
 public class RsaKeyProvider : IRsaKeyProvider
 {

@@ -3,7 +3,7 @@ using ProjectPet.Framework.Authorization;
 using ProjectPet.SharedKernel.ErrorClasses;
 using System.Security.Claims;
 
-namespace ProjectPet.Web.MIddlewares;
+namespace DEVShared.Middlewares;
 
 public class ScopedUserDataMiddleware : IMiddleware
 {
@@ -16,7 +16,7 @@ public class ScopedUserDataMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        string rawUserId = context.User?.Claims?.FirstOrDefault((Claim c) => c.Type == CustomClaims.ID)?.Value!;
+        string rawUserId = context.User?.Claims?.FirstOrDefault((c) => c.Type == CustomClaims.ID)?.Value!;
         bool isIdParsed = Guid.TryParse(rawUserId, out Guid userId);
 
         if (context.User.Identity is null || context.User.Identity.IsAuthenticated == false)
@@ -33,13 +33,13 @@ public class ScopedUserDataMiddleware : IMiddleware
         List<string>? permissions = context
             .User?
             .Claims?
-            .Where((Claim c) => c.Type == CustomClaims.PERMISSION && c.Value is not null)
+            .Where((c) => c.Type == CustomClaims.PERMISSION && c.Value is not null)
             .Select(x => x.Value)
             .ToList();
 
         List<string>? roles = context.User?
             .Claims?
-            .Where((Claim c) => c.Type == CustomClaims.ROLE && c.Value is not null)
+            .Where((c) => c.Type == CustomClaims.ROLE && c.Value is not null)
             .Select(x => x.Value)
             .ToList();
 
