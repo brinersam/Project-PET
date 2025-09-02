@@ -17,21 +17,24 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
     private readonly OptionsTokens _options;
     private readonly IRsaKeyProvider _keyProvider;
     private readonly IAuthRepository _authRepository;
+    private readonly IAccountRepository _accountRepository;
     private readonly TokenValidationParametersFactory _tokenValidationParametersFactory;
 
     public TokenManager(
         IOptions<OptionsTokens> options,
         IRsaKeyProvider keyProvider,
         IAuthRepository authRepository,
+        IAccountRepository accountRepository,
         TokenValidationParametersFactory tokenValidationParametersFactory)
     {
         _options = options.Value;
         _keyProvider = keyProvider;
         _authRepository = authRepository;
+        _accountRepository = accountRepository;
         _tokenValidationParametersFactory = tokenValidationParametersFactory;
     }
 
-    public AccessTokenWJti GenerateRsaAccessToken(User user)
+    public async Task<AccessTokenWJti> GenerateRsaAccessTokenAsync(User user, CancellationToken ct = default)
     {
         var jti = Guid.NewGuid();
 
@@ -41,9 +44,15 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
         var userRoleClaims = user.Roles
             .Select(role => new Claim(CustomClaims.ROLE, role.Name ?? "UNKNOWN_ROLE_NAME"));
 
+        var userPermissionModifiers = await _accountRepository.GetPermissionModifiersAsync(user.Id, ct);
+        var userPermissionModifiersInclude = userPermissionModifiers.Where(x => x.IsAllowed).Select(x => x.Code).ToHashSet();
+        var userPermissionModifiersExclude = userPermissionModifiers.Where(x => x.IsAllowed == false).Select(x => x.Code).ToHashSet();
+
         var userPermissionClaims = user.Roles
             .SelectMany(role => role.RolePermissions.Select(y => y.Permission.Code))
             .Distinct()
+            .Where(code => userPermissionModifiersExclude.Contains(code) == false)
+            .Concat(userPermissionModifiersInclude)
             .Select(code => new Claim(CustomClaims.PERMISSION, code));
 
         List<Claim> claims =
@@ -119,7 +128,7 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
 
     public async Task<Result<LoginResponse, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken)
     {
-        var newAccessToken = GenerateRsaAccessToken(user);
+        var newAccessToken = await GenerateRsaAccessTokenAsync(user);
         var newRefreshToken = await GenerateRefreshTokenAsync(user, newAccessToken.jti, cancellationToken);
         return new LoginResponse(newRefreshToken, newAccessToken.accessToken, []);
     }

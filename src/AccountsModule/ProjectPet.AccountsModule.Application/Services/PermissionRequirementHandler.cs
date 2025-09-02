@@ -9,14 +9,10 @@ namespace ProjectPet.AccountsModule.Application.Services;
 public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttribute>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IAuthRepository _authRepository;
 
-    public PermissionRequirementHandler(
-        IHttpContextAccessor httpContextAccessor,
-        IAuthRepository authRepository)
+    public PermissionRequirementHandler(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-        _authRepository = authRepository;
     }
 
     protected override async Task HandleRequirementAsync(
@@ -30,18 +26,18 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
         if (userScopedData.UserId is null || userScopedData.IsSuccess == false)
             return;
 
-        bool isRoleAuthorized = false;
-
-        try
-        {
-            isRoleAuthorized = await _authRepository.DoesUserHavePermissionCodeAsync((Guid)userScopedData.UserId!, requirement.Code);
-        }
-        catch (InvalidOperationException ex) // no db, verify using whatever is in jwt
-        {
-            isRoleAuthorized = _authRepository.DoesUserHavePermissionCode(userScopedData, requirement.Code);
-        }
-
-        if (isRoleAuthorized)
+        if (DoesUserHavePermissionCode(userScopedData, requirement.Code))
             context.Succeed(requirement);
+    }
+
+    private bool DoesUserHavePermissionCode(UserScopedData userData, string permissionCode)
+    {
+        var permissionExists = userData.Permissions.Any
+            (
+                permission => Equals(permission, permissionCode) || // rolePermission has the required permission code
+                              Equals(permission, "admin.masterkey") // rolePermission is admin sudo),
+            );
+
+        return permissionExists;
     }
 }

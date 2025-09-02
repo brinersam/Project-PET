@@ -43,4 +43,12 @@ public class AccountRepository : IAccountRepository
         _authDbContext.Attach(user);
         await _authDbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<HashSet<PermissionModifier>> GetPermissionModifiersAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var result = await _authDbContext.PermissionModifiers
+            .Where(x => DateTime.UtcNow >= x.ExpiresAt)
+            .ToHashSetAsync(cancellationToken);
+        return result;
+    }
 }
