@@ -119,14 +119,18 @@ public class TokenManager : ITokenProvider, ITokenRefresher, ITokenClaimsAccesso
         if (session.ExpiresIn < DateTime.UtcNow)
             return Error.Validation("invalid.session", "Session has expired!");
 
+        var user = await _accountRepository.GetByIdWRolesAsync(session.UserId, cancellationToken);
+        if (user.IsFailure)
+            return Error.Validation("invalid.session", "Invalid session user!");
+
         await _authRepository.DeleteSessionAsync(session, cancellationToken);
 
-        return await GenerateSessionAsync(session.User, cancellationToken);
+        return await GenerateSessionAsync(user.Value, cancellationToken);
     }
 
     public async Task<Result<LoginResponse, Error>> GenerateSessionAsync(User user, CancellationToken cancellationToken)
     {
-        var newAccessToken = await GenerateRsaAccessTokenAsync(user);
+        var newAccessToken = await GenerateRsaAccessTokenAsync(user, cancellationToken);
         var newRefreshToken = await GenerateRefreshTokenAsync(user, newAccessToken.jti, cancellationToken);
         return new LoginResponse(newRefreshToken, newAccessToken.accessToken, []);
     }

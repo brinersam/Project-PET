@@ -72,7 +72,7 @@ public class AuthController : CustomControllerBase
         var refreshTokenRaw = HttpContext.Request.Cookies["refreshToken"];
 
         if (!Guid.TryParse(refreshTokenRaw, out var refreshToken))
-            return Ok();// Errors.General.ValueIsInvalid("refreshtoken", "refreshToken").ToResponse();
+            return Ok();
 
         var cmd = new RefreshTokensCommand(refreshToken);
 

@@ -9,4 +9,5 @@ public interface IAccountRepository
     Task<Result<User, Error>> GetByEmailWRolesAsync(string email, CancellationToken cancellationToken);
     Task Save(User user, CancellationToken cancellationToken);
     Task<HashSet<PermissionModifier>> GetPermissionModifiersAsync(Guid userId, CancellationToken cancellationToken = default);
+    Task<Result<User, Error>> GetByIdWRolesAsync(Guid userId, CancellationToken cancellationToken);
 }
